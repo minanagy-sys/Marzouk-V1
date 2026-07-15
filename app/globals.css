@@ -1,0 +1,71 @@
+/* ============================================================
+   Global styles ported 1:1 from the original HTML design.
+   Keyframes, responsive rules and base element styles that the
+   inline styles rely on across every page.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #ffffff; }
+a { color: #30B6DE; text-decoration: none; }
+a:hover { color: #1E92B8; }
+::selection { background: rgba(48, 182, 222, 0.25); }
+
+input::placeholder,
+textarea::placeholder {
+  color: #8AA5B1;
+  font-family: var(--font-tajawal), sans-serif;
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes damFadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes damFadeUpA { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes damFadeUpB { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes damZoomA { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+@keyframes damZoomB { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+@keyframes damFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+@keyframes damFloatSlow { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(6deg); } }
+@keyframes damPulse { 0%, 100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.12); } }
+@keyframes damEcg { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
+@keyframes damSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes damPing { 0% { transform: scale(0.5); opacity: 0.8; } 80% { transform: scale(1.6); opacity: 0; } 100% { transform: scale(1.6); opacity: 0; } }
+
+/* ---------- Horizontal scroll rows (hide scrollbar) ---------- */
+.dam-scroll-row { scrollbar-width: none; }
+.dam-scroll-row::-webkit-scrollbar { display: none; }
+
+/* ---------- Navigation responsive ---------- */
+@media (max-width: 1080px) {
+  .dam-navrow { flex-wrap: wrap; height: auto !important; padding: 12px 16px !important; row-gap: 10px !important; }
+  .dam-navlinks { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; justify-content: flex-start !important; }
+  .dam-navlinks::-webkit-scrollbar { display: none; }
+  .dam-navlinks a, .dam-navlinks button { white-space: nowrap; flex-shrink: 0; }
+}
+
+/* ---------- Grid helpers ---------- */
+@media (max-width: 960px) {
+  .dam-3col { grid-template-columns: 1fr 1fr !important; }
+  .dam-4col { grid-template-columns: 1fr 1fr !important; }
+  .dam-2col { grid-template-columns: 1fr !important; }
+  .dam-map { height: 420px !important; }
+  .dam-tip { width: 230px !important; }
+}
+@media (max-width: 640px) {
+  .dam-3col { grid-template-columns: 1fr !important; }
+  .dam-4col { grid-template-columns: 1fr !important; }
+  .dam-2col-sm { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 560px) {
+  .dam-2col-sm > * { grid-column: auto !important; }
+}
+
+/* ---------- Services / media mosaic ---------- */
+@media (max-width: 900px) {
+  .dam-mosaic { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 185px !important; gap: 14px !important; }
+  .dam-case { min-height: auto !important; }
+  .dam-caseimg { flex: 1 1 100% !important; min-height: 260px !important; }
+  .dam-casebody { padding: 30px 22px 44px !important; }
+}
+@media (max-width: 480px) {
+  .dam-mosaic { grid-auto-rows: 150px !important; }
+}
