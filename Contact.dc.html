@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&amp;family=Tajawal:wght@300;400;500;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #ffffff; }
+    a { color: #30B6DE; text-decoration: none; }
+    a:hover { color: #1E92B8; }
+    input::placeholder, textarea::placeholder { color: #8AA5B1; font-family: 'Tajawal', sans-serif; }
+    @keyframes damFadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes damPing { 0% { transform: scale(0.5); opacity: 0.8; } 80% { transform: scale(1.6); opacity: 0; } 100% { transform: scale(1.6); opacity: 0; } }
+    @keyframes damFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+    @media (max-width: 1080px) {
+      .dam-navrow { flex-wrap: wrap; height: auto !important; padding: 12px 16px !important; row-gap: 10px !important; }
+      .dam-navlinks { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; justify-content: flex-start !important; }
+      .dam-navlinks::-webkit-scrollbar { display: none; }
+      .dam-navlinks a, .dam-navlinks button { white-space: nowrap; flex-shrink: 0; }
+    }
+    @media (max-width: 960px) {
+      .dam-2col { grid-template-columns: 1fr !important; }
+      .dam-map { height: 420px !important; }
+      .dam-tip { width: 230px !important; }
+    }
+    @media (max-width: 560px) {
+      .dam-2col-sm { grid-template-columns: 1fr !important; }
+      .dam-2col-sm > * { grid-column: auto !important; }
+    }
+  </style>
+</helmet>
+<div style="font-family: 'Tajawal', sans-serif; direction: {{ dir }}; color: #0C3446; background: #ffffff; min-height: 100vh;">
+
+  <header data-screen-label="Navigation" style="position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(12,52,70,0.08);">
+    <div class="dam-navrow" style="max-width: 1240px; margin: 0 auto; padding: 0 24px; height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <a href="Home.dc.html" style="display: flex; align-items: center; gap: 12px; color: #0C3446;">
+        <span style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #30B6DE, #0E5372); display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px; box-shadow: 0 6px 16px rgba(48,182,222,0.35);">Dr</span>
+        <span style="display: flex; flex-direction: column; line-height: 1.15;">
+          <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 19px; color: #0C3446;">{{ t.brand }}</span>
+          <span style="font-size: 11.5px; color: #5B7A88; letter-spacing: 0.4px;">{{ t.brandSub }}</span>
+        </span>
+      </a>
+      <nav class="dam-navlinks" style="display: flex; align-items: center; gap: 26px; font-size: 15px; font-weight: 500;">
+        <a href="Home.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navHome }}</a>
+        <a href="About.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navAbout }}</a>
+        <a href="Services.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navServices }}</a>
+        <a href="Cases.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navCases }}</a>
+        <a href="Blogs.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navBlogs }}</a>
+        <a href="Media.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navMedia }}</a>
+        <a href="Contact.dc.html" style="color: #30B6DE; font-weight: 700;">{{ t.navContact }}</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button onClick="{{ toggleLang }}" style="background: #ffffff; border: 1.5px solid rgba(48,182,222,0.5); color: #1E92B8; border-radius: 999px; padding: 8px 16px; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer;" style-hover="background: #EAF7FB;">{{ t.langBtn }}</button>
+        <a href="tel:01063337333" style="background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border-radius: 999px; padding: 11px 24px; font-weight: 700; font-size: 14.5px; box-shadow: 0 8px 20px rgba(48,182,222,0.4); direction: ltr;" style-hover="color: #ffffff;">01063337333</a>
+      </div>
+    </div>
+  </header>
+
+  <section data-screen-label="Page hero" style="position: relative; overflow: hidden; background: linear-gradient(140deg, #04202E 0%, #0A3950 55%, #0E5372 100%); padding: 90px 24px;">
+    <div style="position: absolute; top: -160px; inset-inline-end: -100px; width: 480px; height: 480px; border-radius: 50%; background: radial-gradient(circle, rgba(48,182,222,0.3), transparent 65%);"></div>
+    <div style="max-width: 1240px; margin: 0 auto; position: relative; animation: damFadeUp 0.8s ease-out both;">
+      <div style="font-size: 14px; color: rgba(255,255,255,0.55); font-weight: 500;"><a href="Home.dc.html" style="color: #8FE0F7;">{{ t.navHome }}</a> · {{ t.navContact }}</div>
+      <h1 style="font-family: 'El Messiri', serif; font-weight: 700; font-size: clamp(36px, 4vw, 56px); color: #ffffff; margin: 16px 0 0;">{{ t.pageTitle }}</h1>
+      <p style="font-size: 17px; line-height: 1.9; color: rgba(255,255,255,0.72); margin: 16px 0 0; max-width: 640px; text-wrap: pretty;">{{ t.pageSub }}</p>
+    </div>
+  </section>
+
+  <section data-screen-label="Clinics map" style="padding: 90px 24px 0;">
+    <div style="max-width: 1240px; margin: 0 auto;">
+      <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.mapKicker }}</div>
+      <h2 style="font-family: 'El Messiri', serif; font-size: clamp(28px, 3.2vw, 42px); font-weight: 700; margin: 12px 0 0; color: #0C3446;">{{ t.mapTitle }}</h2>
+      <div class="dam-map" style="position: relative; margin-top: 40px; border-radius: 30px; overflow: hidden; border: 1px solid rgba(48,182,222,0.3); box-shadow: 0 24px 60px rgba(12,52,70,0.14); height: 520px; background: linear-gradient(160deg, #DDF2FA 0%, #EAF7FB 45%, #F4FBFD 100%);">
+        <svg viewBox="0 0 1200 520" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+          <path d="M-20 420 C120 380 180 300 160 200 C145 120 190 40 260 -20" stroke="#BFE4F2" stroke-width="46" fill="none" opacity="0.8"></path>
+          <path d="M-20 420 C120 380 180 300 160 200 C145 120 190 40 260 -20" stroke="#A9DCEF" stroke-width="30" fill="none"></path>
+          <path d="M100 540 C300 420 520 460 760 380 C960 315 1100 330 1240 260" stroke="#ffffff" stroke-width="22" fill="none"></path>
+          <path d="M240 -20 C300 140 420 220 640 250 C860 280 1000 380 1080 540" stroke="#ffffff" stroke-width="16" fill="none"></path>
+          <path d="M420 -20 C460 120 560 300 520 540" stroke="#ffffff" stroke-width="12" fill="none"></path>
+          <path d="M-20 180 C220 200 460 140 720 120 C920 105 1080 60 1240 80" stroke="#ffffff" stroke-width="12" fill="none"></path>
+          <path d="M700 540 C740 420 820 320 980 260 C1080 222 1160 140 1200 40" stroke="#ffffff" stroke-width="10" fill="none"></path>
+          <path d="M100 540 C300 420 520 460 760 380 C960 315 1100 330 1240 260" stroke="#C9E9F4" stroke-width="3" fill="none" stroke-dasharray="10 12"></path>
+          <rect x="330" y="180" width="120" height="80" rx="14" fill="rgba(48,182,222,0.08)"></rect>
+          <rect x="520" y="300" width="150" height="95" rx="14" fill="rgba(48,182,222,0.1)"></rect>
+          <rect x="840" y="150" width="130" height="90" rx="14" fill="rgba(48,182,222,0.09)"></rect>
+          <rect x="930" y="330" width="150" height="100" rx="14" fill="rgba(48,182,222,0.12)"></rect>
+          <rect x="180" y="330" width="100" height="70" rx="12" fill="rgba(48,182,222,0.07)"></rect>
+          <circle cx="640" cy="120" r="5" fill="rgba(48,182,222,0.35)"></circle>
+          <circle cx="500" cy="430" r="5" fill="rgba(48,182,222,0.3)"></circle>
+          <circle cx="1050" cy="200" r="5" fill="rgba(48,182,222,0.3)"></circle>
+        </svg>
+        <div style="position: absolute; top: 20px; inset-inline-start: 20px; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border: 1px solid rgba(48,182,222,0.35); border-radius: 999px; padding: 9px 20px; font-size: 13px; font-weight: 800; color: #1E92B8; box-shadow: 0 8px 20px rgba(12,52,70,0.12);">{{ t.mapHint }}</div>
+        <div style="position: absolute; bottom: 20px; inset-inline-end: 20px; width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.92); border: 1px solid rgba(48,182,222,0.35); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(12,52,70,0.12);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1E92B8" stroke-width="1.4"></circle><path d="M12 4 L14 12 L12 20 L10 12 Z" fill="#30B6DE"></path><text x="12" y="3.4" text-anchor="middle" font-size="4.5" fill="#1E92B8" font-weight="bold">N</text></svg>
+        </div>
+
+        <div style="position: absolute; top: 40%; inset-inline-start: 30%;">
+          <sc-if value="{{ pin0Open }}" hint-placeholder-val="{{ false }}">
+            <div class="dam-tip" style="position: absolute; bottom: 74px; left: 50%; transform: translateX(-50%); width: 290px; background: #ffffff; border: 1px solid rgba(48,182,222,0.4); border-radius: 20px; padding: 20px 22px; box-shadow: 0 22px 50px rgba(12,52,70,0.25); z-index: 5;">
+              <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 18px; color: #0C3446;">{{ pin0.name }}</div>
+              <div style="font-size: 13px; color: #5B7A88; line-height: 1.8; margin-top: 6px;">{{ pin0.address }}</div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px;">
+                <a href="tel:01063337333" style="font-weight: 800; font-size: 14.5px; color: #1E92B8; direction: ltr;">01063337333</a>
+                <a href="{{ pin0.url }}" target="_blank" style="background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 800;" style-hover="color: #ffffff;">{{ t.directions }}</a>
+              </div>
+              <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 16px; height: 16px; background: #ffffff; border-right: 1px solid rgba(48,182,222,0.4); border-bottom: 1px solid rgba(48,182,222,0.4);"></div>
+            </div>
+          </sc-if>
+          <button onClick="{{ togglePin0 }}" style="position: relative; background: none; border: none; cursor: pointer; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; transform: translate(-50%, -100%);">
+            <span style="position: absolute; top: -6px; width: 58px; height: 58px; border-radius: 50%; background: rgba(48,182,222,0.25); animation: damPing 2.4s ease-out infinite;"></span>
+            <svg width="46" height="58" viewBox="0 0 46 58" fill="none" style="position: relative; filter: drop-shadow(0 10px 18px rgba(12,52,70,0.35));"><path d="M23 2 C11.4 2 2 11.4 2 23 C2 38 23 56 23 56 S44 38 44 23 C44 11.4 34.6 2 23 2Z" fill="url(#damPinGrad0)"></path><circle cx="23" cy="22" r="8" fill="#ffffff"></circle><defs><linearGradient id="damPinGrad0" x1="0" y1="0" x2="46" y2="58"><stop offset="0" stop-color="#30B6DE"></stop><stop offset="1" stop-color="#0E5372"></stop></linearGradient></defs></svg>
+            <span style="background: rgba(255,255,255,0.94); border: 1px solid rgba(48,182,222,0.4); border-radius: 999px; padding: 6px 16px; font-family: 'Tajawal', sans-serif; font-size: 12.5px; font-weight: 800; color: #0C3446; white-space: nowrap; box-shadow: 0 8px 18px rgba(12,52,70,0.15);">{{ pin0.area }}</span>
+          </button>
+        </div>
+
+        <div style="position: absolute; top: 62%; inset-inline-start: 68%;">
+          <sc-if value="{{ pin1Open }}" hint-placeholder-val="{{ false }}">
+            <div class="dam-tip" style="position: absolute; bottom: 74px; left: 50%; transform: translateX(-50%); width: 290px; background: #ffffff; border: 1px solid rgba(48,182,222,0.4); border-radius: 20px; padding: 20px 22px; box-shadow: 0 22px 50px rgba(12,52,70,0.25); z-index: 5;">
+              <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 18px; color: #0C3446;">{{ pin1.name }}</div>
+              <div style="font-size: 13px; color: #5B7A88; line-height: 1.8; margin-top: 6px;">{{ pin1.address }}</div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px;">
+                <a href="tel:01022399994" style="font-weight: 800; font-size: 14.5px; color: #1E92B8; direction: ltr;">01022399994</a>
+                <a href="{{ pin1.url }}" target="_blank" style="background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 800;" style-hover="color: #ffffff;">{{ t.directions }}</a>
+              </div>
+              <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 16px; height: 16px; background: #ffffff; border-right: 1px solid rgba(48,182,222,0.4); border-bottom: 1px solid rgba(48,182,222,0.4);"></div>
+            </div>
+          </sc-if>
+          <button onClick="{{ togglePin1 }}" style="position: relative; background: none; border: none; cursor: pointer; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; transform: translate(-50%, -100%);">
+            <span style="position: absolute; top: -6px; width: 58px; height: 58px; border-radius: 50%; background: rgba(48,182,222,0.25); animation: damPing 2.4s ease-out infinite 1.2s;"></span>
+            <svg width="46" height="58" viewBox="0 0 46 58" fill="none" style="position: relative; filter: drop-shadow(0 10px 18px rgba(12,52,70,0.35));"><path d="M23 2 C11.4 2 2 11.4 2 23 C2 38 23 56 23 56 S44 38 44 23 C44 11.4 34.6 2 23 2Z" fill="url(#damPinGrad1)"></path><circle cx="23" cy="22" r="8" fill="#ffffff"></circle><defs><linearGradient id="damPinGrad1" x1="0" y1="0" x2="46" y2="58"><stop offset="0" stop-color="#30B6DE"></stop><stop offset="1" stop-color="#0E5372"></stop></linearGradient></defs></svg>
+            <span style="background: rgba(255,255,255,0.94); border: 1px solid rgba(48,182,222,0.4); border-radius: 999px; padding: 6px 16px; font-family: 'Tajawal', sans-serif; font-size: 12.5px; font-weight: 800; color: #0C3446; white-space: nowrap; box-shadow: 0 8px 18px rgba(12,52,70,0.15);">{{ pin1.area }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Contact form and info" style="padding: 90px 24px;">
+    <div class="dam-2col" style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 50px; align-items: start;">
+      <div style="background: #ffffff; border: 1px solid rgba(12,52,70,0.08); border-radius: 26px; padding: 44px; box-shadow: 0 14px 40px rgba(12,52,70,0.08);">
+        <h2 style="font-family: 'El Messiri', serif; font-size: 28px; font-weight: 700; margin: 0; color: #0C3446;">{{ t.formTitle }}</h2>
+        <p style="font-size: 15px; color: #5B7A88; line-height: 1.9; margin: 10px 0 0;">{{ t.formSub }}</p>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top: 28px; background: #EAF7FB; border: 1px solid rgba(48,182,222,0.5); border-radius: 16px; padding: 22px; text-align: center;">
+            <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px; color: #1E92B8;">{{ t.sentTitle }}</div>
+            <div style="font-size: 14.5px; color: #46687A; margin-top: 6px;">{{ t.sentSub }}</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div class="dam-2col-sm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 28px;">
+            <input placeholder="{{ t.fName }}" style="border: 1.5px solid rgba(12,52,70,0.14); border-radius: 13px; padding: 15px 18px; font-family: 'Tajawal', sans-serif; font-size: 15px; color: #0C3446; outline: none;" style-focus="border-color: #30B6DE;">
+            <input placeholder="{{ t.fPhone }}" style="border: 1.5px solid rgba(12,52,70,0.14); border-radius: 13px; padding: 15px 18px; font-family: 'Tajawal', sans-serif; font-size: 15px; color: #0C3446; outline: none;" style-focus="border-color: #30B6DE;">
+            <input placeholder="{{ t.fService }}" style="grid-column: span 2; border: 1.5px solid rgba(12,52,70,0.14); border-radius: 13px; padding: 15px 18px; font-family: 'Tajawal', sans-serif; font-size: 15px; color: #0C3446; outline: none;" style-focus="border-color: #30B6DE;">
+            <textarea placeholder="{{ t.fMsg }}" rows="4" style="grid-column: span 2; border: 1.5px solid rgba(12,52,70,0.14); border-radius: 13px; padding: 15px 18px; font-family: 'Tajawal', sans-serif; font-size: 15px; color: #0C3446; outline: none; resize: vertical;" style-focus="border-color: #30B6DE;"></textarea>
+            <button onClick="{{ send }}" style="grid-column: span 2; background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border: none; border-radius: 999px; padding: 16px; font-family: 'Tajawal', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 10px 26px rgba(48,182,222,0.4);" style-hover="box-shadow: 0 14px 34px rgba(48,182,222,0.55);">{{ t.fSend }}</button>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <sc-for list="{{ clinics }}" as="c" hint-placeholder-count="2">
+          <div style="background: #F4FBFD; border: 1px solid rgba(48,182,222,0.25); border-radius: 22px; padding: 30px;">
+            <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px; color: #0C3446;">{{ c.name }}</div>
+            <div style="font-size: 14.5px; line-height: 1.9; color: #5B7A88; margin-top: 10px;">{{ c.address }}</div>
+            <div style="font-size: 13.5px; color: #1E92B8; font-weight: 700; margin-top: 10px;">{{ c.hours }}</div>
+          </div>
+        </sc-for>
+        <div style="background: linear-gradient(135deg, #0A3950, #1E92B8); border-radius: 22px; padding: 30px; color: #ffffff;">
+          <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px;">{{ t.callTitle }}</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+            <a href="tel:01063337333" style="color: #ffffff; font-weight: 800; font-size: 20px; direction: ltr; text-align: start;" style-hover="color: #8FE0F7;">01063337333</a>
+            <a href="tel:01022399994" style="color: #ffffff; font-weight: 800; font-size: 20px; direction: ltr; text-align: start;" style-hover="color: #8FE0F7;">01022399994</a>
+            <a href="mailto:info@ahmedmarzouk.com" style="color: rgba(255,255,255,0.85); font-size: 14.5px; margin-top: 4px;" style-hover="color: #8FE0F7;">info@ahmedmarzouk.com</a>
+          </div>
+          <div style="font-size: 13.5px; color: rgba(255,255,255,0.75); line-height: 1.8; margin-top: 16px;">{{ t.videoNote }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer data-screen-label="Footer" style="background: #04202E; color: rgba(255,255,255,0.75); padding: 60px 24px 0;">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap; padding-bottom: 40px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #30B6DE, #0E5372); display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: 'El Messiri', serif; font-weight: 700; font-size: 18px;">Dr</span>
+        <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 19px; color: #ffffff;">{{ t.brand }}</span>
+      </div>
+      <div style="display: flex; gap: 22px; font-size: 14px; flex-wrap: wrap;">
+        <a href="Home.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navHome }}</a>
+        <a href="Services.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navServices }}</a>
+        <a href="Cases.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navCases }}</a>
+        <a href="Blogs.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navBlogs }}</a>
+      </div>
+      <div style="direction: ltr; color: #30B6DE; font-weight: 700; font-size: 15px;">01063337333</div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 20px 0; text-align: center; font-size: 13px; color: rgba(255,255,255,0.45);">{{ t.copyright }}</div>
+  </footer>
+
+  <a href="https://wa.me/201063337333" target="_blank" style="position: fixed; bottom: 28px; inset-inline-end: 28px; z-index: 200; width: 60px; height: 60px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px rgba(37,211,102,0.45); animation: damFloat 4s ease-in-out infinite;" style-hover="transform: scale(1.08);">
+    <svg width="30" height="30" viewBox="0 0 32 32" fill="#ffffff"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6 0.8 5 2.3 7L4.5 28l6.3-1.7c1.9 1 4 1.6 6.2 1.6 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-0.3 0.8-1.5 1.5-2.4 1.7-0.6 0.1-1.4 0.2-4.1-0.9-3.4-1.4-5.6-4.9-5.8-5.1-0.2-0.2-1.4-1.9-1.4-3.6s0.9-2.5 1.2-2.9c0.3-0.3 0.7-0.4 0.9-0.4h0.6c0.2 0 0.5-0.1 0.7 0.6 0.3 0.7 0.9 2.4 1 2.5 0.1 0.2 0.1 0.4 0 0.6-0.1 0.2-0.2 0.4-0.4 0.6-0.2 0.2-0.4 0.5-0.5 0.6-0.2 0.2-0.4 0.4-0.2 0.7 0.2 0.4 0.9 1.6 2 2.5 1.4 1.2 2.5 1.6 2.9 1.8 0.4 0.2 0.6 0.1 0.8-0.1 0.2-0.2 0.9-1 1.1-1.4 0.2-0.4 0.5-0.3 0.8-0.2 0.3 0.1 2 0.9 2.3 1.1 0.3 0.2 0.6 0.3 0.6 0.4 0.1 0.3 0.1 0.9-0.2 1.5z"></path></svg>
+  </a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lang&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;ar&quot;, &quot;en&quot;], &quot;default&quot;: &quot;ar&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Settings&quot;}}">
+class Component extends DCLogic {
+  state = {
+    lang: (typeof localStorage !== 'undefined' && localStorage.getItem('dam-lang')) || null,
+    sent: false,
+    activePin: 0
+  };
+
+  renderVals() {
+    const lang = this.state.lang || this.props.lang || 'ar';
+    const isAr = lang === 'ar';
+
+    const T = {
+      ar: {
+        brand: 'د. أحمد مرزوق', brandSub: 'استشاري النساء والتوليد وجراحة الأورام',
+        navHome: 'الرئيسية', navAbout: 'عن الدكتور', navServices: 'خدماتنا', navCases: 'الحالات',
+        navBlogs: 'المدونة', navMedia: 'الإعلام', navContact: 'اتصل بنا',
+        langBtn: 'English',
+        pageTitle: 'اتصل بنا',
+        pageSub: 'احجزي موعدك الآن وتخلصي من آلام أمراض النساء نهائيًا — فريقنا في انتظارك.',
+        mapKicker: 'عياداتنا', mapTitle: 'وصلي إلينا بسهولة',
+        mapHint: 'اضغطي على العلامة لعرض تفاصيل العيادة', directions: 'الاتجاهات',
+        formTitle: 'احجزي موعدك',
+        formSub: 'املئي البيانات وسنتواصل معك لتأكيد الموعد في أقرب وقت.',
+        fName: 'الاسم', fPhone: 'رقم الهاتف', fService: 'الخدمة المطلوبة', fMsg: 'رسالتك (اختياري)', fSend: 'إرسال طلب الحجز',
+        sentTitle: 'تم استلام طلبك بنجاح', sentSub: 'سنتواصل معك خلال ساعات العمل لتأكيد الموعد.',
+        callTitle: 'أو اتصلي مباشرة',
+        videoNote: 'يمكن إجراء استشارة فيديو في حالات الأورام الليفية — توفيرًا للوقت وبُعد المسافات.',
+        copyright: '© 2026 د. أحمد مرزوق — جميع الحقوق محفوظة'
+      },
+      en: {
+        brand: 'Dr. Ahmed Marzouk', brandSub: 'Consultant of OB-GYN & Oncologic Surgery',
+        navHome: 'Home', navAbout: 'About', navServices: 'Our Services', navCases: 'Cases',
+        navBlogs: 'Blogs', navMedia: 'Media', navContact: 'Contact Us',
+        langBtn: 'عربي',
+        pageTitle: 'Contact Us',
+        pageSub: 'Book your appointment now and put gynecological pain behind you — our team is waiting for you.',
+        mapKicker: 'Our clinics', mapTitle: 'Find us easily',
+        mapHint: 'Tap a pin to see clinic details', directions: 'Directions',
+        formTitle: 'Book Your Appointment',
+        formSub: 'Fill in your details and we will contact you shortly to confirm.',
+        fName: 'Name', fPhone: 'Phone number', fService: 'Requested service', fMsg: 'Your message (optional)', fSend: 'Send booking request',
+        sentTitle: 'Your request was received', sentSub: 'We will contact you during working hours to confirm your appointment.',
+        callTitle: 'Or call directly',
+        videoNote: 'Video consultations are available for fibroid cases — saving you time and distance.',
+        copyright: '© 2026 Dr. Ahmed Marzouk — All rights reserved'
+      }
+    };
+
+    const clinics = isAr ? [
+      { name: 'عيادة التجمع الخامس', address: 'سيلفر ستار مول — فوق سوبر ماركت سعودي، الدور الأول.', hours: 'يوميًا ما عدا الجمعة' },
+      { name: 'عيادة مدينة نصر', address: 'شارع مصطفى النحاس — بعد المنهل وبجوار سنتر أنوار المدينة، عمارة 7، الدور الثاني.', hours: 'يوميًا ما عدا الجمعة' }
+    ] : [
+      { name: 'Fifth Settlement Clinic', address: 'Silver Star Mall — above Saoudi Market, 1st floor.', hours: 'Daily except Friday' },
+      { name: 'Nasr City Clinic', address: 'Mostafa El-Nahas St. — next to Anwar El-Madina Center, Building 7, 2nd floor.', hours: 'Daily except Friday' }
+    ];
+
+    const pins = [
+      {
+        name: clinics[0].name,
+        address: clinics[0].address,
+        area: isAr ? 'التجمع الخامس' : 'Fifth Settlement',
+        url: 'https://maps.google.com/?q=Silver+Star+Mall,+New+Cairo,+Egypt'
+      },
+      {
+        name: clinics[1].name,
+        address: clinics[1].address,
+        area: isAr ? 'مدينة نصر' : 'Nasr City',
+        url: 'https://maps.google.com/?q=Mostafa+El-Nahas+Street,+Nasr+City,+Cairo,+Egypt'
+      }
+    ];
+
+    return {
+      t: T[lang],
+      dir: isAr ? 'rtl' : 'ltr',
+      clinics,
+      pin0: pins[0],
+      pin1: pins[1],
+      pin0Open: this.state.activePin === 0,
+      pin1Open: this.state.activePin === 1,
+      togglePin0: () => this.setState(s => ({ activePin: s.activePin === 0 ? -1 : 0 })),
+      togglePin1: () => this.setState(s => ({ activePin: s.activePin === 1 ? -1 : 1 })),
+      sent: this.state.sent,
+      notSent: !this.state.sent,
+      send: () => this.setState({ sent: true }),
+      toggleLang: () => {
+        const next = lang === 'ar' ? 'en' : 'ar';
+        try { localStorage.setItem('dam-lang', next); } catch (e) {}
+        this.setState({ lang: next });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

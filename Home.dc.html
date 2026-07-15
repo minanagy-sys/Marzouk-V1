@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&amp;family=Tajawal:wght@300;400;500;700;800&amp;display=swap" rel="stylesheet">
+  <script src="image-slot.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #ffffff; }
+    a { color: #30B6DE; text-decoration: none; }
+    a:hover { color: #1E92B8; }
+    ::selection { background: rgba(48,182,222,0.25); }
+    @keyframes damFadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes damFadeUpA { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes damFadeUpB { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes damZoomA { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+    @keyframes damZoomB { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: scale(1); } }
+    @keyframes damFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+    @keyframes damFloatSlow { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(6deg); } }
+    @keyframes damPulse { 0%,100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.12); } }
+    @keyframes damEcg { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
+    @keyframes damSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .dam-scroll-row { scrollbar-width: none; }
+    .dam-scroll-row::-webkit-scrollbar { display: none; }
+    @media (max-width: 1080px) {
+      .dam-navrow { flex-wrap: wrap; height: auto !important; padding: 12px 16px !important; row-gap: 10px !important; }
+      .dam-navlinks { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; justify-content: flex-start !important; }
+      .dam-navlinks::-webkit-scrollbar { display: none; }
+      .dam-navlinks a, .dam-navlinks button { white-space: nowrap; flex-shrink: 0; }
+    }
+    @media (max-width: 960px) {
+      .dam-3col { grid-template-columns: 1fr 1fr !important; }
+      .dam-2col { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 640px) {
+      .dam-3col { grid-template-columns: 1fr !important; }
+      .dam-2col-sm { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</helmet>
+<div style="font-family: 'Tajawal', sans-serif; direction: {{ dir }}; color: #0C3446; background: #ffffff; min-height: 100vh;">
+
+  <!-- ============ NAV ============ -->
+  <header data-screen-label="Navigation" style="position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(12,52,70,0.08);">
+    <div class="dam-navrow" style="max-width: 1240px; margin: 0 auto; padding: 0 24px; height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <a href="Home.dc.html" style="display: flex; align-items: center; gap: 12px; color: #0C3446;">
+        <span style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #30B6DE, #0E5372); display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px; box-shadow: 0 6px 16px rgba(48,182,222,0.35);">Dr</span>
+        <span style="display: flex; flex-direction: column; line-height: 1.15;">
+          <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 19px; color: #0C3446;">{{ t.brand }}</span>
+          <span style="font-size: 11.5px; color: #5B7A88; letter-spacing: 0.4px;">{{ t.brandSub }}</span>
+        </span>
+      </a>
+      <nav class="dam-navlinks" style="display: flex; align-items: center; gap: 26px; font-size: 15px; font-weight: 500;">
+        <a href="Home.dc.html" style="color: #30B6DE; font-weight: 700;">{{ t.navHome }}</a>
+        <a href="About.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navAbout }}</a>
+        <a href="Services.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navServices }}</a>
+        <span style="position: relative;">
+          <button onClick="{{ toggleCases }}" style="background: none; border: none; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 500; color: #0C3446; display: flex; align-items: center; gap: 5px; padding: 0;" style-hover="color: #30B6DE;">{{ t.navCases }} <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></button>
+          <sc-if value="{{ casesOpen }}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; top: 34px; inset-inline-start: -12px; background: #ffffff; border: 1px solid rgba(12,52,70,0.08); border-radius: 14px; box-shadow: 0 18px 40px rgba(12,52,70,0.14); padding: 8px; display: flex; flex-direction: column; min-width: 180px; z-index: 10;">
+              <a href="Cases.dc.html#success" style="padding: 10px 14px; border-radius: 9px; color: #0C3446;" style-hover="background: #EAF7FB; color: #30B6DE;">{{ t.navSuccess }}</a>
+              <a href="Cases.dc.html#celebs" style="padding: 10px 14px; border-radius: 9px; color: #0C3446;" style-hover="background: #EAF7FB; color: #30B6DE;">{{ t.navCelebs }}</a>
+            </span>
+          </sc-if>
+        </span>
+        <a href="Blogs.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navBlogs }}</a>
+        <span style="position: relative;">
+          <button onClick="{{ toggleMedia }}" style="background: none; border: none; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 500; color: #0C3446; display: flex; align-items: center; gap: 5px; padding: 0;" style-hover="color: #30B6DE;">{{ t.navMedia }} <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 3l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></button>
+          <sc-if value="{{ mediaOpen }}" hint-placeholder-val="{{ false }}">
+            <span style="position: absolute; top: 34px; inset-inline-start: -12px; background: #ffffff; border: 1px solid rgba(12,52,70,0.08); border-radius: 14px; box-shadow: 0 18px 40px rgba(12,52,70,0.14); padding: 8px; display: flex; flex-direction: column; min-width: 180px; z-index: 10;">
+              <a href="Media.dc.html#gallery" style="padding: 10px 14px; border-radius: 9px; color: #0C3446;" style-hover="background: #EAF7FB; color: #30B6DE;">{{ t.navGallery }}</a>
+              <a href="Media.dc.html#videos" style="padding: 10px 14px; border-radius: 9px; color: #0C3446;" style-hover="background: #EAF7FB; color: #30B6DE;">{{ t.navVideos }}</a>
+            </span>
+          </sc-if>
+        </span>
+        <a href="Contact.dc.html" style="color: #0C3446;" style-hover="color: #30B6DE;">{{ t.navContact }}</a>
+      </nav>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button onClick="{{ toggleLang }}" style="background: #ffffff; border: 1.5px solid rgba(48,182,222,0.5); color: #1E92B8; border-radius: 999px; padding: 8px 16px; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer;" style-hover="background: #EAF7FB;">{{ t.langBtn }}</button>
+        <a href="Contact.dc.html" style="background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border-radius: 999px; padding: 11px 24px; font-weight: 700; font-size: 14.5px; box-shadow: 0 8px 20px rgba(48,182,222,0.4);" style-hover="box-shadow: 0 10px 26px rgba(48,182,222,0.55); color: #ffffff;">{{ t.book }}</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO SLIDER ============ -->
+  <section data-screen-label="Hero slider" style="position: relative; overflow: hidden; background: #04202E; min-height: 94vh; display: flex; flex-direction: column;">
+    <div style="position: absolute; inset: 0; animation: {{ visualAnim }};">
+      <sc-if value="{{ showV1 }}" hint-placeholder-val="{{ true }}">
+        <img src="assets/hero-doctor-dark.jpg" alt="Doctor" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{ heroFocus }} center; transform: {{ heroFlip }};">
+      </sc-if>
+      <sc-if value="{{ showV2 }}" hint-placeholder-val="{{ false }}">
+        <image-slot id="hero-slide-2" shape="rect" src="assets/hero-surgery.jpg" placeholder="{{ t.photoPh }}" style="position: absolute; inset: 0; width: 100%; height: 100%;"></image-slot>
+      </sc-if>
+      <sc-if value="{{ showV3 }}" hint-placeholder-val="{{ false }}">
+        <image-slot id="hero-slide-3" shape="rect" src="assets/hero-prenatal.jpg" placeholder="{{ t.photoPh }}" style="position: absolute; inset: 0; width: 100%; height: 100%;"></image-slot>
+      </sc-if>
+    </div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4,32,46,0) 82%, rgba(4,32,46,0.55) 100%); pointer-events: none;"></div>
+    <div style="position: absolute; top: 14%; inset-inline-start: 5%; width: 200px; height: 200px; border: 1px solid rgba(48,182,222,0.22); border-radius: 50%; animation: damFloatSlow 11s ease-in-out infinite; pointer-events: none;"></div>
+    <div style="position: absolute; top: 60%; inset-inline-start: 46%; width: 80px; height: 80px; border: 1px dashed rgba(48,182,222,0.3); border-radius: 50%; animation: damSpin 30s linear infinite; pointer-events: none;"></div>
+    <svg viewBox="0 0 1200 120" style="position: absolute; bottom: 16%; left: 0; width: 100%; opacity: 0.35; pointer-events: none;" preserveAspectRatio="none">
+      <path d="M0 60 H300 l18 0 12 -34 16 62 14 -46 10 18 h60 l14 -40 16 74 14 -34 h718" stroke="#30B6DE" stroke-width="2.5" fill="none" stroke-dasharray="1200" style="animation: damEcg 5s ease-out infinite;"></path>
+    </svg>
+    <div style="position: absolute; top: 40px; inset-inline-end: 2%; font-family: 'El Messiri', serif; font-weight: 700; font-size: clamp(140px, 18vw, 280px); line-height: 1; color: rgba(143,224,247,0.07); pointer-events: none; user-select: none;">{{ slideNumBig }}</div>
+    <div style="position: relative; max-width: 1240px; margin: 0 auto; width: 100%; padding: 120px 24px 60px; flex: 1; display: flex; align-items: center; box-sizing: border-box;">
+      <div style="max-width: 660px; animation: {{ slideAnim }};">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="width: 54px; height: 2px; background: linear-gradient(90deg, #30B6DE, transparent); border-radius: 2px;"></span>
+          <span style="color: #7FD6EF; font-size: 14px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;">{{ cs.kicker }}</span>
+        </div>
+        <h1 style="font-family: 'El Messiri', serif; font-weight: 700; font-size: clamp(44px, 5.6vw, 80px); line-height: 1.15; color: #ffffff; margin: 28px 0 0; text-shadow: 0 3px 30px rgba(4,32,46,0.75);">
+          {{ cs.t1 }}
+          <span style="display: block; background: linear-gradient(90deg, #30B6DE, #8FE0F7); -webkit-background-clip: text; background-clip: text; color: transparent;">{{ cs.t2 }}</span>
+        </h1>
+        <p style="font-size: clamp(16px, 1.6vw, 19px); line-height: 1.95; color: #ffffff; margin: 24px 0 0; max-width: 560px; text-wrap: pretty; text-shadow: 0 2px 18px rgba(4,32,46,0.8);">{{ cs.sub }}</p>
+        <div style="display: flex; gap: 16px; margin-top: 38px; flex-wrap: wrap;">
+          <a href="Contact.dc.html" style="background: linear-gradient(135deg, #30B6DE, #1E92B8); color: #ffffff; border-radius: 999px; padding: 17px 38px; font-weight: 800; font-size: 16px; box-shadow: 0 12px 30px rgba(48,182,222,0.45);" style-hover="box-shadow: 0 16px 38px rgba(48,182,222,0.6); color: #ffffff;">{{ t.heroCta1 }}</a>
+          <a href="Services.dc.html" style="border: 1.5px solid rgba(255,255,255,0.4); color: #ffffff; border-radius: 999px; padding: 17px 38px; font-weight: 700; font-size: 16px; backdrop-filter: blur(4px);" style-hover="border-color: #30B6DE; color: #8FE0F7;">{{ t.heroCta2 }}</a>
+        </div>
+      </div>
+    </div>
+    <div style="position: relative; border-top: 1px solid rgba(255,255,255,0.14); background: rgba(4,32,46,0.55); backdrop-filter: blur(12px);">
+      <div style="max-width: 1240px; margin: 0 auto; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 18px;">
+          <button onClick="{{ prevSlide }}" style="width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px;" style-hover="border-color: #30B6DE; color: #8FE0F7; background: rgba(48,182,222,0.12);">{{ arrowPrev }}</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3">
+              <button onClick="{{ d.go }}" style="height: 5px; border: none; border-radius: 3px; cursor: pointer; padding: 0; transition: all 0.4s ease; width: {{ d.w }}; background: {{ d.bg }};"></button>
+            </sc-for>
+          </div>
+          <button onClick="{{ nextSlide }}" style="width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px;" style-hover="border-color: #30B6DE; color: #8FE0F7; background: rgba(48,182,222,0.12);">{{ arrowNext }}</button>
+          <span style="font-family: 'El Messiri', serif; font-size: 15px; color: rgba(255,255,255,0.55); letter-spacing: 2px; direction: ltr;">{{ slideCounter }}</span>
+        </div>
+        <div style="display: flex; gap: 36px; flex-wrap: wrap;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 24px; color: #30B6DE;">{{ s.num }}</span>
+              <span style="font-size: 12px; color: rgba(255,255,255,0.6); max-width: 170px;">{{ s.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <button onClick="{{ nextSlide }}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; background: none; border: none; cursor: pointer; font-family: 'Tajawal', sans-serif; text-align: start; padding: 8px 0;" style-hover="opacity: 0.85;">
+          <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: #7FD6EF; text-transform: uppercase;">{{ t.nextLabel }} {{ arrowNext }}</span>
+          <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 17px; color: #ffffff; max-width: 260px;">{{ nextTitle }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MESSAGE ============ -->
+  <section data-screen-label="Doctor message" style="padding: 100px 24px;">
+    <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+      <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.msgKicker }}</div>
+      <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 14px 0 0; color: #0C3446;">{{ t.msgTitle }}</h2>
+      <div style="width: 64px; height: 3px; background: linear-gradient(90deg, #30B6DE, #8FE0F7); border-radius: 3px; margin: 22px auto 0;"></div>
+      <p style="font-size: 18px; line-height: 2.05; color: #46687A; margin: 28px 0 0; text-wrap: pretty;">{{ t.msgBody }}</p>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section data-screen-label="Services" style="padding: 90px 24px; background: linear-gradient(180deg, #F4FBFD 0%, #ffffff 100%);">
+    <div style="max-width: 1240px; margin: 0 auto;">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.svcKicker }}</div>
+          <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 12px 0 0; color: #0C3446;">{{ t.svcTitle }}</h2>
+        </div>
+        <a href="Services.dc.html" style="font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px;">{{ t.viewAll }} <span style="font-size: 18px;">{{ arrow }}</span></a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 24px; margin-top: 48px;">
+        <sc-for list="{{ services }}" as="svc" hint-placeholder-count="4">
+          <div style="position: relative; height: 460px; border-radius: 26px; overflow: hidden; border: 1px solid rgba(12,52,70,0.08); box-shadow: 0 10px 30px rgba(12,52,70,0.08); background: linear-gradient(160deg, #0A3950, #0E5372); transition: all 0.35s ease;" style-hover="transform: translateY(-8px); box-shadow: 0 28px 60px rgba(48,182,222,0.28);">
+            <image-slot id="{{ svc.slotId }}" shape="rect" placeholder="{{ t.photoPh }}" style="position: absolute; inset: 0; width: 100%; height: 100%;"></image-slot>
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4,32,46,0.25) 0%, rgba(4,32,46,0) 38%, rgba(4,32,46,0.55) 62%, rgba(4,32,46,0.94) 100%); pointer-events: none;"></div>
+            <span style="position: absolute; top: 18px; inset-inline-start: 18px; background: rgba(48,182,222,0.92); color: #ffffff; border-radius: 999px; padding: 6px 16px; font-size: 12px; font-weight: 800; letter-spacing: 0.6px; pointer-events: none; box-shadow: 0 6px 16px rgba(4,32,46,0.35);">{{ svc.tag }}</span>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 26px; pointer-events: none;">
+              <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 24px; line-height: 1.45; color: #ffffff; display: block;">{{ svc.title }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VISION & MISSION ============ -->
+  <section data-screen-label="Vision and mission" style="padding: 100px 24px; background: linear-gradient(140deg, #04202E 0%, #0A3950 60%, #0C4661 100%); position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -140px; inset-inline-end: -100px; width: 440px; height: 440px; border-radius: 50%; background: radial-gradient(circle, rgba(48,182,222,0.22), transparent 65%);"></div>
+    <div style="position: absolute; bottom: 10%; inset-inline-start: 4%; width: 160px; height: 160px; border: 1px dashed rgba(48,182,222,0.3); border-radius: 50%; animation: damSpin 40s linear infinite;"></div>
+    <div style="max-width: 1240px; margin: 0 auto; position: relative;">
+      <div style="text-align: center;">
+        <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.vmKicker }}</div>
+        <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 12px 0 0; color: #ffffff;">{{ t.vmTitle }}</h2>
+      </div>
+      <div class="dam-3col" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 54px;">
+        <sc-for list="{{ vm }}" as="v" hint-placeholder-count="3">
+          <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(48,182,222,0.25); border-radius: 24px; padding: 38px 32px; backdrop-filter: blur(6px);" style-hover="border-color: rgba(48,182,222,0.6); background: rgba(48,182,222,0.08);">
+            <div style="font-family: 'El Messiri', serif; font-size: 44px; font-weight: 700; color: rgba(48,182,222,0.45);">{{ v.num }}</div>
+            <div style="font-family: 'El Messiri', serif; font-size: 24px; font-weight: 700; color: #ffffff; margin-top: 10px;">{{ v.title }}</div>
+            <p style="font-size: 15px; line-height: 1.95; color: rgba(255,255,255,0.7); margin: 14px 0 0;">{{ v.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY CHOOSE US ============ -->
+  <section data-screen-label="Why choose us" style="padding: 100px 24px;">
+    <div class="dam-2col" style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px; align-items: center;">
+      <div>
+        <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.whyKicker }}</div>
+        <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 14px 0 0; color: #0C3446; line-height: 1.3;">{{ t.whyTitle }}</h2>
+        <p style="font-size: 16.5px; line-height: 2; color: #46687A; margin: 20px 0 0; text-wrap: pretty;">{{ t.whyBody }}</p>
+        <a href="About.dc.html" style="display: inline-flex; margin-top: 30px; background: #0C3446; color: #ffffff; border-radius: 999px; padding: 14px 30px; font-weight: 700; font-size: 15px;" style-hover="background: #1E92B8; color: #ffffff;">{{ t.whyCta }}</a>
+      </div>
+      <div class="dam-2col-sm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px;">
+        <sc-for list="{{ why }}" as="w" hint-placeholder-count="4">
+          <div style="background: #F4FBFD; border: 1px solid rgba(48,182,222,0.2); border-radius: 20px; padding: 30px 26px;" style-hover="background: #EAF7FB; border-color: rgba(48,182,222,0.5);">
+            <span style="width: 52px; height: 52px; border-radius: 50%; background: #ffffff; border: 1px solid rgba(48,182,222,0.4); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1E92B8; box-shadow: 0 6px 14px rgba(48,182,222,0.15); font-family: 'El Messiri', serif; font-weight: 700;">{{ w.glyph }}</span>
+            <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 19px; color: #0C3446; margin-top: 16px;">{{ w.title }}</div>
+            <div style="font-size: 14px; line-height: 1.8; color: #5B7A88; margin-top: 8px;">{{ w.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CELEBRITIES STRIP ============ -->
+  <section data-screen-label="Celebrity cases" style="padding: 90px 0; background: linear-gradient(180deg, #F4FBFD 0%, #ffffff 100%); overflow: hidden;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.celebKicker }}</div>
+        <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 12px 0 0; color: #0C3446;">{{ t.celebTitle }}</h2>
+      </div>
+      <a href="Cases.dc.html#celebs" style="font-weight: 700; font-size: 15px;">{{ t.viewAll }} {{ arrow }}</a>
+    </div>
+    <div class="dam-scroll-row" style="display: flex; gap: 22px; overflow-x: auto; padding: 44px 24px 10px; scroll-snap-type: x mandatory; max-width: 1240px; margin: 0 auto;">
+      <sc-for list="{{ celebs }}" as="c" hint-placeholder-count="6">
+        <a href="Cases.dc.html#celebs" style="flex: 0 0 250px; scroll-snap-align: start; background: #ffffff; border: 1px solid rgba(12,52,70,0.08); border-radius: 22px; padding: 26px; text-align: center; color: #0C3446; box-shadow: 0 4px 14px rgba(12,52,70,0.05);" style-hover="transform: translateY(-6px); box-shadow: 0 20px 44px rgba(48,182,222,0.18); color: #0C3446;">
+          <span style="display: block; width: 110px; height: 110px; margin: 0 auto; border-radius: 50%; padding: 4px; background: linear-gradient(135deg, #30B6DE, #8FE0F7);">
+            <image-slot id="{{ c.slotId }}" shape="circle" style="width: 102px; height: 102px;" placeholder="{{ t.photoPh }}"></image-slot>
+          </span>
+          <span style="display: block; font-family: 'El Messiri', serif; font-weight: 700; font-size: 18px; margin-top: 18px;">{{ c.name }}</span>
+          <span style="display: block; font-size: 13px; color: #5B7A88; margin-top: 6px; line-height: 1.7;">{{ c.caption }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ============ BOOKING CTA ============ -->
+  <section data-screen-label="Booking CTA" style="padding: 40px 24px 100px;">
+    <div class="dam-2col" style="max-width: 1240px; margin: 0 auto; background: linear-gradient(135deg, #0A3950 0%, #1E92B8 70%, #30B6DE 100%); border-radius: 30px; padding: clamp(28px, 5vw, 64px) clamp(22px, 4.5vw, 56px); position: relative; overflow: hidden; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 40px; align-items: center;">
+      <div style="position: absolute; top: -80px; inset-inline-end: -60px; width: 300px; height: 300px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);"></div>
+      <div style="position: absolute; bottom: -110px; inset-inline-end: 60px; width: 240px; height: 240px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.25); animation: damSpin 36s linear infinite;"></div>
+      <div style="position: relative;">
+        <h2 style="font-family: 'El Messiri', serif; font-size: clamp(28px, 3vw, 40px); font-weight: 700; color: #ffffff; margin: 0; line-height: 1.35;">{{ t.ctaTitle }}</h2>
+        <p style="font-size: 16px; line-height: 1.95; color: rgba(255,255,255,0.85); margin: 16px 0 0; max-width: 560px;">{{ t.ctaBody }}</p>
+      </div>
+      <div style="position: relative; display: flex; flex-direction: column; gap: 14px;">
+        <a href="Contact.dc.html" style="background: #ffffff; color: #0A3950; border-radius: 999px; padding: 16px 32px; font-weight: 800; font-size: 16px; text-align: center; box-shadow: 0 12px 30px rgba(4,32,46,0.3);" style-hover="transform: translateY(-2px); color: #0A3950;">{{ t.book }}</a>
+        <a href="tel:01063337333" style="border: 1.5px solid rgba(255,255,255,0.5); color: #ffffff; border-radius: 999px; padding: 15px 32px; font-weight: 700; font-size: 16px; text-align: center; direction: ltr;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.1); color: #ffffff;">01063337333</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NEWS ============ -->
+  <section data-screen-label="News" style="padding: 0 24px 100px;">
+    <div style="max-width: 1240px; margin: 0 auto;">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+        <div>
+          <div style="color: #30B6DE; font-weight: 800; font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">{{ t.newsKicker }}</div>
+          <h2 style="font-family: 'El Messiri', serif; font-size: clamp(30px, 3.4vw, 44px); font-weight: 700; margin: 12px 0 0; color: #0C3446;">{{ t.newsTitle }}</h2>
+        </div>
+        <a href="Blogs.dc.html" style="font-weight: 700; font-size: 15px;">{{ t.viewAll }} {{ arrow }}</a>
+      </div>
+      <div class="dam-3col" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 46px;">
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
+          <a href="Blogs.dc.html" style="background: #ffffff; border: 1px solid rgba(12,52,70,0.08); border-radius: 22px; overflow: hidden; color: #0C3446; box-shadow: 0 4px 14px rgba(12,52,70,0.04); display: flex; flex-direction: column;" style-hover="transform: translateY(-6px); box-shadow: 0 20px 44px rgba(48,182,222,0.16); color: #0C3446;">
+            <span style="display: block; height: 190px;">
+              <image-slot id="{{ n.slotId }}" shape="rect" placeholder="{{ t.photoPh }}" style="width: 100%; height: 190px;"></image-slot>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 10px; padding: 24px;">
+              <span style="font-size: 12.5px; font-weight: 700; color: #30B6DE; letter-spacing: 0.5px;">{{ n.date }}</span>
+              <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 19px; line-height: 1.5;">{{ n.title }}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer" style="background: #04202E; color: rgba(255,255,255,0.75); padding: 70px 24px 0;">
+    <div class="dam-3col" style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 0.8fr 1.2fr; gap: 50px; padding-bottom: 50px;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #30B6DE, #0E5372); display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px;">Dr</span>
+          <span style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 20px; color: #ffffff;">{{ t.brand }}</span>
+        </div>
+        <p style="font-size: 14.5px; line-height: 2; margin: 20px 0 0; max-width: 380px;">{{ t.footerAbout }}</p>
+        <div style="display: flex; gap: 12px; margin-top: 22px;">
+          <a href="https://www.facebook.com/Dr.AhmedMarzouk.official/" target="_blank" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(48,182,222,0.4); display: flex; align-items: center; justify-content: center; color: #30B6DE; font-weight: 800; font-size: 15px;" style-hover="background: rgba(48,182,222,0.15); color: #8FE0F7;">f</a>
+          <a href="https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ" target="_blank" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(48,182,222,0.4); display: flex; align-items: center; justify-content: center; color: #30B6DE;" style-hover="background: rgba(48,182,222,0.15); color: #8FE0F7;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6 4.5v7l6-3.5-6-3.5z"></path></svg>
+          </a>
+          <a href="https://www.instagram.com/dr.ahmed.marzok/" target="_blank" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(48,182,222,0.4); display: flex; align-items: center; justify-content: center; color: #30B6DE;" style-hover="background: rgba(48,182,222,0.15); color: #8FE0F7;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4"></rect><circle cx="8" cy="8" r="3.2"></circle><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none"></circle></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 17px; color: #ffffff; margin-bottom: 20px;">{{ t.footerLinks }}</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14.5px;">
+          <a href="Home.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navHome }}</a>
+          <a href="About.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navAbout }}</a>
+          <a href="Services.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navServices }}</a>
+          <a href="Cases.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navCases }}</a>
+          <a href="Blogs.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navBlogs }}</a>
+          <a href="Contact.dc.html" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">{{ t.navContact }}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'El Messiri', serif; font-weight: 700; font-size: 17px; color: #ffffff; margin-bottom: 20px;">{{ t.footerContact }}</div>
+        <div style="display: flex; flex-direction: column; gap: 16px; font-size: 14px; line-height: 1.9;">
+          <div>{{ t.clinic1 }}</div>
+          <div>{{ t.clinic2 }}</div>
+          <div style="direction: ltr; text-align: end; color: #30B6DE; font-weight: 700; font-size: 15px;">01063337333 · 01022399994</div>
+          <a href="mailto:info@ahmedmarzouk.com" style="color: rgba(255,255,255,0.75);" style-hover="color: #30B6DE;">info@ahmedmarzouk.com</a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 22px 0; text-align: center; font-size: 13px; color: rgba(255,255,255,0.45);">{{ t.copyright }}</div>
+  </footer>
+
+  <!-- ============ WHATSAPP FLOAT ============ -->
+  <sc-if value="{{ showWhatsapp }}" hint-placeholder-val="{{ true }}">
+    <a href="https://wa.me/201063337333" target="_blank" style="position: fixed; bottom: 28px; inset-inline-end: 28px; z-index: 200; width: 60px; height: 60px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 30px rgba(37,211,102,0.45); animation: damFloat 4s ease-in-out infinite;" style-hover="transform: scale(1.08);">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="#ffffff"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6 0.8 5 2.3 7L4.5 28l6.3-1.7c1.9 1 4 1.6 6.2 1.6 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-0.3 0.8-1.5 1.5-2.4 1.7-0.6 0.1-1.4 0.2-4.1-0.9-3.4-1.4-5.6-4.9-5.8-5.1-0.2-0.2-1.4-1.9-1.4-3.6s0.9-2.5 1.2-2.9c0.3-0.3 0.7-0.4 0.9-0.4h0.6c0.2 0 0.5-0.1 0.7 0.6 0.3 0.7 0.9 2.4 1 2.5 0.1 0.2 0.1 0.4 0 0.6-0.1 0.2-0.2 0.4-0.4 0.6-0.2 0.2-0.4 0.5-0.5 0.6-0.2 0.2-0.4 0.4-0.2 0.7 0.2 0.4 0.9 1.6 2 2.5 1.4 1.2 2.5 1.6 2.9 1.8 0.4 0.2 0.6 0.1 0.8-0.1 0.2-0.2 0.9-1 1.1-1.4 0.2-0.4 0.5-0.3 0.8-0.2 0.3 0.1 2 0.9 2.3 1.1 0.3 0.2 0.6 0.3 0.6 0.4 0.1 0.3 0.1 0.9-0.2 1.5z"></path></svg>
+    </a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lang&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;ar&quot;, &quot;en&quot;], &quot;default&quot;: &quot;ar&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Settings&quot;}, &quot;showWhatsapp&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Settings&quot;}}">
+class Component extends DCLogic {
+  state = {
+    lang: (typeof localStorage !== 'undefined' && localStorage.getItem('dam-lang')) || null,
+    casesOpen: false,
+    mediaOpen: false,
+    slide: 0
+  };
+
+  componentDidMount() {
+    this.startTimer();
+  }
+  componentWillUnmount() {
+    if (this._timer) clearInterval(this._timer);
+  }
+  startTimer() {
+    if (this._timer) clearInterval(this._timer);
+    this._timer = setInterval(() => {
+      this.setState(s => ({ slide: (s.slide + 1) % 3 }));
+    }, 6500);
+  }
+  goSlide(n) {
+    this.setState({ slide: ((n % 3) + 3) % 3 });
+    this.startTimer();
+  }
+
+  getLang() {
+    return this.state.lang || this.props.lang || 'ar';
+  }
+
+  renderVals() {
+    const lang = this.getLang();
+    const isAr = lang === 'ar';
+    const slide = this.state.slide;
+
+    const T = {
+      ar: {
+        brand: 'د. أحمد مرزوق',
+        brandSub: 'استشاري النساء والتوليد وجراحة الأورام',
+        navHome: 'الرئيسية', navAbout: 'عن الدكتور', navServices: 'خدماتنا', navCases: 'الحالات',
+        navSuccess: 'قصص نجاح', navCelebs: 'المشاهير', navBlogs: 'المدونة', navMedia: 'الإعلام',
+        navGallery: 'الصور', navVideos: 'فيديوهات', navContact: 'اتصل بنا',
+        book: 'احجز الآن', langBtn: 'English', more: 'المزيد', viewAll: 'عرض الكل', nextLabel: 'التالي',
+        heroCta1: 'احجزي موعدك', heroCta2: 'تعرفي على خدماتنا',
+        msgKicker: 'رسالة من الدكتور', msgTitle: 'رسالة من د. أحمد مرزوق',
+        msgBody: 'نُكرس جهودنا لتقديم أعلى مستوى من الرعاية في بيئة مريحة بدون ألم وبأجمل الذكريات؛ نساعدك على الترحيب بأحدث فرد في عائلتك عبر مجموعة كاملة من خدمات الأمومة — من متابعة ما قبل الولادة إلى تجربة الولادة بدون ألم بنوعيها الطبيعية والقيصرية — إلى جانب الرعاية المتخصصة في الأورام الليفية المعقدة وبطانة الرحم المهاجرة وجراحات التجميل النسائي. أنتِ تستحقين حياة مليئة بالصحة؛ فأنتِ أساس عائلتك وعمودها.',
+        svcKicker: 'خدماتنا', svcTitle: 'رعاية متكاملة لصحة المرأة',
+        vmKicker: 'من نحن', vmTitle: 'رسالتنا ورؤيتنا وقيمنا',
+        whyKicker: 'لماذا تختارنا؟', whyTitle: 'خبرة تطمئنين إليها في أدق اللحظات',
+        whyBody: 'أكثر من 10,000 ولادة بدون ألم، ومهارة نادرة في استئصال الأورام المعقدة مع الحفاظ على الرحم — رعاية إنسانية قبل أن تكون طبية.',
+        whyCta: 'تعرفي على الدكتور',
+        celebKicker: 'المشاهير', celebTitle: 'نجوم وثقوا بنا في أجمل لحظاتهم',
+        ctaTitle: 'احجزي موعدك مع د. أحمد مرزوق',
+        ctaBody: 'يمكنك الحجز الآن والتخلص من آلام أمراض النساء نهائيًا، كما يمكنك إجراء استشارة فيديو في حالات الأورام الليفية توفيرًا للوقت وبُعد المسافات.',
+        newsKicker: 'آخر الأخبار', newsTitle: 'من المدونة والأخبار',
+        footerAbout: 'كل امرأة تستحق ولادة بدون ألم، وأن تستمتع باليوم الذي تلتقي فيه بصغيرها وتعتز به مدى الحياة، ومن حقها الحفاظ على جنينها وقدرتها على الإنجاب حتى مع الأورام الليفية المعقدة.',
+        footerLinks: 'روابط سريعة', footerContact: 'تواصل معنا',
+        clinic1: 'عيادة التجمع الخامس: سيلفر ستار مول — فوق سوبر ماركت سعودي، الدور الأول.',
+        clinic2: 'عيادة مدينة نصر: شارع مصطفى النحاس — عمارة 7، الدور الثاني.',
+        copyright: '© 2026 د. أحمد مرزوق — جميع الحقوق محفوظة',
+        photoPh: 'أسقطي صورة هنا'
+      },
+      en: {
+        brand: 'Dr. Ahmed Marzouk',
+        brandSub: 'Consultant of OB-GYN & Oncologic Surgery',
+        navHome: 'Home', navAbout: 'About', navServices: 'Our Services', navCases: 'Cases',
+        navSuccess: 'Success Stories', navCelebs: 'Celebrities', navBlogs: 'Blogs', navMedia: 'Media',
+        navGallery: 'Gallery', navVideos: 'Videos', navContact: 'Contact Us',
+        book: 'Book Now', langBtn: 'عربي', more: 'Read more', viewAll: 'View all', nextLabel: 'Next',
+        heroCta1: 'Book Your Visit', heroCta2: 'Explore Services',
+        msgKicker: 'A word from the doctor', msgTitle: 'A Message from Dr. Ahmed Marzouk',
+        msgBody: 'We dedicate ourselves to the highest level of care in a comfortable, pain-free environment with the most beautiful memories. We help you welcome the newest member of your family through a complete range of maternity services — from prenatal follow-up to pain-free natural and cesarean delivery — alongside specialized care for complex fibroids, endometriosis, and cosmetic gynecology. You deserve a life full of health; you are the foundation of your family.',
+        svcKicker: 'Our Services', svcTitle: 'Complete Care for Women\u2019s Health',
+        vmKicker: 'Who we are', vmTitle: 'Our Mission, Vision & Values',
+        whyKicker: 'Why choose us?', whyTitle: 'Expertise you can trust in the most delicate moments',
+        whyBody: 'Over 10,000 pain-free deliveries and rare skill in removing complex tumors while preserving the uterus — humane care before medical care.',
+        whyCta: 'Meet the doctor',
+        celebKicker: 'Celebrities', celebTitle: 'Stars who trusted us with their finest moments',
+        ctaTitle: 'Book your appointment with Dr. Ahmed Marzouk',
+        ctaBody: 'Book now and put gynecological pain behind you. Video consultations are available for fibroid cases — saving you time and distance.',
+        newsKicker: 'Latest news', newsTitle: 'From the Blog & News',
+        footerAbout: 'Every woman deserves a pain-free delivery — to enjoy and cherish the day she meets her little one, and to preserve her pregnancy and fertility even with complex fibroids.',
+        footerLinks: 'Quick Links', footerContact: 'Contact',
+        clinic1: 'Fifth Settlement Clinic: Silver Star Mall — above Saoudi Market, 1st floor.',
+        clinic2: 'Nasr City Clinic: Mostafa El-Nahas St. — Building 7, 2nd floor.',
+        copyright: '© 2026 Dr. Ahmed Marzouk — All rights reserved',
+        photoPh: 'Drop a photo here'
+      }
+    };
+
+    const slides = isAr ? [
+      {
+        kicker: 'استشاري النساء والتوليد وجراحة الأورام',
+        t1: 'مبتكر الولادة', t2: 'بدون ألم في مصر',
+        sub: 'رحلة أمومة كاملة بأعلى مستوى من الرعاية — ولادة طبيعية وقيصرية بدون ألم، بأجمل الذكريات ومن أول لحظة.',
+        cardTitle: 'د. أحمد مرزوق', cardSub: 'استشاري النساء والتوليد وجراحة الأورام',
+        badgeTitle: 'ولادة بدون ألم', badgeSub: 'تجربة آمنة ومريحة بأجمل الذكريات'
+      },
+      {
+        kicker: 'جراحة الأورام المعقدة',
+        t1: 'أورام معقدة تُستأصل', t2: 'ورحم يبقى محفوظًا',
+        sub: 'مهارة نادرة في استئصال الأورام الليفية المعقدة وبطانة الرحم المهاجرة مع الحفاظ على الرحم والقدرة على الإنجاب — حتى في أصعب الحالات.',
+        cardTitle: 'جراحة الأورام', cardSub: 'استئصال ورم 14 كجم مع الحفاظ على الجنين',
+        badgeTitle: 'الحفاظ على الرحم', badgeSub: 'قدرتك على الإنجاب حق نحميه'
+      },
+      {
+        kicker: 'التجميل النسائي',
+        t1: 'استعيدي ثقتك', t2: 'ورشاقتك من جديد',
+        sub: 'جراحات تجميل نسائي دقيقة بخصوصية تامة، ويمكن إجراء شد البطن مع القيصرية لتستعيدي رشاقتك بعد الولادة مباشرةً.',
+        cardTitle: 'التجميل النسائي', cardSub: 'شد البطن مع القيصرية في جلسة واحدة',
+        badgeTitle: 'خصوصية تامة', badgeSub: 'رعاية تليق بك وبثقتك'
+      }
+    ] : [
+      {
+        kicker: 'Consultant of Obstetrics, Gynecology & Oncologic Surgery',
+        t1: 'Egypt\u2019s Pioneer of', t2: 'Pain-Free Delivery',
+        sub: 'A complete motherhood journey with the highest level of care — natural and cesarean pain-free delivery, with beautiful memories from the very first moment.',
+        cardTitle: 'Dr. Ahmed Marzouk', cardSub: 'Consultant of OB-GYN & Oncologic Surgery',
+        badgeTitle: 'Pain-Free Delivery', badgeSub: 'A safe, comfortable experience'
+      },
+      {
+        kicker: 'Complex Tumor Surgery',
+        t1: 'Complex tumors removed,', t2: 'the uterus preserved',
+        sub: 'Rare skill in removing complex fibroids and treating endometriosis while preserving the uterus and fertility — even in the hardest cases.',
+        cardTitle: 'Tumor Surgery', cardSub: 'A 14 kg tumor removed — fetus preserved',
+        badgeTitle: 'Uterus Preserved', badgeSub: 'Your fertility is a right we protect'
+      },
+      {
+        kicker: 'Cosmetic Gynecology',
+        t1: 'Regain your confidence', t2: 'and your figure',
+        sub: 'Precise cosmetic gynecology with complete privacy — a tummy tuck can be performed with your cesarean so you regain your figure right after delivery.',
+        cardTitle: 'Cosmetic Gynecology', cardSub: 'Tummy tuck with cesarean in one session',
+        badgeTitle: 'Complete Privacy', badgeSub: 'Care worthy of your confidence'
+      }
+    ];
+
+    const stats = isAr ? [
+      { num: '+10,000', label: 'ولادة بدون ألم' },
+      { num: '14 كجم', label: 'أكبر ورم مستأصل مع الحفاظ على الجنين' },
+      { num: 'عيادتان', label: 'التجمع الخامس ومدينة نصر' }
+    ] : [
+      { num: '10,000+', label: 'Pain-free deliveries' },
+      { num: '14 kg', label: 'Largest tumor removed while preserving the fetus' },
+      { num: '2 Clinics', label: 'Fifth Settlement & Nasr City' }
+    ];
+
+    const services = (isAr ? [
+      { tag: 'ولادة', title: 'الولادة القيصرية بدون ألم', desc: 'تجربة قيصرية آمنة ومطمئنة بدون ألم، بتقنيات حديثة تحفظ لك أجمل لحظات استقبال طفلك.' },
+      { tag: 'ولادة', title: 'الولادة الطبيعية بدون ألم', desc: 'ولادة طبيعية هادئة بدون معاناة، مع متابعة دقيقة قبل الولادة وحتى أول احتضان.' },
+      { tag: 'جراحة أورام', title: 'استئصال الأورام الليفية المعقدة', desc: 'مهارة نادرة في استئصال الأورام المعقدة مع الحفاظ على الرحم والقدرة على الإنجاب.' },
+      { tag: 'تجميل', title: 'التجميل النسائي', desc: 'جراحات تجميل نسائي دقيقة تعيد لك الثقة والراحة، ويمكن إجراء شد البطن مع القيصرية.' }
+    ] : [
+      { tag: 'Delivery', title: 'Pain-Free Cesarean Delivery', desc: 'A safe, reassuring cesarean experience without pain — preserving your most beautiful first moments.' },
+      { tag: 'Delivery', title: 'Pain-Free Natural Delivery', desc: 'A calm natural birth without suffering, with careful follow-up through the first embrace.' },
+      { tag: 'Tumor surgery', title: 'Complex Fibroid Removal', desc: 'Rare skill in removing complex tumors while preserving the uterus and fertility.' },
+      { tag: 'Cosmetic', title: 'Cosmetic Gynecology', desc: 'Precise cosmetic procedures that restore confidence — tummy tuck available with cesarean.' }
+    ]).map((s, i) => Object.assign({ slotId: 'svc-home-' + (i + 1) }, s));
+
+    const vm = isAr ? [
+      { num: '01', title: 'رسالتنا', body: 'تقديم علاج متخصص لأمراض النساء والتوليد لدعم المرأة صحيًا، والمساعدة في تحقيق الشفاء التام والسريع، وحماية حقها في الرعاية الإنجابية الكاملة.' },
+      { num: '02', title: 'رؤيتنا', body: 'أن تكون كل زيارة استشارة إيجابية وبناءة؛ نقدم مستوى رعاية لائقًا وفريدًا يريح المرأة جسديًا ونفسيًا في مجال أمراض النساء والتوليد.' },
+      { num: '03', title: 'قيمنا', body: 'التميز في الرعاية الصحية النسائية، والتطور بتطبيق التكنولوجيا المبتكرة في الوقت المناسب، والنزاهة باتباع الأسس الأخلاقية في كل قرار.' }
+    ] : [
+      { num: '01', title: 'Our Mission', body: 'Specialized OB-GYN treatment that supports women\u2019s health, helps achieve full and rapid recovery, and protects the right to complete reproductive care.' },
+      { num: '02', title: 'Our Vision', body: 'Every visit should be a positive, constructive consultation — a unique standard of care that puts women at ease, physically and emotionally.' },
+      { num: '03', title: 'Our Values', body: 'Excellence in women\u2019s healthcare, progress through innovative technology delivered at the right time, and integrity in every decision.' }
+    ];
+
+    const why = isAr ? [
+      { glyph: '\u2695', title: 'طبيب محترف', desc: 'خبرة طويلة واحترافية عالية في أدق جراحات النساء والتوليد.' },
+      { glyph: '\u2661', title: 'ولادة بدون ألم', desc: 'مبتكر تجربة الولادة بدون ألم في مصر بنوعيها الطبيعية والقيصرية.' },
+      { glyph: '\u2740', title: 'استئصال الأورام المعقدة', desc: 'مهارة نادرة في الحالات المعقدة مع الحفاظ على الرحم.' },
+      { glyph: '\u23F1', title: 'رعاية في الطوارئ', desc: 'استجابة سريعة في أي وقت — حتى الساعة 3 فجرًا.' }
+    ] : [
+      { glyph: '\u2695', title: 'Professional Doctor', desc: 'Long experience and high professionalism in the most delicate OB-GYN surgeries.' },
+      { glyph: '\u2661', title: 'Pain-Free Delivery', desc: 'Pioneer of the pain-free birth experience in Egypt — natural and cesarean.' },
+      { glyph: '\u2740', title: 'Complex Tumor Removal', desc: 'Rare skill in complex cases while preserving the uterus.' },
+      { glyph: '\u23F1', title: 'Emergency Care', desc: 'Rapid response at any hour — even 3 a.m.' }
+    ];
+
+    const celebs = (isAr ? [
+      { name: 'رنا سماحة', caption: 'المطربة — ولادة بدون ألم وطلق الساعة 2 فجرًا' },
+      { name: 'إنجي يحيى', caption: 'مذيعة ON Sport — قيصرية بدون ألم لتوأم' },
+      { name: 'محمد مجدي «قفشة»', caption: 'نجم منتخب مصر — ولادة مالك' },
+      { name: 'محمود الليثي', caption: 'الفنان — ولادة ابنه البكر يونس' },
+      { name: 'أيمن الكاشف', caption: 'المعلق الرياضي — ولادة ابنه هشام' },
+      { name: 'خلود الباشا', caption: 'الفنانة — قيصرية بدون ألم' }
+    ] : [
+      { name: 'Rana Samaha', caption: 'Singer — pain-free delivery at 2 a.m.' },
+      { name: 'Engy Yehia', caption: 'ON Sport anchor — pain-free cesarean twins' },
+      { name: 'Mohamed Magdy', caption: 'Egypt national team star — baby Malek' },
+      { name: 'Mahmoud El-Leithy', caption: 'Actor — his firstborn Younes' },
+      { name: 'Ayman El-Kashef', caption: 'Sports commentator — baby Hisham' },
+      { name: 'Kholoud El-Basha', caption: 'Actress — pain-free cesarean' }
+    ]).map((c, i) => Object.assign({ slotId: 'celeb-' + (i + 1) }, c));
+
+    const news = (isAr ? [
+      { date: '24 مارس 2021', title: 'الاحتفال بعشرة آلاف حالة من الولادة بدون ألم' },
+      { date: '7 يونيو 2017', title: 'افتتاح فرع التجمع الخامس' },
+      { date: '10 أكتوبر 2016', title: 'افتتاح عيادة مدينة نصر' }
+    ] : [
+      { date: 'Mar 24, 2021', title: 'Celebrating 10,000 pain-free deliveries' },
+      { date: 'Jun 7, 2017', title: 'Fifth Settlement branch opening' },
+      { date: 'Oct 10, 2016', title: 'Nasr City clinic opening' }
+    ]).map((n, i) => Object.assign({ slotId: 'news-' + (i + 1) }, n));
+
+    const even = slide % 2 === 0;
+    const dots = slides.map((s, i) => ({
+      go: () => this.goSlide(i),
+      w: i === slide ? '44px' : '18px',
+      bg: i === slide ? '#30B6DE' : 'rgba(255,255,255,0.25)'
+    }));
+
+    return {
+      t: T[lang],
+      dir: isAr ? 'rtl' : 'ltr',
+      arrow: isAr ? '←' : '→',
+      arrowPrev: isAr ? '→' : '←',
+      arrowNext: isAr ? '←' : '→',
+      cs: slides[slide],
+      overlayGrad: 'linear-gradient(' + (isAr ? '270deg' : '90deg') + ', rgba(4,32,46,0.96) 20%, rgba(4,32,46,0.72) 45%, rgba(4,32,46,0.08) 78%)',
+      heroFocus: '78%',
+      heroFlip: isAr ? 'scaleX(-1)' : 'none',
+      nextTitle: slides[(slide + 1) % 3].t1 + ' ' + slides[(slide + 1) % 3].t2,
+      slideAnim: (even ? 'damFadeUpA' : 'damFadeUpB') + ' 0.85s ease-out both',
+      visualAnim: (even ? 'damZoomA' : 'damZoomB') + ' 0.9s ease-out both',
+      slideCounter: '0' + (slide + 1) + ' / 03',
+      slideNumBig: '0' + (slide + 1),
+      showV1: slide === 0, showV2: slide === 1, showV3: slide === 2,
+      dots,
+      stats, services, vm, why, celebs, news,
+      casesOpen: this.state.casesOpen,
+      mediaOpen: this.state.mediaOpen,
+      showWhatsapp: this.props.showWhatsapp ?? true,
+      prevSlide: () => this.goSlide(this.state.slide - 1),
+      nextSlide: () => this.goSlide(this.state.slide + 1),
+      toggleLang: () => {
+        const next = lang === 'ar' ? 'en' : 'ar';
+        try { localStorage.setItem('dam-lang', next); } catch (e) {}
+        this.setState({ lang: next });
+      },
+      toggleCases: () => this.setState(s => ({ casesOpen: !s.casesOpen, mediaOpen: false })),
+      toggleMedia: () => this.setState(s => ({ mediaOpen: !s.mediaOpen, casesOpen: false }))
+    };
+  }
+}
+</script>
+</body>
+</html>
