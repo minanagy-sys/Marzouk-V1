@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { El_Messiri, Tajawal } from "next/font/google";
 import { LangProvider } from "@/lib/lang";
+import { SITE } from "@/lib/site";
 import "./globals.css";
 
 // Fonts loaded/optimized by Next — exposed as CSS variables used across the site.
@@ -19,9 +20,31 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: "د. أحمد مرزوق | Dr. Ahmed Marzouk",
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: "د. أحمد مرزوق | Dr. Ahmed Marzouk",
+    template: "%s | د. أحمد مرزوق",
+  },
   description:
     "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",
+  keywords: [
+    "دكتور نساء وتوليد",
+    "ولادة بدون ألم",
+    "استئصال الأورام الليفية",
+    "التجمع الخامس",
+    "مدينة نصر",
+    "Dr Ahmed Marzouk",
+    "OB-GYN Cairo",
+    "pain-free delivery Egypt",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: "د. أحمد مرزوق",
+    locale: "ar_EG",
+    alternateLocale: "en_US",
+    url: SITE.url,
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
