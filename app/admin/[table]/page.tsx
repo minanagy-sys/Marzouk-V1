@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
-import { adminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin/client";
+import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 
 type Row = Record<string, unknown>;
 
@@ -149,9 +149,41 @@ function FieldInput({ field, value, onChange, readOnly }: { field: Field; value:
   if (field.type === "textarea" || field.type === "json") {
     return <div style={wrap}>{label}<textarea value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} rows={field.type === "json" ? 6 : 3} style={{ ...inp, fontFamily: field.type === "json" ? "monospace" : "inherit", resize: "vertical" }} /></div>;
   }
-  return <div style={wrap}>{label}<input type={field.type === "number" ? "number" : field.type === "date" ? "date" : "text"} value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} style={inp} />
-    {field.type === "image" && value ? <img src={String(value)} alt="" style={{ maxWidth: 120, borderRadius: 8, marginTop: 6 }} /> : null}
-  </div>;
+  if (field.type === "image") {
+    return <div style={wrap}>{label}<ImageField value={value} onChange={onChange} disabled={disabled} /></div>;
+  }
+  return <div style={wrap}>{label}<input type={field.type === "number" ? "number" : field.type === "date" ? "date" : "text"} value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} style={inp} /></div>;
+}
+
+function ImageField({ value, onChange, disabled }: { value: unknown; onChange: (v: unknown) => void; disabled?: boolean }) {
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true); setErr("");
+    try { onChange(await adminUpload(file)); } catch (x) { setErr((x as Error).message); }
+    setUploading(false);
+    e.target.value = "";
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <input type="text" value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} placeholder="Image URL, or upload →" style={{ ...inp, flex: 1, minWidth: 180 }} />
+        {!disabled && (
+          <label style={{ background: "#1E92B8", color: "#fff", borderRadius: 8, padding: "9px 14px", fontSize: 13, fontWeight: 700, cursor: uploading ? "wait" : "pointer", whiteSpace: "nowrap", opacity: uploading ? 0.7 : 1 }}>
+            {uploading ? "Uploading…" : "⬆ Upload"}
+            <input type="file" accept="image/*" onChange={onFile} disabled={uploading} style={{ display: "none" }} />
+          </label>
+        )}
+        {value ? <button type="button" onClick={() => onChange("")} style={{ background: "none", border: "none", color: "#C0392B", cursor: "pointer", fontSize: 13 }}>Remove</button> : null}
+      </div>
+      {err && <div style={{ color: "#C0392B", fontSize: 12 }}>{err}</div>}
+      {value ? <img src={String(value)} alt="" style={{ maxWidth: 160, maxHeight: 120, borderRadius: 8, objectFit: "cover", border: "1px solid rgba(12,52,70,0.1)" }} /> : null}
+    </div>
+  );
 }
 
 const inp: React.CSSProperties = { border: "1.5px solid rgba(12,52,70,0.15)", borderRadius: 9, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };

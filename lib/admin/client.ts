@@ -36,6 +36,19 @@ export async function adminUpdate(table: string, body: Record<string, unknown>) 
   return json.data;
 }
 
+export async function adminUpload(file: File): Promise<string> {
+  const fd = new FormData();
+  fd.append("file", file);
+  const res = await fetch(`/api/admin/upload`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${await token()}` },
+    body: fd,
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || "upload_failed");
+  return json.url as string;
+}
+
 export async function adminDelete(table: string, id: string) {
   const res = await fetch(`/api/admin/${table}?id=${encodeURIComponent(id)}`, {
     method: "DELETE",

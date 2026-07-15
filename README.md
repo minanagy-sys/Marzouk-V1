@@ -29,6 +29,11 @@ npm run build && npm run start
 See `.env.example`. Put real values in `.env.local` (git-ignored) or in your
 host's environment settings. Never commit secrets.
 
+## Supabase setup (run once in SQL Editor)
+1. `supabase/schema.sql` — creates all tables + security.
+2. `supabase/storage.sql` — creates the public `media` bucket for admin image uploads.
+Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
+
 ## Deploy (Vercel — recommended)
 1. Push this repo to GitHub (done).
 2. Import the repo at [vercel.com/new](https://vercel.com/new).
