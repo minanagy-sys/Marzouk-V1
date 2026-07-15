@@ -1,12 +1,13 @@
 import HomeView from "./HomeView";
 import JsonLd from "@/components/JsonLd";
 import { getServices } from "@/lib/data/services";
+import { getCelebrities } from "@/lib/data/celebrities";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
 
 export default async function HomePage() {
-  const services = await getServices();
+  const [services, celebrities] = await Promise.all([getServices(), getCelebrities()]);
 
   const physician = {
     "@context": "https://schema.org",
@@ -36,7 +37,7 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={physician} />
-      <HomeView services={services} />
+      <HomeView services={services} celebrities={celebrities} />
     </>
   );
 }

@@ -49,3 +49,36 @@ export type MediaItem = {
   gr: string;
   title: BiText;
 };
+
+export type Celebrity = {
+  id: string;
+  imageUrl?: string;
+  name: BiText;
+  caption: BiText;
+};
+
+export type Testimonial = {
+  id: string;
+  name: string;
+  text: BiText;
+};
+
+export type Clinic = {
+  id: string;
+  phone: string;
+  mapsUrl: string;
+  name: BiText;
+  address: BiText;
+  hours: BiText;
+  area: BiText;
+};
+
+export type BlogPostBi = {
+  slug: string;
+  imageUrl?: string;
+  date: string;
+  tag: BiText;
+  title: BiText;
+  excerpt: BiText;
+  body: { ar: string[]; en: string[] };
+};

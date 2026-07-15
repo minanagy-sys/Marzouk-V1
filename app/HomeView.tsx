@@ -10,10 +10,10 @@ import HoverBox from "@/components/HoverBox";
 import { useLang } from "@/lib/lang";
 import { homeContent } from "@/lib/content/home";
 import { common, CONTACT_INFO } from "@/lib/content/common";
-import { pick, type Service } from "@/lib/data/types";
+import { pick, type Service, type Celebrity } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
-export default function HomeView({ services }: { services: Service[] }) {
+export default function HomeView({ services, celebrities }: { services: Service[]; celebrities: Celebrity[] }) {
   const { lang, dir, isAr } = useLang();
   const c = homeContent(lang);
   const t = c.t;
@@ -214,13 +214,13 @@ export default function HomeView({ services }: { services: Service[] }) {
           <HoverBox as={Link} href="/cases#celebs" style={{ fontWeight: 700, fontSize: 15 }}>{t.viewAll} {arrow}</HoverBox>
         </div>
         <div className="dam-scroll-row" style={{ display: "flex", gap: 22, overflowX: "auto", padding: "44px 24px 10px", scrollSnapType: "x mandatory", maxWidth: 1240, margin: "0 auto" }}>
-          {c.celebs.map((cel) => (
-            <HoverBox key={cel.slotId} as={Link} href="/cases#celebs" style={{ flex: "0 0 250px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
+          {celebrities.map((cel) => (
+            <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ flex: "0 0 250px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
               <span style={{ display: "block", width: 110, height: 110, margin: "0 auto", borderRadius: "50%", padding: 4, background: "linear-gradient(135deg, #30B6DE, #8FE0F7)" }}>
-                <ImageSlot shape="circle" placeholder={t.photoPh} style={{ width: 102, height: 102 }} />
+                <ImageSlot src={cel.imageUrl} shape="circle" placeholder={t.photoPh} style={{ width: 102, height: 102 }} />
               </span>
-              <span style={{ display: "block", fontFamily: SERIF, fontWeight: 700, fontSize: 18, marginTop: 18 }}>{cel.name}</span>
-              <span style={{ display: "block", fontSize: 13, color: "#5B7A88", marginTop: 6, lineHeight: 1.7 }}>{cel.caption}</span>
+              <span style={{ display: "block", fontFamily: SERIF, fontWeight: 700, fontSize: 18, marginTop: 18 }}>{pick(cel.name, lang)}</span>
+              <span style={{ display: "block", fontSize: 13, color: "#5B7A88", marginTop: 6, lineHeight: 1.7 }}>{pick(cel.caption, lang)}</span>
             </HoverBox>
           ))}
         </div>
