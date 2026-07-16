@@ -9,6 +9,7 @@ import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { servicesContent } from "@/lib/content/services";
 import { common } from "@/lib/content/common";
 import { pick, type Service } from "@/lib/data/types";
@@ -16,7 +17,7 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function ServicesView({ services }: { services: Service[] }) {
   const { lang, dir, isAr } = useLang();
-  const { t } = servicesContent(lang);
+  const t = usePageText("services", lang, servicesContent(lang).t);
   const tc = common(lang);
   const arrow = isAr ? "←" : "→";
   const [filter, setFilter] = useState<string>("all");

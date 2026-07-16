@@ -9,6 +9,7 @@ import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import Lightbox, { type LightboxItem } from "@/components/Lightbox";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { mediaContent } from "@/lib/content/media";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type MediaItem } from "@/lib/data/types";
@@ -17,7 +18,7 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function MediaView({ media }: { media: MediaItem[] }) {
   const { lang, dir } = useLang();
-  const { t } = mediaContent(lang);
+  const t = usePageText("media", lang, mediaContent(lang).t);
   const tc = common(lang);
   const [tab, setTab] = useState<"gallery" | "videos">("gallery");
   const [lb, setLb] = useState<{ items: LightboxItem[]; index: number } | null>(null);

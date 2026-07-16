@@ -9,6 +9,7 @@ import ImageSlot from "@/components/ImageSlot";
 import HoverBox from "@/components/HoverBox";
 import Slider from "@/components/Slider";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { homeContent } from "@/lib/content/home";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type Service, type Celebrity, type Testimonial, type InstagramPost, type BlogPostBi } from "@/lib/data/types";
@@ -22,7 +23,7 @@ export default function HomeView({
 }) {
   const { lang, dir, isAr } = useLang();
   const c = homeContent(lang);
-  const t = c.t;
+  const t = usePageText("home", lang, c.t);
   const tc = common(lang);
 
   const [slide, setSlide] = useState(0);

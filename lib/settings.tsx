@@ -38,3 +38,21 @@ export function useSetting() {
     return (lang === "ar" ? v.ar : v.en) || fallback;
   };
 }
+
+/**
+ * Overlays admin edits onto a page's text object. Each field `k` in `fallback`
+ * can be overridden from the "Site text" admin section with key `${prefix}.${k}`.
+ * Returns the same shape as `fallback`, so pages need no other changes.
+ */
+export function usePageText<T extends Record<string, string>>(prefix: string, lang: Lang, fallback: T): T {
+  const dict = useContext(Ctx);
+  const out = { ...fallback } as Record<string, string>;
+  for (const k of Object.keys(fallback)) {
+    const v = dict[`${prefix}.${k}`];
+    if (v) {
+      const val = lang === "ar" ? v.ar : v.en;
+      if (val) out[k] = val;
+    }
+  }
+  return out as T;
+}

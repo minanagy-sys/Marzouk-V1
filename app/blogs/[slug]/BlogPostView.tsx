@@ -7,6 +7,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { blogsUi } from "@/lib/content/blogs";
 import { common } from "@/lib/content/common";
 import { pick, type BlogPostBi } from "@/lib/data/types";
@@ -14,7 +15,7 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function BlogPostView({ post, related }: { post: BlogPostBi; related: BlogPostBi[] }) {
   const { lang, dir } = useLang();
-  const ui = blogsUi(lang);
+  const ui = usePageText("blogs", lang, blogsUi(lang));
   const tc = common(lang);
   const bodyHtml = lang === "ar" ? post.body.ar : post.body.en;
 
