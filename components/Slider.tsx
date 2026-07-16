@@ -24,11 +24,12 @@ export default function Slider({ children, gap = 22 }: { children: React.ReactNo
     <button
       onClick={() => scrollByCard(dir)}
       aria-label={dir === -1 ? "Previous" : "Next"}
+      className="dam-slide-arrow"
       style={{
-        width: 46, height: 46, borderRadius: "50%", flexShrink: 0,
+        width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
         border: "1.5px solid rgba(48,182,222,0.5)", background: "#ffffff", color: "#1E92B8",
-        cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 6px 16px rgba(48,182,222,0.2)",
+        cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center",
+        boxShadow: "0 4px 12px rgba(48,182,222,0.2)",
       }}
     >
       {glyph}
@@ -36,7 +37,7 @@ export default function Slider({ children, gap = 22 }: { children: React.ReactNo
   );
 
   return (
-    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 12 }}>
+    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
       {arrowBtn(-1, isAr ? "→" : "←")}
       <div
         ref={ref}
