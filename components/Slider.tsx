@@ -24,6 +24,7 @@ export default function Slider({ children, gap = 22 }: { children: React.ReactNo
     <button
       onClick={() => scrollByCard(dir)}
       aria-label={dir === -1 ? "Previous" : "Next"}
+      className="dam-slide-arrow"
       style={{
         width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
         border: "1.5px solid rgba(48,182,222,0.5)", background: "#ffffff", color: "#1E92B8",
