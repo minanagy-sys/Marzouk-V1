@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 import RichTextField from "@/components/admin/RichTextField";
+import { ytThumb } from "@/lib/youtube";
 
 const arrToHtml = (v: unknown): string =>
   Array.isArray(v) ? (v as string[]).map((p) => `<p>${p}</p>`).join("") : typeof v === "string" ? v : "";
@@ -145,35 +146,45 @@ export default function AdminCollectionPage() {
       ) : rows.length === 0 ? (
         <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>No items yet. Click “+ New {col.singular}”.</div>
       ) : (
-        <div style={{ ...card, padding: 0, overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
-            <thead>
-              <tr style={{ background: "#F4FBFD" }}>
-                {canReorder && <th style={{ ...th, width: 30 }}></th>}
-                {col.listColumns.map((c) => <th key={c} style={th}>{prettify(c)}</th>)}
-                <th style={th}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, i) => (
-                <tr
-                  key={String(row.id) || i}
-                  draggable={canReorder}
-                  onDragStart={() => setDragIndex(i)}
-                  onDragOver={(e) => { if (canReorder) e.preventDefault(); }}
-                  onDrop={() => canReorder && dropRow(i)}
-                  style={{ borderTop: "1px solid rgba(12,52,70,0.07)", background: dragIndex === i ? "#EAF7FB" : undefined, cursor: canReorder ? "grab" : undefined }}
-                >
-                  {canReorder && <td style={{ ...td, color: "#9BB3BF", cursor: "grab" }} title="Drag to reorder">⠿</td>}
-                  {col.listColumns.map((c) => <td key={c} style={td}>{formatCell(row[c], c, refData)}</td>)}
-                  <td style={{ ...td, textAlign: "end", whiteSpace: "nowrap" }}>
-                    <button onClick={() => startEdit(row)} style={btnSmall}>Edit</button>
-                    {!col.readOnly && <button onClick={() => remove(row)} style={{ ...btnSmall, color: "#C0392B" }}>Delete</button>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 18 }}>
+          {rows.map((row, i) => {
+            const img = (row.image_url as string) || (row.video_url ? ytThumb(String(row.video_url)) : "");
+            const published = "is_published" in row ? !!row.is_published : true;
+            const title = String(row[col.titleColumn] ?? "—") || "—";
+            const meta = col.listColumns.filter((cc) => cc !== col.titleColumn && cc !== "is_published");
+            return (
+              <div
+                key={String(row.id) || i}
+                draggable={canReorder}
+                onDragStart={() => setDragIndex(i)}
+                onDragOver={(e) => { if (canReorder) e.preventDefault(); }}
+                onDrop={() => canReorder && dropRow(i)}
+                style={{ background: "#fff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 16, overflow: "hidden", boxShadow: dragIndex === i ? "0 12px 30px rgba(48,182,222,0.25)" : "0 2px 10px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", cursor: canReorder ? "grab" : "default" }}
+              >
+                <div style={{ position: "relative", height: 150, background: "linear-gradient(160deg, #0A3950, #0E5372)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  {img
+                    ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    : <span style={{ fontSize: 38, opacity: 0.5 }}>{col.icon}</span>}
+                  <span style={{ position: "absolute", top: 10, insetInlineStart: 10, background: published ? "rgba(39,174,96,0.95)" : "rgba(120,140,150,0.95)", color: "#fff", borderRadius: 999, padding: "3px 12px", fontSize: 11, fontWeight: 800 }}>{published ? "Published" : "Hidden"}</span>
+                  {canReorder && <span title="Drag to reorder" style={{ position: "absolute", top: 10, insetInlineEnd: 10, background: "rgba(4,32,46,0.55)", color: "#fff", borderRadius: 8, padding: "3px 8px", fontSize: 13, cursor: "grab" }}>⠿</span>}
+                </div>
+                <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: 15.5, color: "#0C3446", lineHeight: 1.4 }}>{title.length > 70 ? title.slice(0, 70) + "…" : title}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {meta.map((cc) => {
+                      const val = formatCell(row[cc], cc, refData);
+                      if (val === "—") return null;
+                      return <span key={cc} style={{ background: "#F4FBFD", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 8, padding: "3px 9px", fontSize: 11.5, color: "#5B7A88" }}>{String(val)}</span>;
+                    })}
+                  </div>
+                  <div style={{ marginTop: "auto", paddingTop: 10, display: "flex", gap: 8, borderTop: "1px solid rgba(12,52,70,0.06)" }}>
+                    <button onClick={() => startEdit(row)} style={{ ...btnSmall, background: "#EAF7FB", borderRadius: 8, padding: "7px 14px" }}>✎ Edit</button>
+                    {!col.readOnly && <button onClick={() => remove(row)} style={{ ...btnSmall, color: "#C0392B", background: "#FDECEA", borderRadius: 8, padding: "7px 14px" }}>Delete</button>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

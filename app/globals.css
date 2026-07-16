@@ -35,11 +35,11 @@ textarea::placeholder {
 .dam-scroll-row::-webkit-scrollbar { display: none; }
 
 /* ---------- Navigation responsive ---------- */
+.dam-hamburger { display: none; }
 @media (max-width: 1080px) {
-  .dam-navrow { flex-wrap: wrap; height: auto !important; padding: 12px 16px !important; row-gap: 10px !important; }
-  .dam-navlinks { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; justify-content: flex-start !important; }
-  .dam-navlinks::-webkit-scrollbar { display: none; }
-  .dam-navlinks a, .dam-navlinks button { white-space: nowrap; flex-shrink: 0; }
+  .dam-navlinks { display: none !important; }
+  .dam-desktop-actions { display: none !important; }
+  .dam-hamburger { display: flex !important; }
 }
 
 /* ---------- Grid helpers ---------- */
@@ -68,6 +68,20 @@ textarea::placeholder {
 }
 @media (max-width: 480px) {
   .dam-mosaic { grid-auto-rows: 150px !important; }
+}
+
+/* ---------- Slider slides: ~3 visible + peek, slide one at a time ---------- */
+.dam-slide {
+  flex: 0 0 calc((100% - 2 * var(--slider-gap, 22px)) / 3.25);
+  scroll-snap-align: start;
+  min-width: 0;
+}
+.dam-slide > * { width: 100% !important; }
+@media (max-width: 1080px) {
+  .dam-slide { flex-basis: calc((100% - var(--slider-gap, 22px)) / 2.2); }
+}
+@media (max-width: 700px) {
+  .dam-slide { flex-basis: calc(100% - 42px); } /* 1 card + peek */
 }
 
 /* ---------- Instagram card hover ---------- */

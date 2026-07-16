@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsappFloat from "@/components/WhatsappFloat";
@@ -18,15 +19,32 @@ export default function ServicesView({ services }: { services: Service[] }) {
   const { t } = servicesContent(lang);
   const tc = common(lang);
   const arrow = isAr ? "←" : "→";
+  const [filter, setFilter] = useState<string>("all");
+
+  const parents = services.filter((s) => s.id && services.some((x) => x.parentId === s.id));
+  const shown = filter === "all" ? services : services.filter((s) => s.parentId === filter);
+  const allLabel = isAr ? "الكل" : "All";
+  const chip = (key: string, label: string) => {
+    const active = filter === key;
+    return (
+      <button key={key} onClick={() => setFilter(key)} style={{ borderRadius: 999, padding: "9px 20px", fontFamily: SANS, fontWeight: 700, fontSize: 14, cursor: "pointer", border: "1.5px solid " + (active ? "#30B6DE" : "rgba(12,52,70,0.15)"), background: active ? "#30B6DE" : "#ffffff", color: active ? "#ffffff" : "#46687A" }}>{label}</button>
+    );
+  };
 
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="services" cta="book" />
       <PageHero crumbLabel={tc.navServices} title={t.pageTitle} sub={t.pageSub} />
 
-      <section data-screen-label="Services mosaic" style={{ padding: "90px 24px" }}>
+      <section data-screen-label="Services mosaic" style={{ padding: "60px 24px 90px" }}>
+        {parents.length > 0 && (
+          <div style={{ maxWidth: 1240, margin: "0 auto 36px", display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {chip("all", allLabel)}
+            {parents.map((p) => chip(p.id!, pick(p.title, lang)))}
+          </div>
+        )}
         <div className="dam-mosaic" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "215px", gap: 20 }}>
-          {services.map((svc) => (
+          {shown.map((svc) => (
             <HoverBox
               key={svc.slug}
               as={Link}

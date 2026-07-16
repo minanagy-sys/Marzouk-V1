@@ -57,16 +57,19 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
 
   if (variant === "full") {
     return (
-      <footer data-screen-label="Footer" style={{ background: "#04202E", color: "rgba(255,255,255,0.75)", padding: "70px 24px 0" }}>
+      <footer data-screen-label="Footer" style={{ background: "#04202E", color: "rgba(255,255,255,0.75)", padding: "0 0 0", borderTop: "3px solid transparent", borderImage: "linear-gradient(90deg, #30B6DE, #0E5372) 1" }}>
+        <div style={{ height: 4, background: "linear-gradient(90deg, #30B6DE, #8FE0F7, #1E92B8)" }} />
         <div
           className="dam-3col"
           style={{
             maxWidth: 1240,
             margin: "0 auto",
+            padding: "70px 24px 0",
             display: "grid",
-            gridTemplateColumns: "1.4fr 0.8fr 1.2fr",
-            gap: 50,
+            gridTemplateColumns: "1.5fr 0.9fr 1.2fr",
+            gap: 56,
             paddingBottom: 50,
+            boxSizing: "border-box",
           }}
         >
           <div>
@@ -153,7 +156,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
             </div>
           </div>
         </div>
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "22px 0", textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "22px 24px", textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
           {st("footer.copyright", lang, t.copyright)}
         </div>
       </footer>

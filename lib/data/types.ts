@@ -15,6 +15,8 @@ export type Service = {
   slug: string;
   slotId: string;
   glyph: string;
+  parentId?: string;
+  id?: string;
   imageUrl?: string;
   gc: string; // mosaic column span
   gr: string; // mosaic row span

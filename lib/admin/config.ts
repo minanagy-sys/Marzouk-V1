@@ -249,3 +249,14 @@ export const COLLECTIONS: Record<string, Collection> = {
 export const COLLECTION_KEYS = Object.keys(COLLECTIONS);
 
 export const GROUPS: Collection["group"][] = ["Content", "Blog", "System"];
+
+/** Expandable sidebar tree — parents with arrow-submenus. */
+export type NavParent = { label: string; labelAr: string; icon: string; children: string[] };
+export const NAV_TREE: NavParent[] = [
+  { label: "Services", labelAr: "الخدمات", icon: "🩺", children: ["services"] },
+  { label: "Cases", labelAr: "الحالات", icon: "⭐", children: ["cases", "celebrities"] },
+  { label: "Blog", labelAr: "المدونة", icon: "📝", children: ["blog_categories", "blog_posts"] },
+  { label: "Media", labelAr: "الإعلام", icon: "🖼️", children: ["media_items", "instagram_posts"] },
+  { label: "Content", labelAr: "المحتوى", icon: "✦", children: ["testimonials", "clinics", "site_content"] },
+  { label: "Inbox", labelAr: "الوارد", icon: "📥", children: ["bookings"] },
+];

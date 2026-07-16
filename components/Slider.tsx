@@ -1,23 +1,28 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { useLang } from "@/lib/lang";
 
-/** Horizontal slider with prev/next arrows. Children are the cards. */
+/**
+ * Horizontal slider with prev/next arrows.
+ * Shows ~3 cards on desktop (with a peek of the next) and slides ONE card
+ * at a time. Card sizing is handled by the .dam-slide CSS (responsive).
+ */
 export default function Slider({ children, gap = 22 }: { children: React.ReactNode; gap?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { isAr } = useLang();
 
-  const scrollBy = (dir: -1 | 1) => {
+  const scrollByCard = (dir: -1 | 1) => {
     const el = ref.current;
     if (!el) return;
-    const amount = Math.max(el.clientWidth * 0.8, 280) * dir;
-    el.scrollBy({ left: isAr ? -amount : amount, behavior: "smooth" });
+    const slide = el.querySelector<HTMLElement>(".dam-slide");
+    const step = slide ? slide.getBoundingClientRect().width + gap : el.clientWidth * 0.8;
+    el.scrollBy({ left: (isAr ? -1 : 1) * step * dir, behavior: "smooth" });
   };
 
   const arrowBtn = (dir: -1 | 1, glyph: string) => (
     <button
-      onClick={() => scrollBy(dir)}
+      onClick={() => scrollByCard(dir)}
       aria-label={dir === -1 ? "Previous" : "Next"}
       style={{
         width: 46, height: 46, borderRadius: "50%", flexShrink: 0,
@@ -35,10 +40,12 @@ export default function Slider({ children, gap = 22 }: { children: React.ReactNo
       {arrowBtn(-1, isAr ? "→" : "←")}
       <div
         ref={ref}
-        className="dam-scroll-row"
-        style={{ display: "flex", gap, overflowX: "auto", scrollSnapType: "x mandatory", flex: 1, padding: "8px 2px", scrollBehavior: "smooth" }}
+        className="dam-slider dam-scroll-row"
+        style={{ ["--slider-gap" as string]: gap + "px", display: "flex", gap, overflowX: "auto", scrollSnapType: "x mandatory", flex: 1, padding: "8px 2px", minWidth: 0 }}
       >
-        {children}
+        {React.Children.map(children, (child, i) => (
+          <div className="dam-slide" key={i}>{child}</div>
+        ))}
       </div>
       {arrowBtn(1, isAr ? "←" : "→")}
     </div>

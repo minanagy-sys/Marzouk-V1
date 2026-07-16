@@ -434,6 +434,8 @@ function rowToService(r: any): Service {
     slug: r.slug,
     slotId: r.slug,
     glyph: r.glyph ?? "",
+    id: r.id,
+    parentId: r.parent_id ?? undefined,
     imageUrl: r.image_url ?? undefined,
     gc: r.span_gc ?? "auto",
     gr: r.span_gr ?? "auto",
