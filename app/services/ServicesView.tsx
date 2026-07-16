@@ -57,10 +57,10 @@ export default function ServicesView({ services, categories = [] }: { services: 
             >
               <ImageSlot src={svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
               <span style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.18) 0%, rgba(4,32,46,0) 42%, rgba(4,32,46,0.9) 100%)", pointerEvents: "none" }} />
-              <span style={{ position: "absolute", top: 18, insetInlineStart: 18, background: "rgba(48,182,222,0.92)", color: "#ffffff", borderRadius: 999, padding: "6px 16px", fontSize: 12, fontWeight: 800, letterSpacing: "0.5px", pointerEvents: "none", boxShadow: "0 6px 16px rgba(4,32,46,0.35)" }}>{pick(svc.tag, lang)}</span>
-              <span style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px", pointerEvents: "none", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
-                <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(19px, 1.8vw, 25px)", lineHeight: 1.45, color: "#ffffff" }}>{pick(svc.title, lang)}</span>
-                <span style={{ flexShrink: 0, width: 42, height: 42, borderRadius: "50%", background: "rgba(255,255,255,0.14)", border: "1px solid rgba(255,255,255,0.35)", backdropFilter: "blur(6px)", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>{arrow}</span>
+              <span className="dam-svc-tag" style={{ position: "absolute", top: 18, insetInlineStart: 18, background: "rgba(48,182,222,0.92)", color: "#ffffff", borderRadius: 999, padding: "6px 16px", fontSize: 12, fontWeight: 800, letterSpacing: "0.5px", pointerEvents: "none", boxShadow: "0 6px 16px rgba(4,32,46,0.35)" }}>{pick(svc.tag, lang)}</span>
+              <span className="dam-svc-cap" style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px", pointerEvents: "none", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 12 }}>
+                <span className="dam-svc-title" style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(19px, 1.8vw, 25px)", lineHeight: 1.45, color: "#ffffff" }}>{pick(svc.title, lang)}</span>
+                <span className="dam-svc-arrow" style={{ flexShrink: 0, width: 42, height: 42, borderRadius: "50%", background: "rgba(255,255,255,0.14)", border: "1px solid rgba(255,255,255,0.35)", backdropFilter: "blur(6px)", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>{arrow}</span>
               </span>
             </HoverBox>
           ))}
