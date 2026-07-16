@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 import RichTextField from "@/components/admin/RichTextField";
+import SiteTextEditor from "@/components/admin/SiteTextEditor";
 import { ytThumb } from "@/lib/youtube";
 
 const arrToHtml = (v: unknown): string =>
@@ -119,12 +120,14 @@ export default function AdminCollectionPage() {
           <Link href="/admin" style={{ color: "#1E92B8", textDecoration: "none", fontSize: 13 }}>← Dashboard</Link>
           <h1 style={{ fontSize: 27, margin: "6px 0 0", display: "flex", alignItems: "center", gap: 10 }}><span>{col.icon}</span>{col.label} <span style={{ color: "#8AA5B1", fontSize: 17, fontWeight: 400 }}>{col.labelAr}</span></h1>
         </div>
-        {!col.readOnly && editing === null && <button onClick={startNew} style={btnPrimary}>+ New {col.singular}</button>}
+        {!col.readOnly && editing === null && table !== "site_content" && <button onClick={startNew} style={btnPrimary}>+ New {col.singular}</button>}
       </div>
 
       {error && <div style={{ background: "#FDECEA", color: "#C0392B", padding: 14, borderRadius: 12, marginBottom: 16, fontSize: 14 }}>{error}</div>}
 
-      {editing !== null ? (
+      {table === "site_content" ? (
+        <SiteTextEditor />
+      ) : editing !== null ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {groups.map((g) => (
             <div key={g} style={card}>

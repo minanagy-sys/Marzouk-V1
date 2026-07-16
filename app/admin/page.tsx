@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { COLLECTIONS, COLLECTION_KEYS, GROUPS } from "@/lib/admin/config";
+import DashboardMetrics from "@/components/admin/DashboardMetrics";
 
 export default function AdminDashboard() {
   return (
     <div>
       <h1 style={{ fontSize: 30, margin: "0 0 4px" }}>Welcome back 👋</h1>
       <p style={{ color: "#5B7A88", margin: "0 0 28px" }}>Manage every part of the website. Changes save to your database and appear on the live site right away.</p>
+
+      <DashboardMetrics />
 
       {GROUPS.map((g) => {
         const items = COLLECTION_KEYS.filter((k) => COLLECTIONS[k].group === g);

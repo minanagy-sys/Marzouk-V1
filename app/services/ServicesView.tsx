@@ -12,18 +12,20 @@ import { useLang } from "@/lib/lang";
 import { usePageText } from "@/lib/settings";
 import { servicesContent } from "@/lib/content/services";
 import { common } from "@/lib/content/common";
-import { pick, type Service } from "@/lib/data/types";
+import { pick, type Service, type ServiceCategory } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
-export default function ServicesView({ services }: { services: Service[] }) {
+export default function ServicesView({ services, categories = [] }: { services: Service[]; categories?: ServiceCategory[] }) {
   const { lang, dir, isAr } = useLang();
   const t = usePageText("services", lang, servicesContent(lang).t);
   const tc = common(lang);
   const arrow = isAr ? "←" : "→";
   const [filter, setFilter] = useState<string>("all");
 
-  const parents = services.filter((s) => s.id && services.some((x) => x.parentId === s.id));
-  const shown = filter === "all" ? services : services.filter((s) => s.parentId === filter);
+  // Only show category chips that actually have services attached (kept in sync
+  // with the parent category each service belongs to).
+  const parents = categories.filter((cat) => services.some((s) => s.categoryId === cat.id));
+  const shown = filter === "all" ? services : services.filter((s) => s.categoryId === filter);
   const allLabel = isAr ? "الكل" : "All";
   const chip = (key: string, label: string) => {
     const active = filter === key;
@@ -41,7 +43,7 @@ export default function ServicesView({ services }: { services: Service[] }) {
         {parents.length > 0 && (
           <div style={{ maxWidth: 1240, margin: "0 auto 36px", display: "flex", gap: 10, flexWrap: "wrap" }}>
             {chip("all", allLabel)}
-            {parents.map((p) => chip(p.id!, pick(p.title, lang)))}
+            {parents.map((p) => chip(p.id, pick(p.name, lang)))}
           </div>
         )}
         <div className="dam-mosaic" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "215px", gap: 20 }}>

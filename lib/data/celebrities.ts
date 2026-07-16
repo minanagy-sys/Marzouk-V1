@@ -14,7 +14,7 @@ export function celebritiesSeed(): Celebrity[] {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowTo(r: any): Celebrity {
-  return { id: r.id, imageUrl: r.image_url ?? undefined, name: { ar: r.name_ar ?? "", en: r.name_en ?? "" }, caption: { ar: r.caption_ar ?? "", en: r.caption_en ?? "" } };
+  return { id: r.id, imageUrl: r.image_url ?? undefined, name: { ar: r.name_ar ?? "", en: r.name_en ?? "" }, caption: { ar: r.caption_ar ?? "", en: r.caption_en ?? "" }, showOnHome: r.show_on_home ?? true };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -24,4 +24,9 @@ export async function getCelebrities(): Promise<Celebrity[]> {
   const { data, error } = await supabase.from("celebrities").select("*").eq("is_published", true).order("sort_order", { ascending: true });
   if (error || !data || data.length === 0) return celebritiesSeed();
   return data.map(rowTo);
+}
+
+/** Published celebrities flagged to appear in the home slider. */
+export async function getCelebritiesHome(): Promise<Celebrity[]> {
+  return (await getCelebrities()).filter((c) => c.showOnHome !== false);
 }

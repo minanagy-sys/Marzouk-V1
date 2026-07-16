@@ -5,8 +5,8 @@ import { useLang } from "@/lib/lang";
 
 /**
  * Horizontal slider with prev/next arrows.
- * Shows ~3 cards on desktop (with a peek of the next) and slides ONE card
- * at a time. Card sizing is handled by the .dam-slide CSS (responsive).
+ * Shows exactly 3 cards on desktop (no peek) and slides ONE card at a time.
+ * Card sizing is handled by the .dam-slide CSS (responsive: 3 / 2 / 1).
  */
 export default function Slider({ children, gap = 22 }: { children: React.ReactNode; gap?: number }) {
   const ref = useRef<HTMLDivElement>(null);

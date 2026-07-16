@@ -16,6 +16,10 @@ export type Service = {
   slotId: string;
   glyph: string;
   parentId?: string;
+  categoryId?: string;
+  categorySlug?: string;
+  categoryName?: BiText;
+  showOnHome?: boolean;
   id?: string;
   imageUrl?: string;
   gc: string; // mosaic column span
@@ -30,6 +34,13 @@ export type Service = {
   faq: ServiceFaq[];
   metaTitle: BiText;
   metaDesc: BiText;
+};
+
+/** A parent service / category used to group and filter services. */
+export type ServiceCategory = {
+  id: string;
+  slug: string;
+  name: BiText;
 };
 
 export type CaseItem = {
@@ -57,6 +68,7 @@ export type Celebrity = {
   imageUrl?: string;
   name: BiText;
   caption: BiText;
+  showOnHome?: boolean;
 };
 
 export type Testimonial = {
@@ -64,6 +76,7 @@ export type Testimonial = {
   name: string;
   text: BiText;
   rating?: number;
+  showOnHome?: boolean;
 };
 
 export type HeroSlide = {
@@ -129,4 +142,5 @@ export type BlogPostBi = {
   body: { ar: string; en: string }; // HTML
   categorySlug?: string;
   categoryName?: BiText;
+  showOnHome?: boolean;
 };

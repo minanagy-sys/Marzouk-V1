@@ -70,18 +70,18 @@ textarea::placeholder {
   .dam-mosaic { grid-auto-rows: 150px !important; }
 }
 
-/* ---------- Slider slides: ~3 visible + peek, slide one at a time ---------- */
+/* ---------- Slider slides: exactly 3 visible (no peek), slide one at a time ---------- */
 .dam-slide {
-  flex: 0 0 calc((100% - 2 * var(--slider-gap, 22px)) / 3.25);
+  flex: 0 0 calc((100% - 2 * var(--slider-gap, 22px)) / 3);
   scroll-snap-align: start;
   min-width: 0;
 }
 .dam-slide > * { width: 100% !important; }
 @media (max-width: 1080px) {
-  .dam-slide { flex-basis: calc((100% - var(--slider-gap, 22px)) / 2.2); }
+  .dam-slide { flex-basis: calc((100% - var(--slider-gap, 22px)) / 2); }
 }
 @media (max-width: 700px) {
-  .dam-slide { flex-basis: calc(100% - 42px); } /* 1 card + peek */
+  .dam-slide { flex-basis: 100%; } /* 1 card */
 }
 
 /* ---------- Instagram card hover ---------- */

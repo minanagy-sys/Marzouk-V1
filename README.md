@@ -35,6 +35,7 @@ host's environment settings. Never commit secrets.
 3. `supabase/blog_categories.sql` — adds blog categories + links posts to a category.
 4. `supabase/instagram_and_extras.sql` — Instagram table + parent service + review ratings.
 5. `supabase/home_sections.sql` — editable hero slides, stats, values, and features.
+6. `supabase/service_categories_and_flags.sql` — parent-service categories + "show on home" toggles.
 Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
 
 ## Deploy (Vercel — recommended)

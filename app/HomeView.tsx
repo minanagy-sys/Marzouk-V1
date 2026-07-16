@@ -45,10 +45,6 @@ export default function HomeView({
   const nextSlide = heroSlides[(slide + 1) % N] ?? heroSlides[0];
   const nextTitle = nextSlide ? pick(nextSlide.title1, lang) + " " + pick(nextSlide.title2, lang) : "";
 
-  const L = isAr
-    ? { revKicker: "آراء المرضى", revTitle: "ماذا قالوا عنا", igKicker: "إنستجرام", igTitle: "تابعونا على إنستجرام", igFollow: "متابعة", video: "فيديو", post: "منشور", viewIg: "عرض على إنستجرام" }
-    : { revKicker: "Patient reviews", revTitle: "What they said about us", igKicker: "Instagram", igTitle: "Follow us on Instagram", igFollow: "Follow", video: "Video", post: "Post", viewIg: "View on Instagram" };
-
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="home" cta="book" />
@@ -188,7 +184,7 @@ export default function HomeView({
           <SectionHead kicker={t.celebKicker} title={t.celebTitle} href="/cases#celebs" cta={t.viewAll} arrow={arrow} />
           <Slider>
             {celebrities.map((cel) => (
-              <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ flex: "0 0 240px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
+              <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ display: "block", flex: "0 0 240px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
                 <span style={{ display: "block", width: 110, height: 110, margin: "0 auto", borderRadius: "50%", padding: 4, background: "linear-gradient(135deg, #30B6DE, #8FE0F7)" }}>
                   <ImageSlot src={cel.imageUrl} shape="circle" placeholder={t.photoPh} style={{ width: 102, height: 102 }} />
                 </span>
@@ -205,8 +201,8 @@ export default function HomeView({
         <section data-screen-label="Reviews" style={{ padding: "90px 24px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 40 }}>
-              <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{L.revKicker}</div>
-              <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{L.revTitle}</h2>
+              <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.revKicker}</div>
+              <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.revTitle}</h2>
             </div>
             <Slider>
               {reviews.map((r) => (
@@ -230,12 +226,12 @@ export default function HomeView({
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 30 }}>
               <div>
-                <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{L.igKicker}</div>
-                <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{L.igTitle}</h2>
+                <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.igKicker}</div>
+                <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.igTitle}</h2>
               </div>
               <HoverBox as="a" href={CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
-                {L.igFollow}
+                {t.igFollow}
               </HoverBox>
             </div>
             <Slider gap={16}>
@@ -243,11 +239,11 @@ export default function HomeView({
                 <a key={p.id} href={p.permalink || CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="ig-card" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }}>
                   <ImageSlot src={p.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                   {/* type badge (post / video) */}
-                  <span style={{ position: "absolute", top: 12, insetInlineEnd: 12, background: "rgba(4,32,46,0.7)", color: "#fff", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, zIndex: 2 }}>{p.isVideo ? `▶ ${L.video}` : L.post}</span>
+                  <span style={{ position: "absolute", top: 12, insetInlineEnd: 12, background: "rgba(4,32,46,0.7)", color: "#fff", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, zIndex: 2 }}>{p.isVideo ? `▶ ${t.igVideo}` : t.igPost}</span>
                   {/* hover overlay → View on Instagram */}
                   <span className="ig-overlay" style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(225,48,108,0.9), rgba(131,58,180,0.9))", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, color: "#fff", textAlign: "center", padding: 18 }}>
                     <svg width="34" height="34" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
-                    <span style={{ fontWeight: 800, fontSize: 14 }}>{L.viewIg}</span>
+                    <span style={{ fontWeight: 800, fontSize: 14 }}>{t.igViewIg}</span>
                     {pick(p.caption, lang) && <span style={{ fontSize: 12, lineHeight: 1.5, opacity: 0.92 }}>{pick(p.caption, lang).slice(0, 70)}</span>}
                   </span>
                 </a>
