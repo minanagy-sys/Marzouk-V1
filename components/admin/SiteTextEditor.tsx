@@ -6,13 +6,29 @@ import { adminList, adminUpdate, adminCreate, adminDelete } from "@/lib/admin/cl
 type Row = { id?: string; key: string; section?: string; value_ar?: string; value_en?: string } & Record<string, unknown>;
 
 /**
- * Arranged editor for the `site_content` table. Instead of one card per text
- * key, it groups every piece of text into friendly cards — a card for the
- * Header and one for the Footer (shared across all pages), then a card for
- * each content section of every page, following the on-page sequence.
+ * Arranged editor for the `site_content` table, two levels deep:
+ *  1) An overview of "pages" — one card each for the Header, the Footer
+ *     (shared across every page), and every page of the site.
+ *  2) Click a card to open only that page, its text split into section cards
+ *     following the same order the sections appear on the page.
  */
 
-// Ordered sub-sections. The first prefix a field starts with wins.
+// Top-level buckets, in menu order.
+const PAGES: { id: string; label: string; labelAr: string; icon: string; caption: string }[] = [
+  { id: "header", label: "Header", labelAr: "الهيدر", icon: "🔝", caption: "Shown on every page" },
+  { id: "footer", label: "Footer", labelAr: "الفوتر", icon: "🔻", caption: "Shown on every page" },
+  { id: "home", label: "Home page", labelAr: "الصفحة الرئيسية", icon: "🏠", caption: "Home sections" },
+  { id: "about", label: "About page", labelAr: "من نحن", icon: "👤", caption: "About sections" },
+  { id: "services", label: "Services page", labelAr: "الخدمات", icon: "🩺", caption: "Services page text" },
+  { id: "cases", label: "Cases page", labelAr: "الحالات", icon: "⭐", caption: "Cases page text" },
+  { id: "blogs", label: "Blog page", labelAr: "المدونة", icon: "📝", caption: "Blog page text" },
+  { id: "media", label: "Media page", labelAr: "الإعلام", icon: "🖼️", caption: "Media page text" },
+  { id: "contact", label: "Contact page", labelAr: "اتصل بنا", icon: "📍", caption: "Contact page text" },
+  { id: "other", label: "Other text", labelAr: "نصوص أخرى", icon: "✦", caption: "Uncategorised" },
+];
+const PAGE_BY_ID = Object.fromEntries(PAGES.map((p) => [p.id, p]));
+
+// Ordered sub-sections within a page. The first prefix a field starts with wins.
 const SUBGROUPS: { id: string; title: string; match: string[] }[] = [
   { id: "page", title: "Page header", match: ["page"] },
   { id: "hero", title: "Hero / buttons", match: ["hero", "next"] },
@@ -28,18 +44,6 @@ const SUBGROUPS: { id: string; title: string; match: string[] }[] = [
   { id: "shared", title: "Shared labels", match: ["viewAll", "photoPh", "view", "photo"] },
 ];
 
-const PAGE_ORDER: Record<string, { order: number; label: string }> = {
-  home: { order: 10, label: "Home page" },
-  about: { order: 20, label: "About page" },
-  services: { order: 30, label: "Services page" },
-  cases: { order: 40, label: "Cases page" },
-  blogs: { order: 50, label: "Blog page" },
-  media: { order: 60, label: "Media page" },
-  contact: { order: 70, label: "Contact page" },
-};
-
-type Group = { id: string; title: string; caption: string; order: number; rows: Row[] };
-
 function prettifyField(field: string) {
   return field
     .replace(/[._]/g, " ")
@@ -49,25 +53,25 @@ function prettifyField(field: string) {
     .trim();
 }
 
-function groupOf(row: Row): Group {
+function pageIdOf(row: Row): string {
   const section = String(row.section ?? "");
+  if (section === "Header" || section === "Header/Footer") return "header";
+  if (section === "Footer") return "footer";
   const key = String(row.key ?? "");
-  if (section === "Header" || section === "Header/Footer") {
-    return { id: "header", title: "Header", caption: "Shown on every page", order: 0, rows: [] };
-  }
-  if (section === "Footer") {
-    return { id: "footer", title: "Footer", caption: "Shown on every page", order: 1, rows: [] };
-  }
   const dot = key.indexOf(".");
   const page = dot > 0 ? key.slice(0, dot) : key;
+  return PAGE_BY_ID[page] ? page : "other";
+}
+
+type Section = { id: string; title: string; order: number; rows: Row[] };
+
+function sectionOf(row: Row): { id: string; title: string; order: number } {
+  const key = String(row.key ?? "");
+  const dot = key.indexOf(".");
   const field = dot > 0 ? key.slice(dot + 1) : key;
-  const pageInfo = PAGE_ORDER[page] ?? { order: 90, label: prettifyField(page) };
-  const subIdx = SUBGROUPS.findIndex((g) => g.match.some((m) => field.toLowerCase().startsWith(m.toLowerCase())));
-  if (subIdx >= 0) {
-    const sub = SUBGROUPS[subIdx];
-    return { id: `${page}:${sub.id}`, title: sub.title, caption: pageInfo.label, order: pageInfo.order + subIdx + 2, rows: [] };
-  }
-  return { id: `${page}:other`, title: "General text", caption: pageInfo.label, order: pageInfo.order + 99, rows: [] };
+  const idx = SUBGROUPS.findIndex((g) => g.match.some((m) => field.toLowerCase().startsWith(m.toLowerCase())));
+  if (idx >= 0) return { id: SUBGROUPS[idx].id, title: SUBGROUPS[idx].title, order: idx };
+  return { id: "general", title: "General text", order: 99 };
 }
 
 export default function SiteTextEditor() {
@@ -76,7 +80,7 @@ export default function SiteTextEditor() {
   const [error, setError] = useState("");
   const [dirty, setDirty] = useState<Record<string, Row>>({});
   const [saving, setSaving] = useState(false);
-  const [open, setOpen] = useState<Record<string, boolean>>({});
+  const [selected, setSelected] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [newRow, setNewRow] = useState<Row>({ key: "", section: "", value_ar: "", value_en: "" });
 
@@ -87,19 +91,28 @@ export default function SiteTextEditor() {
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const groups = useMemo(() => {
-    const map = new Map<string, Group>();
-    for (const r of rows) {
-      const g = groupOf(r);
-      const existing = map.get(g.id) ?? g;
-      existing.rows.push(r);
-      map.set(g.id, existing);
+  // rows grouped by page id
+  const byPage = useMemo(() => {
+    const m: Record<string, Row[]> = {};
+    for (const r of rows) { const p = pageIdOf(r); (m[p] ??= []).push(r); }
+    return m;
+  }, [rows]);
+
+  // sections for the selected page
+  const sections = useMemo<Section[]>(() => {
+    if (!selected) return [];
+    const map = new Map<string, Section>();
+    for (const r of byPage[selected] ?? []) {
+      const s = sectionOf(r);
+      const ex = map.get(s.id) ?? { ...s, rows: [] };
+      ex.rows.push(r);
+      map.set(s.id, ex);
     }
     const arr = Array.from(map.values());
-    arr.forEach((g) => g.rows.sort((a, b) => String(a.key).localeCompare(String(b.key))));
+    arr.forEach((s) => s.rows.sort((a, b) => String(a.key).localeCompare(String(b.key))));
     arr.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
     return arr;
-  }, [rows]);
+  }, [selected, byPage]);
 
   const edit = (row: Row, field: "value_ar" | "value_en", v: string) => {
     setRows((rs) => rs.map((r) => (r.id === row.id ? { ...r, [field]: v } : r)));
@@ -112,8 +125,7 @@ export default function SiteTextEditor() {
     setSaving(true); setError("");
     try {
       for (const it of items) await adminUpdate("site_content", { id: it.id, value_ar: it.value_ar ?? "", value_en: it.value_en ?? "" });
-      setDirty({});
-      await load();
+      setDirty({}); await load();
     } catch (e) { setError((e as Error).message); }
     setSaving(false);
   };
@@ -134,82 +146,103 @@ export default function SiteTextEditor() {
   };
 
   const dirtyCount = Object.keys(dirty).length;
+  const cur = selected ? PAGE_BY_ID[selected] : null;
+
+  if (loading) return <div style={{ color: "#5B7A88" }}>Loading…</div>;
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-        <p style={{ margin: 0, color: "#5B7A88", fontSize: 14, maxWidth: 640 }}>
-          Every piece of text on the site, arranged by section. The Header and Footer are shared across all pages; each page&apos;s
-          sections follow the same order they appear on the page.
-        </p>
-        <button onClick={() => setAdding((a) => !a)} style={btnGhost}>{adding ? "Close" : "+ Advanced: add text block"}</button>
-      </div>
-
       {error && <div style={{ background: "#FDECEA", color: "#C0392B", padding: 14, borderRadius: 12, marginBottom: 16, fontSize: 14 }}>{error}</div>}
 
-      {adding && (
-        <div style={{ ...card, marginBottom: 20 }}>
-          <div style={cardHead}>New text block</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <Labeled label="Key (e.g. home.msgTitle)"><input value={newRow.key} onChange={(e) => setNewRow({ ...newRow, key: e.target.value })} style={inp} /></Labeled>
-            <Labeled label="Section (e.g. Home page)"><input value={newRow.section} onChange={(e) => setNewRow({ ...newRow, section: e.target.value })} style={inp} /></Labeled>
-            <Labeled label="Text (Arabic)"><textarea value={newRow.value_ar} onChange={(e) => setNewRow({ ...newRow, value_ar: e.target.value })} rows={2} style={{ ...inp, resize: "vertical" }} dir="rtl" /></Labeled>
-            <Labeled label="Text (English)"><textarea value={newRow.value_en} onChange={(e) => setNewRow({ ...newRow, value_en: e.target.value })} rows={2} style={{ ...inp, resize: "vertical" }} /></Labeled>
+      {/* ---------- OVERVIEW: page cards ---------- */}
+      {!selected && (
+        <>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+            <p style={{ margin: 0, color: "#5B7A88", fontSize: 14, maxWidth: 640 }}>
+              Pick a page to edit its text. The Header and Footer are shared across the whole site; each page opens its own
+              sections in the order they appear on the page.
+            </p>
+            <button onClick={() => setAdding((a) => !a)} style={btnGhost}>{adding ? "Close" : "+ Advanced: add text block"}</button>
           </div>
-          <button onClick={addBlock} disabled={saving} style={{ ...btnPrimary, marginTop: 14 }}>{saving ? "Adding…" : "Add block"}</button>
-        </div>
-      )}
 
-      {loading ? (
-        <div style={{ color: "#5B7A88" }}>Loading…</div>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 18, paddingBottom: 90 }}>
-          {groups.map((g) => {
-            const isOpen = open[g.id] ?? true;
-            return (
-              <div key={g.id} style={card}>
-                <button onClick={() => setOpen((o) => ({ ...o, [g.id]: !isOpen }))} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "start" }}>
-                  <span>
-                    <span style={{ fontSize: 16.5, fontWeight: 800, color: "#0C3446" }}>{g.title}</span>
-                    <span style={{ fontSize: 12.5, color: "#8AA5B1", marginInlineStart: 10 }}>{g.caption} · {g.rows.length} item{g.rows.length === 1 ? "" : "s"}</span>
-                  </span>
-                  <span style={{ color: "#1E92B8", fontSize: 15 }}>{isOpen ? "▾" : "▸"}</span>
-                </button>
-                {isOpen && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 18 }}>
-                    {g.rows.map((r) => {
-                      const dot = String(r.key).indexOf(".");
-                      const field = dot > 0 ? String(r.key).slice(dot + 1) : String(r.key);
-                      return (
-                        <div key={String(r.id)} style={{ borderTop: "1px solid rgba(12,52,70,0.07)", paddingTop: 14 }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 10 }}>
-                            <label style={{ fontSize: 13, fontWeight: 700, color: "#46687A" }}>{prettifyField(field)} <span style={{ fontWeight: 400, color: "#B4C4CC", fontSize: 11.5 }}>· {String(r.key)}</span></label>
-                            <button onClick={() => removeRow(r)} style={{ background: "none", border: "none", color: "#C99", fontSize: 12, cursor: "pointer" }}>Delete</button>
-                          </div>
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                              <span style={miniLbl}>Arabic</span>
-                              <textarea value={String(r.value_ar ?? "")} onChange={(e) => edit(r, "value_ar", e.target.value)} rows={2} dir="rtl" style={{ ...inp, resize: "vertical" }} />
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                              <span style={miniLbl}>English</span>
-                              <textarea value={String(r.value_en ?? "")} onChange={(e) => edit(r, "value_en", e.target.value)} rows={2} style={{ ...inp, resize: "vertical" }} />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+          {adding && (
+            <div style={{ ...card, marginBottom: 20 }}>
+              <div style={cardHead}>New text block</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <Labeled label="Key (e.g. home.msgTitle)"><input value={newRow.key} onChange={(e) => setNewRow({ ...newRow, key: e.target.value })} style={inp} /></Labeled>
+                <Labeled label="Section (e.g. Home page)"><input value={newRow.section} onChange={(e) => setNewRow({ ...newRow, section: e.target.value })} style={inp} /></Labeled>
+                <Labeled label="Text (Arabic)"><textarea value={newRow.value_ar} onChange={(e) => setNewRow({ ...newRow, value_ar: e.target.value })} rows={2} style={{ ...inp, resize: "vertical" }} dir="rtl" /></Labeled>
+                <Labeled label="Text (English)"><textarea value={newRow.value_en} onChange={(e) => setNewRow({ ...newRow, value_en: e.target.value })} rows={2} style={{ ...inp, resize: "vertical" }} /></Labeled>
               </div>
-            );
-          })}
-          {groups.length === 0 && (
-            <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>
-              No text blocks yet. Run the seed (Dashboard → Seed content) to populate every page&apos;s text, or add one above.
+              <button onClick={addBlock} disabled={saving} style={{ ...btnPrimary, marginTop: 14 }}>{saving ? "Adding…" : "Add block"}</button>
             </div>
           )}
-        </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
+            {PAGES.map((p) => {
+              const count = byPage[p.id]?.length ?? 0;
+              if (count === 0) return null;
+              return (
+                <button key={p.id} onClick={() => setSelected(p.id)} style={{ ...card, cursor: "pointer", textAlign: "start", display: "flex", alignItems: "center", gap: 14, border: "1px solid rgba(12,52,70,0.1)" }}>
+                  <span style={{ fontSize: 26, width: 48, height: 48, borderRadius: 12, background: "#EAF7FB", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{p.icon}</span>
+                  <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: "#0C3446" }}>{p.label}</span>
+                    <span style={{ fontSize: 12.5, color: "#8AA5B1" }}>{p.caption} · {count} item{count === 1 ? "" : "s"}</span>
+                  </span>
+                  <span style={{ marginInlineStart: "auto", color: "#1E92B8", fontSize: 20 }}>›</span>
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {/* ---------- DETAIL: one page's sections ---------- */}
+      {selected && cur && (
+        <>
+          <button onClick={() => setSelected(null)} style={{ ...btnGhost, marginBottom: 18 }}>← All pages</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+            <span style={{ fontSize: 30, width: 56, height: 56, borderRadius: 14, background: "#EAF7FB", display: "flex", alignItems: "center", justifyContent: "center" }}>{cur.icon}</span>
+            <div>
+              <h2 style={{ margin: 0, fontSize: 23, color: "#0C3446" }}>{cur.label} <span style={{ color: "#8AA5B1", fontSize: 16, fontWeight: 400 }}>{cur.labelAr}</span></h2>
+              <div style={{ fontSize: 13, color: "#8AA5B1" }}>{cur.caption}</div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 18, paddingBottom: 90 }}>
+            {sections.map((s) => (
+              <div key={s.id} style={card}>
+                <div style={{ fontSize: 15.5, fontWeight: 800, color: "#0C3446", marginBottom: 4 }}>{s.title}</div>
+                <div style={{ fontSize: 12, color: "#B4C4CC", marginBottom: 16 }}>{s.rows.length} item{s.rows.length === 1 ? "" : "s"}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {s.rows.map((r) => {
+                    const dot = String(r.key).indexOf(".");
+                    const field = dot > 0 ? String(r.key).slice(dot + 1) : String(r.key);
+                    return (
+                      <div key={String(r.id)} style={{ borderTop: "1px solid rgba(12,52,70,0.07)", paddingTop: 14 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 10 }}>
+                          <label style={{ fontSize: 13, fontWeight: 700, color: "#46687A" }}>{prettifyField(field)} <span style={{ fontWeight: 400, color: "#B4C4CC", fontSize: 11.5 }}>· {String(r.key)}</span></label>
+                          <button onClick={() => removeRow(r)} style={{ background: "none", border: "none", color: "#C99", fontSize: 12, cursor: "pointer" }}>Delete</button>
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <span style={miniLbl}>Arabic</span>
+                            <textarea value={String(r.value_ar ?? "")} onChange={(e) => edit(r, "value_ar", e.target.value)} rows={2} dir="rtl" style={{ ...inp, resize: "vertical" }} />
+                          </div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <span style={miniLbl}>English</span>
+                            <textarea value={String(r.value_en ?? "")} onChange={(e) => edit(r, "value_en", e.target.value)} rows={2} style={{ ...inp, resize: "vertical" }} />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+            {sections.length === 0 && <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>No text for this page yet.</div>}
+          </div>
+        </>
       )}
 
       {dirtyCount > 0 && (

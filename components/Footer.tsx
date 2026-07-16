@@ -147,8 +147,8 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 16, fontSize: 14, lineHeight: 1.9 }}>
               <div>{st("footer.clinic1", lang, t.clinic1)}</div>
               <div>{st("footer.clinic2", lang, t.clinic2)}</div>
-              <div style={{ direction: "ltr", textAlign: "end", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
-                {CONTACT_INFO.phone1} · {CONTACT_INFO.phone2}
+              <div style={{ color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
+                <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{CONTACT_INFO.phone1} · {CONTACT_INFO.phone2}</bdi>
               </div>
               <HoverBox as="a" href={`mailto:${CONTACT_INFO.email}`} style={{ color: "rgba(255,255,255,0.75)" }} hoverStyle={{ color: "#30B6DE" }}>
                 {CONTACT_INFO.email}
