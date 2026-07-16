@@ -12,6 +12,7 @@ import { casesContent } from "@/lib/content/cases";
 import { blogPosts, blogsUi } from "@/lib/content/blogs";
 import { mediaContent, GALLERY_SLOTS } from "@/lib/content/media";
 import { COMMON } from "@/lib/content/common";
+import { heroSlidesSeed, statsSeed, valuesSeed, featuresSeed } from "@/lib/data/sections";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -104,6 +105,12 @@ export async function POST(request: Request) {
   const galleryRows = GALLERY_SLOTS.map((g, i) => ({ type: "gallery", sort_order: i, is_published: true, span_gc: g.gc, span_gr: g.gr }));
   const videoRows = mAr.videos.map((v, i) => ({ type: "video", sort_order: 100 + i, is_published: true, span_gc: v.gc, span_gr: v.gr, title_ar: v.title, title_en: mEn.videos[i]?.title ?? "" }));
   await seedList("media_items", [...galleryRows, ...videoRows]);
+
+  // Home list sections
+  await seedList("hero_slides", heroSlidesSeed().map((s, i) => ({ sort_order: i, is_published: true, image_url: s.imageUrl ?? null, kicker_ar: s.kicker.ar, kicker_en: s.kicker.en, title1_ar: s.title1.ar, title1_en: s.title1.en, title2_ar: s.title2.ar, title2_en: s.title2.en, sub_ar: s.sub.ar, sub_en: s.sub.en })));
+  await seedList("hero_stats", statsSeed().map((s, i) => ({ sort_order: i, is_published: true, num_ar: s.num.ar, num_en: s.num.en, label_ar: s.label.ar, label_en: s.label.en })));
+  await seedList("value_items", valuesSeed().map((v, i) => ({ sort_order: i, is_published: true, num: v.num, title_ar: v.title.ar, title_en: v.title.en, body_ar: v.body.ar, body_en: v.body.en })));
+  await seedList("feature_items", featuresSeed().map((f, i) => ({ sort_order: i, is_published: true, glyph: f.glyph, title_ar: f.title.ar, title_en: f.title.en, desc_ar: f.desc.ar, desc_en: f.desc.en })));
 
   // Site text (header/footer) — editable in the "Site text" admin section
   const A = COMMON.ar, E = COMMON.en;

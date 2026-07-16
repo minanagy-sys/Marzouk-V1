@@ -33,6 +33,8 @@ host's environment settings. Never commit secrets.
 1. `supabase/schema.sql` — creates all tables + security.
 2. `supabase/storage.sql` — creates the public `media` bucket for admin image uploads.
 3. `supabase/blog_categories.sql` — adds blog categories + links posts to a category.
+4. `supabase/instagram_and_extras.sql` — Instagram table + parent service + review ratings.
+5. `supabase/home_sections.sql` — editable hero slides, stats, values, and features.
 Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
 
 ## Deploy (Vercel — recommended)
