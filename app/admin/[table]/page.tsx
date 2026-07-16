@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
+import { compressImage } from "@/lib/admin/image";
 import RichTextField from "@/components/admin/RichTextField";
 import SiteTextEditor from "@/components/admin/SiteTextEditor";
 import BookingsTable from "@/components/admin/BookingsTable";
@@ -314,7 +315,7 @@ function ImageField({ value, onChange, disabled }: { value: unknown; onChange: (
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
     setUploading(true); setErr("");
-    try { onChange(await adminUpload(file)); } catch (x) { setErr((x as Error).message); }
+    try { onChange(await adminUpload(await compressImage(file))); } catch (x) { setErr((x as Error).message); }
     setUploading(false); e.target.value = "";
   };
   return (

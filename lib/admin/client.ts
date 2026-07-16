@@ -44,8 +44,15 @@ export async function adminUpload(file: File): Promise<string> {
     headers: { Authorization: `Bearer ${await token()}` },
     body: fd,
   });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error || "upload_failed");
+  // The server may return a non-JSON body (e.g. a "Request Entity Too Large"
+  // plain-text 413 from the host) — read as text and parse defensively.
+  const text = await res.text();
+  let json: Record<string, unknown> = {};
+  try { json = text ? JSON.parse(text) : {}; } catch { /* non-JSON error body */ }
+  if (!res.ok) {
+    if (res.status === 413) throw new Error("Image is too large. Please choose an image under ~4 MB (it will be optimized automatically).");
+    throw new Error((json.error as string) || `upload_failed (${res.status})`);
+  }
   return json.url as string;
 }
 
