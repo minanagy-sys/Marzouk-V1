@@ -305,10 +305,11 @@ export const COLLECTIONS: Record<string, Collection> = {
 
   bookings: {
     table: "bookings", label: "Bookings", labelAr: "الحجوزات", singular: "Booking", icon: "📥", group: "System", readOnly: true,
-    listColumns: ["name", "phone", "service", "status", "created_at"], titleColumn: "name", defaultOrder: "created_at",
+    listColumns: ["name", "phone", "email", "service", "status", "created_at"], titleColumn: "name", defaultOrder: "created_at",
     fields: [
       { name: "name", label: "Name", type: "text" },
       { name: "phone", label: "Phone", type: "text" },
+      { name: "email", label: "Email", type: "text" },
       { name: "service", label: "Service", type: "text" },
       { name: "message", label: "Message", type: "textarea" },
       { name: "status", label: "Status", type: "select", options: ["new", "contacted", "confirmed", "done", "cancelled"] },

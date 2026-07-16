@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContactView from "./ContactView";
 import { getClinics } from "@/lib/data/clinics";
+import { getServices } from "@/lib/data/services";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const clinics = await getClinics();
-  return <ContactView clinics={clinics} />;
+  const [clinics, services] = await Promise.all([getClinics(), getServices()]);
+  const serviceOptions = services.map((s) => ({ ar: s.title.ar, en: s.title.en }));
+  return <ContactView clinics={clinics} serviceOptions={serviceOptions} />;
 }
