@@ -184,7 +184,7 @@ export default function HomeView({
           <SectionHead kicker={t.celebKicker} title={t.celebTitle} href="/cases#celebs" cta={t.viewAll} arrow={arrow} />
           <Slider>
             {celebrities.map((cel) => (
-              <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ flex: "0 0 240px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
+              <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ display: "block", flex: "0 0 240px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
                 <span style={{ display: "block", width: 110, height: 110, margin: "0 auto", borderRadius: "50%", padding: 4, background: "linear-gradient(135deg, #30B6DE, #8FE0F7)" }}>
                   <ImageSlot src={cel.imageUrl} shape="circle" placeholder={t.photoPh} style={{ width: 102, height: 102 }} />
                 </span>
