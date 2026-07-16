@@ -9,6 +9,7 @@ import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { casesContent, caseCardStyle } from "@/lib/content/cases";
 import { common } from "@/lib/content/common";
 import { pick, type CaseItem } from "@/lib/data/types";
@@ -16,7 +17,7 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function CasesView({ cases }: { cases: CaseItem[] }) {
   const { lang, dir } = useLang();
-  const { t } = casesContent(lang);
+  const t = usePageText("cases", lang, casesContent(lang).t);
   const tc = common(lang);
   const [tab, setTab] = useState<"success" | "celebrity">("success");
 

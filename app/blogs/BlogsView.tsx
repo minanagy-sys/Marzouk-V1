@@ -9,6 +9,7 @@ import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { blogsUi } from "@/lib/content/blogs";
 import { common } from "@/lib/content/common";
 import { pick, type BlogPostBi, type BlogCategory } from "@/lib/data/types";
@@ -16,7 +17,7 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function BlogsView({ posts, categories }: { posts: BlogPostBi[]; categories: BlogCategory[] }) {
   const { lang, dir } = useLang();
-  const ui = blogsUi(lang);
+  const ui = usePageText("blogs", lang, blogsUi(lang));
   const tc = common(lang);
   const [cat, setCat] = useState<string>("all");
 

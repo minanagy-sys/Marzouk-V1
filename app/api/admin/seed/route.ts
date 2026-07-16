@@ -7,7 +7,9 @@ import { CASES_SEED } from "@/lib/data/cases";
 import { homeContent } from "@/lib/content/home";
 import { aboutContent } from "@/lib/content/about";
 import { contactContent } from "@/lib/content/contact";
-import { blogPosts } from "@/lib/content/blogs";
+import { servicesContent } from "@/lib/content/services";
+import { casesContent } from "@/lib/content/cases";
+import { blogPosts, blogsUi } from "@/lib/content/blogs";
 import { mediaContent, GALLERY_SLOTS } from "@/lib/content/media";
 import { COMMON } from "@/lib/content/common";
 
@@ -121,9 +123,24 @@ export async function POST(request: Request) {
     { key: "footer.clinic2", section: "Footer", value_ar: A.clinic2, value_en: E.clinic2 },
     { key: "footer.copyright", section: "Footer", value_ar: A.copyright, value_en: E.copyright },
   ];
+  // Every page's text — editable in the "Site text" admin section (key: page.field)
+  const pageRows = (prefix: string, arObj: Record<string, string>, enObj: Record<string, string>, section: string) =>
+    Object.keys(arObj).map((k) => ({ key: `${prefix}.${k}`, section, value_ar: arObj[k] ?? "", value_en: enObj[k] ?? arObj[k] ?? "" }));
+
+  const pageText = [
+    ...pageRows("home", homeContent("ar").t, homeContent("en").t, "Home page"),
+    ...pageRows("about", aboutContent("ar").t, aboutContent("en").t, "About page"),
+    ...pageRows("services", servicesContent("ar").t, servicesContent("en").t, "Services page"),
+    ...pageRows("cases", casesContent("ar").t, casesContent("en").t, "Cases page"),
+    ...pageRows("blogs", blogsUi("ar"), blogsUi("en"), "Blog page"),
+    ...pageRows("media", mediaContent("ar").t, mediaContent("en").t, "Media page"),
+    ...pageRows("contact", contactContent("ar").t, contactContent("en").t, "Contact page"),
+  ];
+
   {
-    const { error } = await supabase.from("site_content").upsert(sc, { onConflict: "key" });
-    results.site_content = error ? `error: ${error.message}` : `${sc.length} upserted`;
+    const all = [...sc, ...pageText];
+    const { error } = await supabase.from("site_content").upsert(all, { onConflict: "key" });
+    results.site_content = error ? `error: ${error.message}` : `${all.length} upserted`;
   }
 
   revalidatePath("/", "layout");

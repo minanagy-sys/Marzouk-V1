@@ -7,6 +7,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import { useLang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { aboutContent } from "@/lib/content/about";
 import { common } from "@/lib/content/common";
 import { pick, type Testimonial } from "@/lib/data/types";
@@ -14,7 +15,9 @@ import { SERIF, SANS } from "@/lib/theme";
 
 export default function AboutView({ testimonials }: { testimonials: Testimonial[] }) {
   const { lang, dir } = useLang();
-  const { t, facts, vm, why } = aboutContent(lang);
+  const a = aboutContent(lang);
+  const t = usePageText("about", lang, a.t);
+  const { facts, vm, why } = a;
   const tc = common(lang);
 
   return (

@@ -7,6 +7,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import { useLang, type Lang } from "@/lib/lang";
+import { usePageText } from "@/lib/settings";
 import { contactContent } from "@/lib/content/contact";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type Clinic } from "@/lib/data/types";
@@ -42,7 +43,7 @@ function MapPin({ clinic, index, open, onToggle, directions, lang }: { clinic: C
 
 export default function ContactView({ clinics }: { clinics: Clinic[] }) {
   const { lang, dir } = useLang();
-  const { t } = contactContent(lang);
+  const t = usePageText("contact", lang, contactContent(lang).t);
   const tc = common(lang);
 
   const [activePin, setActivePin] = useState(0);
