@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AboutView from "./AboutView";
 import { getTestimonials } from "@/lib/data/testimonials";
+import { getValues, getFeatures, getStats } from "@/lib/data/sections";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const testimonials = await getTestimonials();
-  return <AboutView testimonials={testimonials} />;
+  const [testimonials, values, features, stats] = await Promise.all([
+    getTestimonials(),
+    getValues(),
+    getFeatures(),
+    getStats(),
+  ]);
+  return <AboutView testimonials={testimonials} values={values} features={features} stats={stats} />;
 }

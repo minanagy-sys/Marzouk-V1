@@ -10,14 +10,16 @@ import { useLang } from "@/lib/lang";
 import { usePageText } from "@/lib/settings";
 import { aboutContent } from "@/lib/content/about";
 import { common } from "@/lib/content/common";
-import { pick, type Testimonial } from "@/lib/data/types";
+import { pick, type Testimonial, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
-export default function AboutView({ testimonials }: { testimonials: Testimonial[] }) {
+export default function AboutView({ testimonials, values, features, stats }: { testimonials: Testimonial[]; values: ValueItem[]; features: Feature[]; stats: Stat[] }) {
   const { lang, dir } = useLang();
   const a = aboutContent(lang);
   const t = usePageText("about", lang, a.t);
-  const { facts, vm, why } = a;
+  const facts = stats;
+  const vm = values;
+  const why = features;
   const tc = common(lang);
 
   return (
@@ -47,9 +49,9 @@ export default function AboutView({ testimonials }: { testimonials: Testimonial[
             <p style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", margin: "16px 0 0", textWrap: "pretty" }}>{t.whoBody2}</p>
             <div style={{ display: "flex", gap: 34, marginTop: 32, flexWrap: "wrap" }}>
               {facts.map((f) => (
-                <div key={f.label}>
-                  <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 28, color: "#30B6DE" }}>{f.num}</div>
-                  <div style={{ fontSize: 13.5, color: "#5B7A88", maxWidth: 150 }}>{f.label}</div>
+                <div key={f.id}>
+                  <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 28, color: "#30B6DE" }}>{pick(f.num, lang)}</div>
+                  <div style={{ fontSize: 13.5, color: "#5B7A88", maxWidth: 150 }}>{pick(f.label, lang)}</div>
                 </div>
               ))}
             </div>
@@ -67,10 +69,10 @@ export default function AboutView({ testimonials }: { testimonials: Testimonial[
           </div>
           <div className="dam-3col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 26, marginTop: 54 }}>
             {vm.map((v) => (
-              <HoverBox key={v.num} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(48,182,222,0.25)", borderRadius: 24, padding: "38px 32px" }} hoverStyle={{ borderColor: "rgba(48,182,222,0.6)", background: "rgba(48,182,222,0.08)" }}>
+              <HoverBox key={v.id} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(48,182,222,0.25)", borderRadius: 24, padding: "38px 32px" }} hoverStyle={{ borderColor: "rgba(48,182,222,0.6)", background: "rgba(48,182,222,0.08)" }}>
                 <div style={{ fontFamily: SERIF, fontSize: 44, fontWeight: 700, color: "rgba(48,182,222,0.45)" }}>{v.num}</div>
-                <div style={{ fontFamily: SERIF, fontSize: 24, fontWeight: 700, color: "#ffffff", marginTop: 10 }}>{v.title}</div>
-                <p style={{ fontSize: 15, lineHeight: 1.95, color: "rgba(255,255,255,0.7)", margin: "14px 0 0" }}>{v.body}</p>
+                <div style={{ fontFamily: SERIF, fontSize: 24, fontWeight: 700, color: "#ffffff", marginTop: 10 }}>{pick(v.title, lang)}</div>
+                <p style={{ fontSize: 15, lineHeight: 1.95, color: "rgba(255,255,255,0.7)", margin: "14px 0 0" }}>{pick(v.body, lang)}</p>
               </HoverBox>
             ))}
           </div>
@@ -86,10 +88,10 @@ export default function AboutView({ testimonials }: { testimonials: Testimonial[
           </div>
           <div className="dam-4col" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 22, marginTop: 50 }}>
             {why.map((w) => (
-              <HoverBox key={w.title} style={{ background: "#F4FBFD", border: "1px solid rgba(48,182,222,0.2)", borderRadius: 20, padding: "30px 26px", textAlign: "center" }} hoverStyle={{ background: "#EAF7FB", borderColor: "rgba(48,182,222,0.5)", transform: "translateY(-6px)" }}>
+              <HoverBox key={w.id} style={{ background: "#F4FBFD", border: "1px solid rgba(48,182,222,0.2)", borderRadius: 20, padding: "30px 26px", textAlign: "center" }} hoverStyle={{ background: "#EAF7FB", borderColor: "rgba(48,182,222,0.5)", transform: "translateY(-6px)" }}>
                 <span style={{ width: 56, height: 56, margin: "0 auto", borderRadius: "50%", background: "#ffffff", border: "1px solid rgba(48,182,222,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 25, color: "#1E92B8", boxShadow: "0 6px 14px rgba(48,182,222,0.15)", fontFamily: SERIF, fontWeight: 700 }}>{w.glyph}</span>
-                <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, color: "#0C3446", marginTop: 16 }}>{w.title}</div>
-                <div style={{ fontSize: 14, lineHeight: 1.8, color: "#5B7A88", marginTop: 8 }}>{w.desc}</div>
+                <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, color: "#0C3446", marginTop: 16 }}>{pick(w.title, lang)}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.8, color: "#5B7A88", marginTop: 8 }}>{pick(w.desc, lang)}</div>
               </HoverBox>
             ))}
           </div>

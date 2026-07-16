@@ -66,6 +66,35 @@ export type Testimonial = {
   rating?: number;
 };
 
+export type HeroSlide = {
+  id: string;
+  imageUrl?: string;
+  kicker: BiText;
+  title1: BiText;
+  title2: BiText;
+  sub: BiText;
+};
+
+export type Stat = {
+  id: string;
+  num: BiText;
+  label: BiText;
+};
+
+export type ValueItem = {
+  id: string;
+  num: string;
+  title: BiText;
+  body: BiText;
+};
+
+export type Feature = {
+  id: string;
+  glyph: string;
+  title: BiText;
+  desc: BiText;
+};
+
 export type InstagramPost = {
   id: string;
   imageUrl?: string;

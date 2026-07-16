@@ -233,6 +233,61 @@ export const COLLECTIONS: Record<string, Collection> = {
     ],
   },
 
+  hero_slides: {
+    table: "hero_slides", label: "Hero slides", labelAr: "شرائح الواجهة", singular: "Slide", icon: "🖼️", group: "Content",
+    listColumns: ["title1_ar", "sort_order", "is_published"], titleColumn: "title1_ar", defaultOrder: "sort_order",
+    fields: [
+      ...publish,
+      { name: "image_url", label: "Background image", type: "image", group: "Basics" },
+      { name: "kicker_ar", label: "Kicker (Arabic)", type: "text", group: "Basics" },
+      { name: "kicker_en", label: "Kicker (English)", type: "text", group: "Basics" },
+      { name: "title1_ar", label: "Title line 1 (Arabic)", type: "text", group: "Basics" },
+      { name: "title1_en", label: "Title line 1 (English)", type: "text", group: "Basics" },
+      { name: "title2_ar", label: "Title line 2 — highlighted (Arabic)", type: "text", group: "Basics" },
+      { name: "title2_en", label: "Title line 2 — highlighted (English)", type: "text", group: "Basics" },
+      { name: "sub_ar", label: "Subtitle (Arabic)", type: "textarea", group: "Basics" },
+      { name: "sub_en", label: "Subtitle (English)", type: "textarea", group: "Basics" },
+    ],
+  },
+
+  hero_stats: {
+    table: "hero_stats", label: "Stats", labelAr: "الأرقام", singular: "Stat", icon: "🔢", group: "Content",
+    listColumns: ["num_ar", "label_ar", "sort_order", "is_published"], titleColumn: "num_ar", defaultOrder: "sort_order",
+    fields: [
+      ...publish,
+      { name: "num_ar", label: "Number (Arabic)", type: "text", group: "Basics" },
+      { name: "num_en", label: "Number (English)", type: "text", group: "Basics" },
+      { name: "label_ar", label: "Label (Arabic)", type: "text", group: "Basics" },
+      { name: "label_en", label: "Label (English)", type: "text", group: "Basics" },
+    ],
+  },
+
+  value_items: {
+    table: "value_items", label: "Mission / Vision / Values", labelAr: "الرسالة والرؤية والقيم", singular: "Item", icon: "🎯", group: "Content",
+    listColumns: ["title_ar", "num", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
+    fields: [
+      ...publish,
+      { name: "num", label: "Number (e.g. 01)", type: "text", group: "Basics" },
+      { name: "title_ar", label: "Title (Arabic)", type: "text", group: "Basics" },
+      { name: "title_en", label: "Title (English)", type: "text", group: "Basics" },
+      { name: "body_ar", label: "Body (Arabic)", type: "textarea", group: "Basics" },
+      { name: "body_en", label: "Body (English)", type: "textarea", group: "Basics" },
+    ],
+  },
+
+  feature_items: {
+    table: "feature_items", label: "Why-us features", labelAr: "لماذا تختارنا", singular: "Feature", icon: "✨", group: "Content",
+    listColumns: ["title_ar", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
+    fields: [
+      ...publish,
+      { name: "glyph", label: "Icon", type: "icon", group: "Basics" },
+      { name: "title_ar", label: "Title (Arabic)", type: "text", group: "Basics" },
+      { name: "title_en", label: "Title (English)", type: "text", group: "Basics" },
+      { name: "desc_ar", label: "Description (Arabic)", type: "textarea", group: "Basics" },
+      { name: "desc_en", label: "Description (English)", type: "textarea", group: "Basics" },
+    ],
+  },
+
   bookings: {
     table: "bookings", label: "Bookings", labelAr: "الحجوزات", singular: "Booking", icon: "📥", group: "System", readOnly: true,
     listColumns: ["name", "phone", "service", "status", "created_at"], titleColumn: "name", defaultOrder: "created_at",
@@ -253,6 +308,7 @@ export const GROUPS: Collection["group"][] = ["Content", "Blog", "System"];
 /** Expandable sidebar tree — parents with arrow-submenus. */
 export type NavParent = { label: string; labelAr: string; icon: string; children: string[] };
 export const NAV_TREE: NavParent[] = [
+  { label: "Home sections", labelAr: "أقسام الرئيسية", icon: "🏠", children: ["hero_slides", "hero_stats", "value_items", "feature_items"] },
   { label: "Services", labelAr: "الخدمات", icon: "🩺", children: ["services"] },
   { label: "Cases", labelAr: "الحالات", icon: "⭐", children: ["cases", "celebrities"] },
   { label: "Blog", labelAr: "المدونة", icon: "📝", children: ["blog_categories", "blog_posts"] },
