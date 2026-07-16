@@ -41,8 +41,8 @@ export default function HomeView({
   const nextTitle = c.slides[(slide + 1) % 3].t1 + " " + c.slides[(slide + 1) % 3].t2;
 
   const L = isAr
-    ? { revKicker: "آراء المرضى", revTitle: "ماذا قالوا عنا", igKicker: "إنستجرام", igTitle: "تابعونا على إنستجرام", igFollow: "متابعة", video: "فيديو" }
-    : { revKicker: "Patient reviews", revTitle: "What they said about us", igKicker: "Instagram", igTitle: "Follow us on Instagram", igFollow: "Follow", video: "Video" };
+    ? { revKicker: "آراء المرضى", revTitle: "ماذا قالوا عنا", igKicker: "إنستجرام", igTitle: "تابعونا على إنستجرام", igFollow: "متابعة", video: "فيديو", post: "منشور", viewIg: "عرض على إنستجرام" }
+    : { revKicker: "Patient reviews", revTitle: "What they said about us", igKicker: "Instagram", igTitle: "Follow us on Instagram", igFollow: "Follow", video: "Video", post: "Post", viewIg: "View on Instagram" };
 
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
@@ -235,11 +235,17 @@ export default function HomeView({
             </div>
             <Slider gap={16}>
               {instagram.map((p) => (
-                <HoverBox key={p.id} as="a" href={p.permalink || CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }} hoverStyle={{ transform: "translateY(-4px)", boxShadow: "0 18px 40px rgba(193,53,132,0.25)" }}>
+                <a key={p.id} href={p.permalink || CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="ig-card" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }}>
                   <ImageSlot src={p.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
-                  {p.isVideo && <span style={{ position: "absolute", top: 12, insetInlineEnd: 12, background: "rgba(4,32,46,0.7)", color: "#fff", borderRadius: 8, padding: "4px 8px", fontSize: 11, fontWeight: 800 }}>▶ {L.video}</span>}
-                  {pick(p.caption, lang) && <span style={{ position: "absolute", bottom: 0, insetInline: 0, padding: "14px 14px", background: "linear-gradient(180deg, transparent, rgba(4,32,46,0.85))", color: "#fff", fontSize: 12.5, lineHeight: 1.5, pointerEvents: "none" }}>{pick(p.caption, lang).slice(0, 80)}</span>}
-                </HoverBox>
+                  {/* type badge (post / video) */}
+                  <span style={{ position: "absolute", top: 12, insetInlineEnd: 12, background: "rgba(4,32,46,0.7)", color: "#fff", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, zIndex: 2 }}>{p.isVideo ? `▶ ${L.video}` : L.post}</span>
+                  {/* hover overlay → View on Instagram */}
+                  <span className="ig-overlay" style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(225,48,108,0.9), rgba(131,58,180,0.9))", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, color: "#fff", textAlign: "center", padding: 18 }}>
+                    <svg width="34" height="34" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
+                    <span style={{ fontWeight: 800, fontSize: 14 }}>{L.viewIg}</span>
+                    {pick(p.caption, lang) && <span style={{ fontSize: 12, lineHeight: 1.5, opacity: 0.92 }}>{pick(p.caption, lang).slice(0, 70)}</span>}
+                  </span>
+                </a>
               ))}
             </Slider>
           </div>
