@@ -7,6 +7,7 @@ import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 import RichTextField from "@/components/admin/RichTextField";
 import SiteTextEditor from "@/components/admin/SiteTextEditor";
+import BookingsTable from "@/components/admin/BookingsTable";
 import { ytThumb } from "@/lib/youtube";
 
 const arrToHtml = (v: unknown): string =>
@@ -127,6 +128,8 @@ export default function AdminCollectionPage() {
 
       {table === "site_content" ? (
         <SiteTextEditor />
+      ) : table === "bookings" ? (
+        <BookingsTable />
       ) : editing !== null ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {groups.map((g) => (
