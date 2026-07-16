@@ -1,14 +1,10 @@
 import type { InstagramPost } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 
-// A few placeholders so the section renders before real posts are added/synced.
+// Instagram posts are added manually from the admin dashboard only.
+// No placeholders and no API fetch — the section stays hidden until posts exist.
 export function instagramSeed(): InstagramPost[] {
-  return Array.from({ length: 6 }, (_, i) => ({
-    id: "ig" + i,
-    caption: { ar: "", en: "" },
-    permalink: "https://www.instagram.com/dr.ahmed.marzok/",
-    isVideo: i % 3 === 0,
-  }));
+  return [];
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
