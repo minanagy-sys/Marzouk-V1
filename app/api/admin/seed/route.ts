@@ -29,9 +29,39 @@ export async function POST(request: Request) {
 
   const results: Record<string, string> = {};
 
+  // Parent services / categories (upsert by slug) — powers the services-page filter.
+  const SERVICE_CATEGORIES = [
+    { slug: "delivery", sort_order: 1, is_published: true, name_ar: "الولادة", name_en: "Delivery" },
+    { slug: "tumor-surgery", sort_order: 2, is_published: true, name_ar: "جراحة الأورام", name_en: "Tumor Surgery" },
+    { slug: "cosmetic", sort_order: 3, is_published: true, name_ar: "التجميل النسائي", name_en: "Cosmetic Gynecology" },
+    { slug: "specialized", sort_order: 4, is_published: true, name_ar: "رعاية تخصصية", name_en: "Specialized Care" },
+  ];
+  const catIdBySlug: Record<string, string> = {};
+  {
+    const { error } = await supabase.from("service_categories").upsert(SERVICE_CATEGORIES, { onConflict: "slug" });
+    if (error) {
+      results.service_categories = `error: ${error.message}`;
+    } else {
+      const { data } = await supabase.from("service_categories").select("id, slug");
+      (data ?? []).forEach((c: { id: string; slug: string }) => { catIdBySlug[c.slug] = c.id; });
+      results.service_categories = `${SERVICE_CATEGORIES.length} upserted`;
+    }
+  }
+
+  // Map each seed service to its parent category.
+  const SERVICE_CAT_MAP: Record<string, string> = {
+    "pain-free-cesarean": "delivery",
+    "pain-free-natural-birth": "delivery",
+    "complex-fibroid-removal": "tumor-surgery",
+    "endometriosis-care": "specialized",
+    "cosmetic-gynecology": "cosmetic",
+    "tummy-tuck-with-cesarean": "cosmetic",
+  };
+
   // Services (upsert by slug)
   const serviceRows = SERVICES_SEED.map((s, i) => ({
-    slug: s.slug, sort_order: i, is_published: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
+    slug: s.slug, sort_order: i, is_published: true, show_on_home: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
+    category_id: catIdBySlug[SERVICE_CAT_MAP[s.slug] ?? ""] ?? null,
     span_gc: s.gc, span_gr: s.gr,
     tag_ar: s.tag.ar, tag_en: s.tag.en, title_ar: s.title.ar, title_en: s.title.en,
     short_desc_ar: s.shortDesc.ar, short_desc_en: s.shortDesc.en, hero_sub_ar: s.heroSub.ar, hero_sub_en: s.heroSub.en,
@@ -42,7 +72,16 @@ export async function POST(request: Request) {
     meta_title_ar: s.metaTitle.ar, meta_title_en: s.metaTitle.en, meta_desc_ar: s.metaDesc.ar, meta_desc_en: s.metaDesc.en,
   }));
   {
-    const { error } = await supabase.from("services").upsert(serviceRows, { onConflict: "slug" });
+    let { error } = await supabase.from("services").upsert(serviceRows, { onConflict: "slug" });
+    if (error) {
+      // Older schema without category_id / show_on_home — retry without them.
+      const fallback = serviceRows.map((r) => {
+        const copy: Record<string, unknown> = { ...r };
+        delete copy.category_id; delete copy.show_on_home;
+        return copy;
+      });
+      ({ error } = await supabase.from("services").upsert(fallback, { onConflict: "slug" }));
+    }
     results.services = error ? `error: ${error.message}` : `${serviceRows.length} upserted`;
   }
 

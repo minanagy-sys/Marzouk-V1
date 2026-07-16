@@ -48,13 +48,25 @@ const publish: Field[] = [
 ];
 
 export const COLLECTIONS: Record<string, Collection> = {
+  service_categories: {
+    table: "service_categories", label: "Parent services", labelAr: "الخدمات الرئيسية", singular: "Parent service", icon: "🗂️", group: "Content",
+    listColumns: ["name_ar", "name_en", "sort_order", "is_published"], titleColumn: "name_ar", defaultOrder: "sort_order",
+    fields: [
+      { name: "slug", label: "Link (slug)", type: "text", help: "e.g. delivery", group: "Settings" },
+      ...publish,
+      { name: "name_ar", label: "Name (Arabic)", type: "text", group: "Basics" },
+      { name: "name_en", label: "Name (English)", type: "text", group: "Basics" },
+    ],
+  },
+
   services: {
     table: "services", label: "Services", labelAr: "الخدمات", singular: "Service", icon: "🩺", group: "Content",
     listColumns: ["title_ar", "tag_ar", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", help: "e.g. pain-free-cesarean", group: "Settings" },
-      { name: "parent_id", label: "Parent service", type: "reference", refTable: "services", refLabelColumn: "title_ar", group: "Settings", help: "Optional — group this under a main service" },
+      { name: "category_id", label: "Parent service (category)", type: "reference", refTable: "service_categories", refLabelColumn: "name_ar", group: "Settings", help: "Groups this under a main service — powers the filter on the services page" },
       ...publish,
+      { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the services slider on the home page" },
       { name: "glyph", label: "Icon", type: "icon", group: "Basics" },
       { name: "image_url", label: "Main image", type: "image", group: "Basics" },
       { name: "tag_ar", label: "Tag (Arabic)", type: "text", group: "Basics" },
@@ -136,6 +148,7 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
       { name: "category_id", label: "Category", type: "reference", refTable: "blog_categories", refLabelColumn: "name_ar", group: "Settings" },
       ...publish,
+      { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the latest-articles slider on the home page" },
       { name: "image_url", label: "Cover image", type: "image", group: "Basics" },
       { name: "published_date", label: "Date", type: "date", group: "Basics" },
       { name: "tag_ar", label: "Tag (Arabic)", type: "text", group: "Basics" },
@@ -171,6 +184,7 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["name_ar", "sort_order", "is_published"], titleColumn: "name_ar", defaultOrder: "sort_order",
     fields: [
       ...publish,
+      { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the celebrities slider on the home page" },
       { name: "image_url", label: "Photo", type: "image", group: "Basics" },
       { name: "name_ar", label: "Name (Arabic)", type: "text", group: "Basics" },
       { name: "name_en", label: "Name (English)", type: "text", group: "Basics" },
@@ -184,6 +198,7 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["name", "sort_order", "is_published"], titleColumn: "name", defaultOrder: "sort_order",
     fields: [
       ...publish,
+      { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the reviews slider on the home page" },
       { name: "name", label: "Patient name", type: "text", group: "Basics" },
       { name: "rating", label: "Rating (1-5 stars)", type: "number", group: "Basics" },
       { name: "text_ar", label: "Testimonial (Arabic)", type: "textarea", group: "Basics" },
@@ -309,7 +324,7 @@ export const GROUPS: Collection["group"][] = ["Content", "Blog", "System"];
 export type NavParent = { label: string; labelAr: string; icon: string; children: string[] };
 export const NAV_TREE: NavParent[] = [
   { label: "Home sections", labelAr: "أقسام الرئيسية", icon: "🏠", children: ["hero_slides", "hero_stats", "value_items", "feature_items"] },
-  { label: "Services", labelAr: "الخدمات", icon: "🩺", children: ["services"] },
+  { label: "Services", labelAr: "الخدمات", icon: "🩺", children: ["service_categories", "services"] },
   { label: "Cases", labelAr: "الحالات", icon: "⭐", children: ["cases", "celebrities"] },
   { label: "Blog", labelAr: "المدونة", icon: "📝", children: ["blog_categories", "blog_posts"] },
   { label: "Media", labelAr: "الإعلام", icon: "🖼️", children: ["media_items", "instagram_posts"] },

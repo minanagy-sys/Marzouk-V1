@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ServicesView from "./ServicesView";
 import { getServices } from "@/lib/data/services";
+import { getServiceCategories } from "@/lib/data/serviceCategories";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-  const services = await getServices();
-  return <ServicesView services={services} />;
+  const [services, categories] = await Promise.all([getServices(), getServiceCategories()]);
+  return <ServicesView services={services} categories={categories} />;
 }

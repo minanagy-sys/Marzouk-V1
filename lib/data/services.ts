@@ -430,12 +430,17 @@ export const SERVICES_SEED: Service[] = [
 // --- Map a Supabase row to the Service shape -------------------------------
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowToService(r: any): Service {
+  const cat = r.service_categories;
   return {
     slug: r.slug,
     slotId: r.slug,
     glyph: r.glyph ?? "",
     id: r.id,
     parentId: r.parent_id ?? undefined,
+    categoryId: r.category_id ?? undefined,
+    categorySlug: cat?.slug ?? undefined,
+    categoryName: cat ? { ar: cat.name_ar ?? "", en: cat.name_en ?? "" } : undefined,
+    showOnHome: r.show_on_home ?? true,
     imageUrl: r.image_url ?? undefined,
     gc: r.span_gc ?? "auto",
     gr: r.span_gr ?? "auto",
@@ -459,26 +464,35 @@ function rowToService(r: any): Service {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+const SELECT_WITH_CAT = "*, service_categories(slug, name_ar, name_en)";
+
 /** All published services (Supabase → seed fallback). Server-side. */
 export async function getServices(): Promise<Service[]> {
   const supabase = getServiceClient() ?? getAnonClient();
   if (!supabase) return SERVICES_SEED;
-  const { data, error } = await supabase
+  let res = await supabase
     .from("services")
-    .select("*")
+    .select(SELECT_WITH_CAT)
     .eq("is_published", true)
     .order("sort_order", { ascending: true });
-  if (error || !data || data.length === 0) return SERVICES_SEED;
-  return data.map(rowToService);
+  if (res.error) res = await supabase.from("services").select("*").eq("is_published", true).order("sort_order", { ascending: true });
+  if (res.error || !res.data || res.data.length === 0) return SERVICES_SEED;
+  return res.data.map(rowToService);
+}
+
+/** Published services flagged to appear in the home slider. Server-side. */
+export async function getServicesHome(): Promise<Service[]> {
+  return (await getServices()).filter((s) => s.showOnHome !== false);
 }
 
 /** One service by slug (Supabase → seed fallback). Server-side. */
 export async function getService(slug: string): Promise<Service | undefined> {
   const supabase = getServiceClient() ?? getAnonClient();
   if (!supabase) return SERVICES_SEED.find((s) => s.slug === slug);
-  const { data, error } = await supabase.from("services").select("*").eq("slug", slug).single();
-  if (error || !data) return SERVICES_SEED.find((s) => s.slug === slug);
-  return rowToService(data);
+  let res = await supabase.from("services").select(SELECT_WITH_CAT).eq("slug", slug).single();
+  if (res.error) res = await supabase.from("services").select("*").eq("slug", slug).single();
+  if (res.error || !res.data) return SERVICES_SEED.find((s) => s.slug === slug);
+  return rowToService(res.data);
 }
 
 /** Slugs for static generation. */

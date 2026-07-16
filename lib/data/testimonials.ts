@@ -10,7 +10,7 @@ export function testimonialsSeed(): Testimonial[] {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowTo(r: any): Testimonial {
-  return { id: r.id, name: r.name ?? "", text: { ar: r.text_ar ?? "", en: r.text_en ?? "" }, rating: r.rating ?? 5 };
+  return { id: r.id, name: r.name ?? "", text: { ar: r.text_ar ?? "", en: r.text_en ?? "" }, rating: r.rating ?? 5, showOnHome: r.show_on_home ?? true };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -20,4 +20,9 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   const { data, error } = await supabase.from("testimonials").select("*").eq("is_published", true).order("sort_order", { ascending: true });
   if (error || !data || data.length === 0) return testimonialsSeed();
   return data.map(rowTo);
+}
+
+/** Published testimonials flagged to appear in the home slider. */
+export async function getTestimonialsHome(): Promise<Testimonial[]> {
+  return (await getTestimonials()).filter((t) => t.showOnHome !== false);
 }

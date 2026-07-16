@@ -32,6 +32,7 @@ function rowTo(r: any): BlogPostBi {
     body: { ar: toHtml(r.body_ar), en: toHtml(r.body_en) },
     categorySlug: cat?.slug ?? undefined,
     categoryName: cat ? { ar: cat.name_ar ?? "", en: cat.name_en ?? "" } : undefined,
+    showOnHome: r.show_on_home ?? true,
   };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -45,6 +46,11 @@ export async function getBlogPostsBi(): Promise<BlogPostBi[]> {
   if (res.error) res = await supabase.from("blog_posts").select("*").eq("is_published", true).order("sort_order", { ascending: true });
   if (res.error || !res.data || res.data.length === 0) return blogSeed();
   return res.data.map(rowTo);
+}
+
+/** Published posts flagged to appear in the home slider. */
+export async function getBlogPostsHome(): Promise<BlogPostBi[]> {
+  return (await getBlogPostsBi()).filter((p) => p.showOnHome !== false);
 }
 
 export async function getBlogPostBi(slug: string): Promise<BlogPostBi | undefined> {
