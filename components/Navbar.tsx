@@ -24,7 +24,7 @@ const CHEVRON = (
 
 export default function Navbar({
   active,
-  dropdowns = false,
+  dropdowns = true,
   cta = "book",
 }: {
   active: NavKey;
@@ -130,8 +130,8 @@ export default function Navbar({
                   cursor: "pointer",
                   fontFamily: "inherit",
                   fontSize: 15,
-                  fontWeight: 500,
-                  color: "#0C3446",
+                  fontWeight: active === "cases" ? 700 : 500,
+                  color: active === "cases" ? "#30B6DE" : "#0C3446",
                   display: "flex",
                   alignItems: "center",
                   gap: 5,
@@ -183,8 +183,8 @@ export default function Navbar({
                   cursor: "pointer",
                   fontFamily: "inherit",
                   fontSize: 15,
-                  fontWeight: 500,
-                  color: "#0C3446",
+                  fontWeight: active === "media" ? 700 : 500,
+                  color: active === "media" ? "#30B6DE" : "#0C3446",
                   display: "flex",
                   alignItems: "center",
                   gap: 5,

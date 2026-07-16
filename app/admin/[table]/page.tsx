@@ -7,6 +7,7 @@ import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 
 type Row = Record<string, unknown>;
+type RefData = Record<string, Row[]>;
 
 export default function AdminCollectionPage() {
   const params = useParams();
@@ -19,6 +20,7 @@ export default function AdminCollectionPage() {
   const [editing, setEditing] = useState<Row | "new" | null>(null);
   const [form, setForm] = useState<Row>({});
   const [saving, setSaving] = useState(false);
+  const [refData, setRefData] = useState<RefData>({});
 
   const load = useCallback(async () => {
     if (!col) return;
@@ -29,20 +31,35 @@ export default function AdminCollectionPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Load reference dropdown options
+  useEffect(() => {
+    if (!col) return;
+    const refs = col.fields.filter((f) => f.type === "reference" && f.refTable);
+    refs.forEach(async (f) => {
+      try { const data = await adminList(f.refTable!); setRefData((d) => ({ ...d, [f.refTable!]: data })); } catch { /* ignore */ }
+    });
+  }, [col]);
+
   if (!col) return <div>Unknown collection. <Link href="/admin">← Back</Link></div>;
+
+  const toForm = (row: Row): Row => {
+    const f: Row = { ...row };
+    col.fields.forEach((fld) => {
+      if (fld.type === "paragraphs") f[fld.name] = Array.isArray(row[fld.name]) ? (row[fld.name] as string[]).join("\n\n") : String(row[fld.name] ?? "");
+      if (fld.type === "repeater") f[fld.name] = Array.isArray(row[fld.name]) ? row[fld.name] : [];
+      if (fld.type === "reference") f[fld.name] = row[fld.name] ?? "";
+    });
+    return f;
+  };
 
   const startNew = () => {
     const f: Row = {};
-    col.fields.forEach((fld) => { f[fld.name] = fld.type === "boolean" ? true : fld.type === "number" ? 0 : ""; });
+    col.fields.forEach((fld) => {
+      f[fld.name] = fld.type === "boolean" ? true : fld.type === "number" ? 0 : fld.type === "repeater" ? [] : "";
+    });
     setForm(f); setEditing("new");
   };
-  const startEdit = (row: Row) => {
-    const f: Row = { ...row };
-    col.fields.forEach((fld) => {
-      if (fld.type === "json") f[fld.name] = JSON.stringify(row[fld.name] ?? [], null, 2);
-    });
-    setForm(f); setEditing(row);
-  };
+  const startEdit = (row: Row) => { setForm(toForm(row)); setEditing(row); };
 
   const save = async () => {
     setSaving(true); setError("");
@@ -50,8 +67,10 @@ export default function AdminCollectionPage() {
       const payload: Row = {};
       col.fields.forEach((fld) => {
         let v = form[fld.name];
-        if (fld.type === "json") { try { v = JSON.parse(String(v || "[]")); } catch { throw new Error(`Invalid JSON in ${fld.label}`); } }
-        if (fld.type === "number") v = v === "" || v === null ? null : Number(v);
+        if (fld.type === "paragraphs") v = String(v || "").split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+        else if (fld.type === "number") v = v === "" || v === null ? null : Number(v);
+        else if (fld.type === "reference") v = v || null;
+        else if (fld.type === "repeater") v = Array.isArray(v) ? v : [];
         payload[fld.name] = v;
       });
       if (editing === "new") await adminCreate(table, payload);
@@ -62,54 +81,62 @@ export default function AdminCollectionPage() {
   };
 
   const remove = async (row: Row) => {
-    if (!confirm("Delete this item?")) return;
+    if (!confirm("Delete this item permanently?")) return;
     try { await adminDelete(table, String(row.id)); await load(); } catch (e) { setError((e as Error).message); }
   };
 
+  const setField = (name: string, v: unknown) => setForm((f) => ({ ...f, [name]: v }));
+
+  // group fields for the form
+  const groups: string[] = [];
+  col.fields.forEach((f) => { const g = f.group || "Details"; if (!groups.includes(g)) groups.push(g); });
+
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
         <div>
           <Link href="/admin" style={{ color: "#1E92B8", textDecoration: "none", fontSize: 13 }}>← Dashboard</Link>
-          <h1 style={{ fontSize: 24, margin: "4px 0 0" }}>{col.label} <span style={{ color: "#8AA5B1", fontSize: 16 }}>{col.labelAr}</span></h1>
+          <h1 style={{ fontSize: 27, margin: "6px 0 0", display: "flex", alignItems: "center", gap: 10 }}><span>{col.icon}</span>{col.label} <span style={{ color: "#8AA5B1", fontSize: 17, fontWeight: 400 }}>{col.labelAr}</span></h1>
         </div>
-        {!col.readOnly && editing === null && (
-          <button onClick={startNew} style={btnPrimary}>+ New {col.singular}</button>
-        )}
+        {!col.readOnly && editing === null && <button onClick={startNew} style={btnPrimary}>+ New {col.singular}</button>}
       </div>
 
-      {error && <div style={{ background: "#FDECEA", color: "#C0392B", padding: 12, borderRadius: 10, marginBottom: 16, fontSize: 14 }}>{error}</div>}
+      {error && <div style={{ background: "#FDECEA", color: "#C0392B", padding: 14, borderRadius: 12, marginBottom: 16, fontSize: 14 }}>{error}</div>}
 
       {editing !== null ? (
-        <div style={{ background: "#fff", border: "1px solid rgba(12,52,70,0.1)", borderRadius: 14, padding: 24 }}>
-          <h2 style={{ fontSize: 18, marginTop: 0 }}>{editing === "new" ? `New ${col.singular}` : `Edit ${col.singular}`}</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            {col.fields.map((fld) => (
-              <FieldInput key={fld.name} field={fld} value={form[fld.name]} onChange={(v) => setForm((f) => ({ ...f, [fld.name]: v }))} readOnly={col.readOnly && fld.name !== "status"} />
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-            <button onClick={save} disabled={saving} style={btnPrimary}>{saving ? "Saving…" : "Save"}</button>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {groups.map((g) => (
+            <div key={g} style={card}>
+              <div style={cardHead}>{g}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+                {col.fields.filter((f) => (f.group || "Details") === g).map((fld) => (
+                  <FieldRenderer key={fld.name} field={fld} value={form[fld.name]} onChange={(v) => setField(fld.name, v)} refData={refData} readOnly={col.readOnly && fld.name !== "status"} />
+                ))}
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "flex", gap: 12, position: "sticky", bottom: 0, background: "#EEF6FA", padding: "14px 0" }}>
+            <button onClick={save} disabled={saving} style={btnPrimary}>{saving ? "Saving…" : "💾 Save changes"}</button>
             <button onClick={() => setEditing(null)} style={btnGhost}>Cancel</button>
           </div>
         </div>
       ) : loading ? (
         <div style={{ color: "#5B7A88" }}>Loading…</div>
       ) : rows.length === 0 ? (
-        <div style={{ color: "#5B7A88" }}>No items yet.</div>
+        <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>No items yet. Click “+ New {col.singular}”.</div>
       ) : (
-        <div style={{ background: "#fff", border: "1px solid rgba(12,52,70,0.1)", borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ ...card, padding: 0, overflow: "hidden" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
             <thead>
-              <tr style={{ background: "#F4FBFD", textAlign: "start" }}>
-                {col.listColumns.map((c) => <th key={c} style={th}>{c}</th>)}
+              <tr style={{ background: "#F4FBFD" }}>
+                {col.listColumns.map((c) => <th key={c} style={th}>{prettify(c)}</th>)}
                 <th style={th}></th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, i) => (
                 <tr key={String(row.id) || i} style={{ borderTop: "1px solid rgba(12,52,70,0.07)" }}>
-                  {col.listColumns.map((c) => <td key={c} style={td}>{formatCell(row[c])}</td>)}
+                  {col.listColumns.map((c) => <td key={c} style={td}>{formatCell(row[c], c, refData)}</td>)}
                   <td style={{ ...td, textAlign: "end", whiteSpace: "nowrap" }}>
                     <button onClick={() => startEdit(row)} style={btnSmall}>Edit</button>
                     {!col.readOnly && <button onClick={() => remove(row)} style={{ ...btnSmall, color: "#C0392B" }}>Delete</button>}
@@ -124,71 +151,135 @@ export default function AdminCollectionPage() {
   );
 }
 
-function formatCell(v: unknown) {
+function prettify(s: string) { return s.replace(/_/g, " ").replace(/\bar\b/, "(AR)").replace(/\ben\b/, "(EN)"); }
+function formatCell(v: unknown, col: string, refData: RefData) {
   if (typeof v === "boolean") return v ? "✓" : "—";
-  if (v === null || v === undefined) return "—";
+  if (v === null || v === undefined || v === "") return "—";
+  if (col === "created_at") return String(v).slice(0, 10);
   const s = String(v);
   return s.length > 60 ? s.slice(0, 60) + "…" : s;
 }
 
-function FieldInput({ field, value, onChange, readOnly }: { field: Field; value: unknown; onChange: (v: unknown) => void; readOnly?: boolean }) {
-  const full = field.type === "textarea" || field.type === "json";
-  const wrap: React.CSSProperties = { gridColumn: full ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 6 };
-  const label = <label style={{ fontSize: 12.5, fontWeight: 700, color: "#46687A" }}>{field.label}{field.help && <span style={{ fontWeight: 400, color: "#8AA5B1" }}> — {field.help}</span>}</label>;
-  const disabled = readOnly;
+/* ---------------- Field renderers ---------------- */
 
+function FieldRenderer({ field, value, onChange, refData, readOnly }: { field: Field; value: unknown; onChange: (v: unknown) => void; refData: RefData; readOnly?: boolean }) {
+  const full = ["textarea", "paragraphs", "repeater", "image"].includes(field.type);
+  return (
+    <div style={{ gridColumn: full ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 6 }}>
+      <label style={lbl}>{field.label}{field.help && <span style={{ fontWeight: 400, color: "#8AA5B1" }}> — {field.help}</span>}</label>
+      <SimpleField field={field} value={value} onChange={onChange} refData={refData} readOnly={readOnly} />
+    </div>
+  );
+}
+
+function SimpleField({ field, value, onChange, refData, readOnly }: { field: Field; value: unknown; onChange: (v: unknown) => void; refData: RefData; readOnly?: boolean }) {
   if (field.type === "boolean") {
-    return <div style={{ ...wrap, flexDirection: "row", alignItems: "center", gap: 10 }}>
-      <input type="checkbox" checked={!!value} disabled={disabled} onChange={(e) => onChange(e.target.checked)} />
-      <span style={{ fontSize: 13.5, fontWeight: 700, color: "#46687A" }}>{field.label}</span>
-    </div>;
+    return <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+      <input type="checkbox" checked={!!value} disabled={readOnly} onChange={(e) => onChange(e.target.checked)} style={{ width: 18, height: 18 }} />
+      <span style={{ fontSize: 13.5, color: "#46687A" }}>Yes</span>
+    </label>;
   }
   if (field.type === "select") {
-    return <div style={wrap}>{label}<select value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} style={inp}>{(field.options || []).map((o) => <option key={o} value={o}>{o}</option>)}</select></div>;
+    return <select value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} style={inp}>{(field.options || []).map((o) => <option key={o} value={o}>{o}</option>)}</select>;
   }
-  if (field.type === "textarea" || field.type === "json") {
-    return <div style={wrap}>{label}<textarea value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} rows={field.type === "json" ? 6 : 3} style={{ ...inp, fontFamily: field.type === "json" ? "monospace" : "inherit", resize: "vertical" }} /></div>;
+  if (field.type === "reference") {
+    const opts = refData[field.refTable || ""] || [];
+    return <select value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} style={inp}>
+      <option value="">— none —</option>
+      {opts.map((o) => <option key={String(o.id)} value={String(o.id)}>{String(o[field.refLabelColumn || "name_ar"] ?? o.id)}</option>)}
+    </select>;
+  }
+  if (field.type === "textarea") {
+    return <textarea value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} rows={3} style={{ ...inp, resize: "vertical" }} />;
+  }
+  if (field.type === "paragraphs") {
+    return <textarea value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} rows={8} style={{ ...inp, resize: "vertical", lineHeight: 1.7 }} />;
+  }
+  if (field.type === "icon") {
+    return <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <input type="text" value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} placeholder="e.g. ⚕ ♡ ❀" style={{ ...inp, width: 120 }} />
+      <span style={{ fontSize: 30 }}>{String(value ?? "")}</span>
+    </div>;
   }
   if (field.type === "image") {
-    return <div style={wrap}>{label}<ImageField value={value} onChange={onChange} disabled={disabled} /></div>;
+    return <ImageField value={value} onChange={onChange} disabled={readOnly} />;
   }
-  return <div style={wrap}>{label}<input type={field.type === "number" ? "number" : field.type === "date" ? "date" : "text"} value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} style={inp} /></div>;
+  if (field.type === "repeater") {
+    return <RepeaterField field={field} value={Array.isArray(value) ? value : []} onChange={onChange} refData={refData} readOnly={readOnly} />;
+  }
+  return <input type={field.type === "number" ? "number" : field.type === "date" ? "date" : "text"} value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} style={inp} />;
+}
+
+function RepeaterField({ field, value, onChange, refData, readOnly }: { field: Field; value: Row[]; onChange: (v: Row[]) => void; refData: RefData; readOnly?: boolean }) {
+  const sub = field.subfields || [];
+  const add = () => onChange([...value, Object.fromEntries(sub.map((s) => [s.name, ""]))]);
+  const update = (i: number, name: string, v: unknown) => onChange(value.map((it, idx) => (idx === i ? { ...it, [name]: v } : it)));
+  const removeAt = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir; if (j < 0 || j >= value.length) return;
+    const copy = [...value]; [copy[i], copy[j]] = [copy[j], copy[i]]; onChange(copy);
+  };
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {value.map((item, i) => (
+        <div key={i} style={{ border: "1px solid rgba(48,182,222,0.3)", borderRadius: 12, padding: 16, background: "#F8FCFE" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <strong style={{ fontSize: 13, color: "#1E92B8" }}>{field.itemLabel || "Item"} {i + 1}</strong>
+            {!readOnly && <div style={{ display: "flex", gap: 6 }}>
+              <button type="button" onClick={() => move(i, -1)} style={btnMini}>↑</button>
+              <button type="button" onClick={() => move(i, 1)} style={btnMini}>↓</button>
+              <button type="button" onClick={() => removeAt(i)} style={{ ...btnMini, color: "#C0392B" }}>✕</button>
+            </div>}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            {sub.map((sf) => (
+              <div key={sf.name} style={{ gridColumn: sf.type === "textarea" ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+                <label style={{ ...lbl, fontSize: 11.5 }}>{sf.label}</label>
+                <SimpleField field={sf} value={item[sf.name]} onChange={(v) => update(i, sf.name, v)} refData={refData} readOnly={readOnly} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {!readOnly && <button type="button" onClick={add} style={{ ...btnGhost, alignSelf: "flex-start" }}>+ Add {field.itemLabel || "item"}</button>}
+    </div>
+  );
 }
 
 function ImageField({ value, onChange, disabled }: { value: unknown; onChange: (v: unknown) => void; disabled?: boolean }) {
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState("");
-
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const file = e.target.files?.[0]; if (!file) return;
     setUploading(true); setErr("");
     try { onChange(await adminUpload(file)); } catch (x) { setErr((x as Error).message); }
-    setUploading(false);
-    e.target.value = "";
+    setUploading(false); e.target.value = "";
   };
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <input type="text" value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} placeholder="Image URL, or upload →" style={{ ...inp, flex: 1, minWidth: 180 }} />
-        {!disabled && (
-          <label style={{ background: "#1E92B8", color: "#fff", borderRadius: 8, padding: "9px 14px", fontSize: 13, fontWeight: 700, cursor: uploading ? "wait" : "pointer", whiteSpace: "nowrap", opacity: uploading ? 0.7 : 1 }}>
-            {uploading ? "Uploading…" : "⬆ Upload"}
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+        {value ? <img src={String(value)} alt="" style={{ width: 90, height: 68, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(12,52,70,0.12)" }} /> : <div style={{ width: 90, height: 68, borderRadius: 10, background: "#EAF2F6", display: "flex", alignItems: "center", justifyContent: "center", color: "#9BB3BF", fontSize: 22 }}>🖼️</div>}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {!disabled && <label style={{ background: "#1E92B8", color: "#fff", borderRadius: 10, padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: uploading ? "wait" : "pointer", opacity: uploading ? 0.7 : 1 }}>
+            {uploading ? "Uploading…" : "⬆ Upload image"}
             <input type="file" accept="image/*" onChange={onFile} disabled={uploading} style={{ display: "none" }} />
-          </label>
-        )}
-        {value ? <button type="button" onClick={() => onChange("")} style={{ background: "none", border: "none", color: "#C0392B", cursor: "pointer", fontSize: 13 }}>Remove</button> : null}
+          </label>}
+          {value && !disabled ? <button type="button" onClick={() => onChange("")} style={btnGhost}>Remove</button> : null}
+        </div>
       </div>
+      <input type="text" value={String(value ?? "")} disabled={disabled} onChange={(e) => onChange(e.target.value)} placeholder="…or paste an image URL" style={{ ...inp, fontSize: 12.5 }} />
       {err && <div style={{ color: "#C0392B", fontSize: 12 }}>{err}</div>}
-      {value ? <img src={String(value)} alt="" style={{ maxWidth: 160, maxHeight: 120, borderRadius: 8, objectFit: "cover", border: "1px solid rgba(12,52,70,0.1)" }} /> : null}
     </div>
   );
 }
 
-const inp: React.CSSProperties = { border: "1.5px solid rgba(12,52,70,0.15)", borderRadius: 9, padding: "10px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" };
-const btnPrimary: React.CSSProperties = { background: "#1E92B8", color: "#fff", border: "none", borderRadius: 9, padding: "10px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer" };
-const btnGhost: React.CSSProperties = { background: "#fff", color: "#46687A", border: "1px solid rgba(12,52,70,0.2)", borderRadius: 9, padding: "10px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer" };
+const card: React.CSSProperties = { background: "#fff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 16, padding: 24, boxShadow: "0 2px 10px rgba(12,52,70,0.04)" };
+const cardHead: React.CSSProperties = { fontSize: 13, fontWeight: 800, color: "#1E92B8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 18 };
+const lbl: React.CSSProperties = { fontSize: 12.5, fontWeight: 700, color: "#46687A" };
+const inp: React.CSSProperties = { border: "1.5px solid rgba(12,52,70,0.15)", borderRadius: 10, padding: "11px 13px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box", background: "#fff" };
+const btnPrimary: React.CSSProperties = { background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", border: "none", borderRadius: 11, padding: "12px 22px", fontSize: 14, fontWeight: 800, cursor: "pointer" };
+const btnGhost: React.CSSProperties = { background: "#fff", color: "#46687A", border: "1px solid rgba(12,52,70,0.2)", borderRadius: 11, padding: "11px 18px", fontSize: 14, fontWeight: 700, cursor: "pointer" };
 const btnSmall: React.CSSProperties = { background: "none", border: "none", color: "#1E92B8", fontSize: 13, fontWeight: 700, cursor: "pointer", padding: "4px 8px" };
-const th: React.CSSProperties = { padding: "12px 14px", textAlign: "start", fontSize: 12, color: "#5B7A88", fontWeight: 700 };
-const td: React.CSSProperties = { padding: "12px 14px", color: "#0C3446" };
+const btnMini: React.CSSProperties = { background: "#fff", border: "1px solid rgba(12,52,70,0.15)", borderRadius: 7, width: 28, height: 26, fontSize: 12, cursor: "pointer", color: "#46687A" };
+const th: React.CSSProperties = { padding: "13px 16px", textAlign: "start", fontSize: 11.5, color: "#5B7A88", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.5px" };
+const td: React.CSSProperties = { padding: "13px 16px", color: "#0C3446" };
