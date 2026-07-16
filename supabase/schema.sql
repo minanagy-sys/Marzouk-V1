@@ -163,6 +163,7 @@ create table if not exists public.bookings (
   id            uuid primary key default gen_random_uuid(),
   name          text not null,
   phone         text not null,
+  email         text default '',
   service       text default '',
   message       text default '',
   lang          text default 'ar',

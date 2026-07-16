@@ -41,16 +41,17 @@ function MapPin({ clinic, index, open, onToggle, directions, lang }: { clinic: C
   );
 }
 
-export default function ContactView({ clinics }: { clinics: Clinic[] }) {
-  const { lang, dir } = useLang();
+export default function ContactView({ clinics, serviceOptions = [] }: { clinics: Clinic[]; serviceOptions?: { ar: string; en: string }[] }) {
+  const { lang, dir, isAr } = useLang();
   const t = usePageText("contact", lang, contactContent(lang).t);
   const tc = common(lang);
 
   const [activePin, setActivePin] = useState(0);
-  const [form, setForm] = useState({ name: "", phone: "", service: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", service: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  const inputStyle = { border: "1.5px solid rgba(12,52,70,0.14)", borderRadius: 13, padding: "15px 18px", fontFamily: SANS, fontSize: 15, color: "#0C3446", outline: "none" } as const;
+  const inputStyle = { border: "1.5px solid rgba(12,52,70,0.14)", borderRadius: 13, padding: "15px 18px", fontFamily: SANS, fontSize: 15, color: "#0C3446", outline: "none", background: "#ffffff" } as const;
+  const otherLabel = isAr ? "أخرى / استفسار عام" : "Other / general enquiry";
 
   const handleSubmit = async () => {
     if (!form.name.trim() || !form.phone.trim()) { setStatus("error"); return; }
@@ -117,7 +118,12 @@ export default function ContactView({ clinics }: { clinics: Clinic[] }) {
               <div className="dam-2col-sm" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginTop: 28 }}>
                 <HoverBox as="input" value={form.name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, name: e.target.value })} placeholder={t.fName} style={inputStyle} focusStyle={{ borderColor: "#30B6DE" }} />
                 <HoverBox as="input" value={form.phone} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, phone: e.target.value })} placeholder={t.fPhone} style={inputStyle} focusStyle={{ borderColor: "#30B6DE" }} />
-                <HoverBox as="input" value={form.service} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, service: e.target.value })} placeholder={t.fService} style={{ ...inputStyle, gridColumn: "span 2" }} focusStyle={{ borderColor: "#30B6DE" }} />
+                <HoverBox as="input" type="email" value={form.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, email: e.target.value })} placeholder={t.fEmail} style={{ ...inputStyle, gridColumn: "span 2" }} focusStyle={{ borderColor: "#30B6DE" }} />
+                <select value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} style={{ ...inputStyle, gridColumn: "span 2", cursor: "pointer", direction: dir }} aria-label={t.fService}>
+                  <option value="">{t.fServicePick}</option>
+                  {serviceOptions.map((o, i) => { const label = pick(o, lang); return <option key={i} value={label}>{label}</option>; })}
+                  <option value={otherLabel}>{otherLabel}</option>
+                </select>
                 <HoverBox as="textarea" value={form.message} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, message: e.target.value })} placeholder={t.fMsg} rows={4} style={{ ...inputStyle, gridColumn: "span 2", resize: "vertical" }} focusStyle={{ borderColor: "#30B6DE" }} />
                 {status === "error" && (
                   <div style={{ gridColumn: "span 2", color: "#C0392B", fontSize: 14, fontWeight: 600 }}>
