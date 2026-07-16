@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getServiceClient } from "@/lib/supabase";
 import { verifyAdmin } from "@/lib/admin/auth";
 import { COLLECTIONS } from "@/lib/admin/config";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+/** Refresh the whole site cache so admin edits appear immediately. */
+function refreshSite() {
+  revalidatePath("/", "layout");
+}
 
 function collectionFor(table: string) {
   return COLLECTIONS[table];
@@ -39,6 +45,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ tab
   const body = await request.json();
   const { data, error } = await g.supabase.from(table).insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  refreshSite();
   return NextResponse.json({ data });
 }
 
@@ -56,10 +63,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ tabl
     if ("status" in rest) allowed.status = rest.status;
     const { data, error } = await g.supabase.from(table).update(allowed).eq("id", id).select().single();
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    refreshSite();
     return NextResponse.json({ data });
   }
   const { data, error } = await g.supabase.from(table).update(rest).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  refreshSite();
   return NextResponse.json({ data });
 }
 
@@ -73,5 +82,6 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ t
   if (!id) return NextResponse.json({ error: "missing_id" }, { status: 400 });
   const { error } = await g.supabase.from(table).delete().eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  refreshSite();
   return NextResponse.json({ ok: true });
 }

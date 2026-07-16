@@ -73,6 +73,12 @@ export type Clinic = {
   area: BiText;
 };
 
+export type BlogCategory = {
+  id: string;
+  slug: string;
+  name: BiText;
+};
+
 export type BlogPostBi = {
   slug: string;
   imageUrl?: string;
@@ -80,5 +86,7 @@ export type BlogPostBi = {
   tag: BiText;
   title: BiText;
   excerpt: BiText;
-  body: { ar: string[]; en: string[] };
+  body: { ar: string; en: string }; // HTML
+  categorySlug?: string;
+  categoryName?: BiText;
 };

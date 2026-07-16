@@ -32,6 +32,7 @@ host's environment settings. Never commit secrets.
 ## Supabase setup (run once in SQL Editor)
 1. `supabase/schema.sql` — creates all tables + security.
 2. `supabase/storage.sql` — creates the public `media` bucket for admin image uploads.
+3. `supabase/blog_categories.sql` — adds blog categories + links posts to a category.
 Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
 
 ## Deploy (Vercel — recommended)

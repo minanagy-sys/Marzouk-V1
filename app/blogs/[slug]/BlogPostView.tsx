@@ -16,7 +16,7 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
   const { lang, dir } = useLang();
   const ui = blogsUi(lang);
   const tc = common(lang);
-  const paras = lang === "ar" ? post.body.ar : post.body.en;
+  const bodyHtml = lang === "ar" ? post.body.ar : post.body.en;
 
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
@@ -41,9 +41,7 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
         <div style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 14px 40px rgba(12,52,70,0.08)", height: 360, marginBottom: 40 }}>
           <ImageSlot src={post.imageUrl} placeholder={ui.photoPh} style={{ width: "100%", height: "100%" }} />
         </div>
-        {paras.map((para, i) => (
-          <p key={i} style={{ fontSize: 17, lineHeight: 2.1, color: "#46687A", margin: "0 0 22px", textWrap: "pretty" }}>{para}</p>
-        ))}
+        <div className="article-body" style={{ fontSize: 17, lineHeight: 2.1, color: "#46687A" }} dangerouslySetInnerHTML={{ __html: bodyHtml }} />
 
         <div style={{ marginTop: 30, paddingTop: 26, borderTop: "1px solid rgba(12,52,70,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <HoverBox as={Link} href="/blogs" style={{ color: "#30B6DE", fontWeight: 800, fontSize: 15 }} hoverStyle={{ color: "#1E92B8" }}>

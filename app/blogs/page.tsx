@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import BlogsView from "./BlogsView";
-import { getBlogPostsBi } from "@/lib/data/blogs";
+import { getBlogPostsBi, getBlogCategories } from "@/lib/data/blogs";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +13,6 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogsPage() {
-  const posts = await getBlogPostsBi();
-  return <BlogsView posts={posts} />;
+  const [posts, categories] = await Promise.all([getBlogPostsBi(), getBlogCategories()]);
+  return <BlogsView posts={posts} categories={categories} />;
 }

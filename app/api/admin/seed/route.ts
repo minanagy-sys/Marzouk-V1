@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getServiceClient } from "@/lib/supabase";
 import { verifyAdmin } from "@/lib/admin/auth";
 import { SERVICES_SEED } from "@/lib/data/services";
@@ -101,5 +102,6 @@ export async function POST(request: Request) {
   const videoRows = mAr.videos.map((v, i) => ({ type: "video", sort_order: 100 + i, is_published: true, span_gc: v.gc, span_gr: v.gr, title_ar: v.title, title_en: mEn.videos[i]?.title ?? "" }));
   await seedList("media_items", [...galleryRows, ...videoRows]);
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ ok: true, results });
 }
