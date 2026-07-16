@@ -101,9 +101,11 @@ export default function SiteTextEditor() {
   // sections for the selected page
   const sections = useMemo<Section[]>(() => {
     if (!selected) return [];
+    // Header / Footer / Other are flat — one section, no prefix sub-grouping.
+    const flat = selected === "header" || selected === "footer" || selected === "other";
     const map = new Map<string, Section>();
     for (const r of byPage[selected] ?? []) {
-      const s = sectionOf(r);
+      const s = flat ? { id: "all", title: "Text", order: 0 } : sectionOf(r);
       const ex = map.get(s.id) ?? { ...s, rows: [] };
       ex.rows.push(r);
       map.set(s.id, ex);
