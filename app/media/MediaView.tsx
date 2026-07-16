@@ -12,6 +12,7 @@ import { useLang } from "@/lib/lang";
 import { mediaContent } from "@/lib/content/media";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type MediaItem } from "@/lib/data/types";
+import { ytThumb } from "@/lib/youtube";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function MediaView({ media }: { media: MediaItem[] }) {
@@ -72,7 +73,7 @@ export default function MediaView({ media }: { media: MediaItem[] }) {
           <div className="dam-mosaic" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "220px", gap: 18 }}>
             {videos.map((v, i) => (
               <HoverBox key={v.id} as="button" onClick={() => setLb({ items: videoItems, index: i })} style={{ position: "relative", borderRadius: 20, overflow: "hidden", border: "1px solid rgba(12,52,70,0.1)", boxShadow: "0 8px 24px rgba(12,52,70,0.08)", gridColumn: v.gc, gridRow: v.gr, background: "linear-gradient(160deg, #0A3950, #0E5372)", padding: 0, cursor: "pointer" }} hoverStyle={{ boxShadow: "0 20px 46px rgba(48,182,222,0.28)" }}>
-                <ImageSlot src={v.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+                <ImageSlot src={v.imageUrl || ytThumb(v.videoUrl)} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                 <span style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.1) 0%, rgba(4,32,46,0) 40%, rgba(4,32,46,0.85) 100%)", pointerEvents: "none" }} />
                 <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
                   <span style={{ width: 60, height: 60, borderRadius: "50%", background: "rgba(48,182,222,0.92)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 26px rgba(4,32,46,0.45)" }}>

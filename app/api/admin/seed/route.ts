@@ -9,6 +9,7 @@ import { aboutContent } from "@/lib/content/about";
 import { contactContent } from "@/lib/content/contact";
 import { blogPosts } from "@/lib/content/blogs";
 import { mediaContent, GALLERY_SLOTS } from "@/lib/content/media";
+import { COMMON } from "@/lib/content/common";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -101,6 +102,29 @@ export async function POST(request: Request) {
   const galleryRows = GALLERY_SLOTS.map((g, i) => ({ type: "gallery", sort_order: i, is_published: true, span_gc: g.gc, span_gr: g.gr }));
   const videoRows = mAr.videos.map((v, i) => ({ type: "video", sort_order: 100 + i, is_published: true, span_gc: v.gc, span_gr: v.gr, title_ar: v.title, title_en: mEn.videos[i]?.title ?? "" }));
   await seedList("media_items", [...galleryRows, ...videoRows]);
+
+  // Site text (header/footer) — editable in the "Site text" admin section
+  const A = COMMON.ar, E = COMMON.en;
+  const sc = [
+    { key: "brand", section: "Header/Footer", value_ar: A.brand, value_en: E.brand },
+    { key: "brand.sub", section: "Header", value_ar: A.brandSub, value_en: E.brandSub },
+    { key: "nav.home", section: "Header", value_ar: A.navHome, value_en: E.navHome },
+    { key: "nav.about", section: "Header", value_ar: A.navAbout, value_en: E.navAbout },
+    { key: "nav.services", section: "Header", value_ar: A.navServices, value_en: E.navServices },
+    { key: "nav.blogs", section: "Header", value_ar: A.navBlogs, value_en: E.navBlogs },
+    { key: "nav.contact", section: "Header", value_ar: A.navContact, value_en: E.navContact },
+    { key: "nav.book", section: "Header", value_ar: A.book, value_en: E.book },
+    { key: "footer.about", section: "Footer", value_ar: A.footerAbout, value_en: E.footerAbout },
+    { key: "footer.linksTitle", section: "Footer", value_ar: A.footerLinks, value_en: E.footerLinks },
+    { key: "footer.contactTitle", section: "Footer", value_ar: A.footerContact, value_en: E.footerContact },
+    { key: "footer.clinic1", section: "Footer", value_ar: A.clinic1, value_en: E.clinic1 },
+    { key: "footer.clinic2", section: "Footer", value_ar: A.clinic2, value_en: E.clinic2 },
+    { key: "footer.copyright", section: "Footer", value_ar: A.copyright, value_en: E.copyright },
+  ];
+  {
+    const { error } = await supabase.from("site_content").upsert(sc, { onConflict: "key" });
+    results.site_content = error ? `error: ${error.message}` : `${sc.length} upserted`;
+  }
 
   revalidatePath("/", "layout");
   return NextResponse.json({ ok: true, results });

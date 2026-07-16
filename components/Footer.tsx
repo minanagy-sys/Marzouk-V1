@@ -3,6 +3,7 @@
 import Link from "next/link";
 import HoverBox from "./HoverBox";
 import { useLang } from "@/lib/lang";
+import { useSetting } from "@/lib/settings";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { SERIF } from "@/lib/theme";
 
@@ -46,9 +47,13 @@ function Logo({ size = 42, font = 18 }: { size?: number; font?: number }) {
   );
 }
 
-export default function Footer({ variant = "simple" }: { variant?: "full" | "simple" }) {
+export default function Footer(_props?: { variant?: "full" | "simple" }) {
+  // The footer is now identical on every page (enhanced 3-column layout).
+  const variant: "full" | "simple" = "full";
+  void _props;
   const { lang } = useLang();
   const t = common(lang);
+  const st = useSetting();
 
   if (variant === "full") {
     return (
@@ -83,9 +88,9 @@ export default function Footer({ variant = "simple" }: { variant?: "full" | "sim
               >
                 Dr
               </span>
-              <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 20, color: "#ffffff" }}>{t.brand}</span>
+              <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 20, color: "#ffffff" }}>{st("brand", lang, t.brand)}</span>
             </div>
-            <p style={{ fontSize: 14.5, lineHeight: 2, margin: "20px 0 0", maxWidth: 380 }}>{t.footerAbout}</p>
+            <p style={{ fontSize: 14.5, lineHeight: 2, margin: "20px 0 0", maxWidth: 380 }}>{st("footer.about", lang, t.footerAbout)}</p>
             <div style={{ display: "flex", gap: 12, marginTop: 22 }}>
               <HoverBox
                 as="a"
@@ -123,7 +128,7 @@ export default function Footer({ variant = "simple" }: { variant?: "full" | "sim
           </div>
 
           <div>
-            <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{t.footerLinks}</div>
+            <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{st("footer.linksTitle", lang, t.footerLinks)}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 14.5 }}>
               {footerLink("/", t.navHome)}
               {footerLink("/about", t.navAbout)}
@@ -135,10 +140,10 @@ export default function Footer({ variant = "simple" }: { variant?: "full" | "sim
           </div>
 
           <div>
-            <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{t.footerContact}</div>
+            <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{st("footer.contactTitle", lang, t.footerContact)}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, fontSize: 14, lineHeight: 1.9 }}>
-              <div>{t.clinic1}</div>
-              <div>{t.clinic2}</div>
+              <div>{st("footer.clinic1", lang, t.clinic1)}</div>
+              <div>{st("footer.clinic2", lang, t.clinic2)}</div>
               <div style={{ direction: "ltr", textAlign: "end", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
                 {CONTACT_INFO.phone1} · {CONTACT_INFO.phone2}
               </div>
@@ -149,7 +154,7 @@ export default function Footer({ variant = "simple" }: { variant?: "full" | "sim
           </div>
         </div>
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "22px 0", textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
-          {t.copyright}
+          {st("footer.copyright", lang, t.copyright)}
         </div>
       </footer>
     );

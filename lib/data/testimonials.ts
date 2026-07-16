@@ -5,12 +5,12 @@ import { aboutContent } from "@/lib/content/about";
 export function testimonialsSeed(): Testimonial[] {
   const ar = aboutContent("ar").testimonials;
   const en = aboutContent("en").testimonials;
-  return ar.map((t, i) => ({ id: String(i), name: t.name, text: { ar: t.text, en: en[i]?.text ?? "" } }));
+  return ar.map((t, i) => ({ id: String(i), name: t.name, text: { ar: t.text, en: en[i]?.text ?? "" }, rating: 5 }));
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowTo(r: any): Testimonial {
-  return { id: r.id, name: r.name ?? "", text: { ar: r.text_ar ?? "", en: r.text_en ?? "" } };
+  return { id: r.id, name: r.name ?? "", text: { ar: r.text_ar ?? "", en: r.text_en ?? "" }, rating: r.rating ?? 5 };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
