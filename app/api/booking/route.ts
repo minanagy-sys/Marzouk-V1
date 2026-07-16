@@ -3,6 +3,13 @@ import { getServiceClient, getAnonClient } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
+/** Convert Arabic-Indic (٠-٩) and Persian (۰-۹) numerals to ASCII digits. */
+function toAsciiDigits(s: string): string {
+  return s
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+}
+
 /**
  * Booking form endpoint.
  * Validates the submission and stores it in the Supabase `bookings` table.
@@ -18,7 +25,7 @@ export async function POST(request: Request) {
   }
 
   const name = String(data.name ?? "").trim();
-  const phone = String(data.phone ?? "").trim();
+  const phone = toAsciiDigits(String(data.phone ?? "").trim());
   const email = String(data.email ?? "").trim();
   const service = String(data.service ?? "").trim();
   const message = String(data.message ?? "").trim();

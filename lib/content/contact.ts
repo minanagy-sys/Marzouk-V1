@@ -25,6 +25,7 @@ export function contactContent(lang: Lang) {
         sentSub: "سنتواصل معك خلال ساعات العمل لتأكيد الموعد.",
         errorMsg: "حدث خطأ، برجاء المحاولة مرة أخرى أو الاتصال بنا مباشرة.",
         reqName: "برجاء إدخال الاسم ورقم الهاتف.",
+        reqPhone: "برجاء إدخال رقم هاتف صحيح (7 أرقام على الأقل).",
         callTitle: "أو اتصلي مباشرة",
         videoNote: "يمكن إجراء استشارة فيديو في حالات الأورام الليفية — توفيرًا للوقت وبُعد المسافات.",
       }
@@ -49,6 +50,7 @@ export function contactContent(lang: Lang) {
         sentSub: "We will contact you during working hours to confirm your appointment.",
         errorMsg: "Something went wrong. Please try again or call us directly.",
         reqName: "Please enter your name and phone number.",
+        reqPhone: "Please enter a valid phone number (at least 7 digits).",
         callTitle: "Or call directly",
         videoNote: "Video consultations are available for fibroid cases — saving you time and distance.",
       };

@@ -53,14 +53,26 @@ export default function ContactView({ clinics, serviceOptions = [] }: { clinics:
   const inputStyle = { border: "1.5px solid rgba(12,52,70,0.14)", borderRadius: 13, padding: "15px 18px", fontFamily: SANS, fontSize: 15, color: "#0C3446", outline: "none", background: "#ffffff" } as const;
   const otherLabel = isAr ? "أخرى / استفسار عام" : "Other / general enquiry";
 
+  const [errText, setErrText] = useState("");
+
+  // Arabic-Indic (٠-٩) and Persian (۰-۹) numerals → ASCII digits.
+  const toAsciiDigits = (s: string) =>
+    s.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+
   const handleSubmit = async () => {
-    if (!form.name.trim() || !form.phone.trim()) { setStatus("error"); return; }
-    setStatus("sending");
+    if (!form.name.trim() || !form.phone.trim()) { setErrText(t.reqName); setStatus("error"); return; }
+    if (toAsciiDigits(form.phone).replace(/\D/g, "").length < 7) { setErrText(t.reqPhone); setStatus("error"); return; }
+    setStatus("sending"); setErrText("");
     try {
       const res = await fetch("/api/booking", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, lang }) });
-      if (!res.ok) throw new Error("failed");
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErrText(json?.error === "invalid_phone" ? t.reqPhone : json?.error === "missing_fields" ? t.reqName : t.errorMsg);
+        setStatus("error");
+        return;
+      }
       setStatus("sent");
-    } catch { setStatus("error"); }
+    } catch { setErrText(t.errorMsg); setStatus("error"); }
   };
 
   return (
@@ -127,7 +139,7 @@ export default function ContactView({ clinics, serviceOptions = [] }: { clinics:
                 <HoverBox as="textarea" value={form.message} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, message: e.target.value })} placeholder={t.fMsg} rows={4} style={{ ...inputStyle, gridColumn: "span 2", resize: "vertical" }} focusStyle={{ borderColor: "#30B6DE" }} />
                 {status === "error" && (
                   <div style={{ gridColumn: "span 2", color: "#C0392B", fontSize: 14, fontWeight: 600 }}>
-                    {!form.name.trim() || !form.phone.trim() ? t.reqName : t.errorMsg}
+                    {errText || t.errorMsg}
                   </div>
                 )}
                 <HoverBox as="button" onClick={handleSubmit} disabled={status === "sending"} style={{ gridColumn: "span 2", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#ffffff", border: "none", borderRadius: 999, padding: 16, fontFamily: SANS, fontWeight: 800, fontSize: 16, cursor: status === "sending" ? "wait" : "pointer", boxShadow: "0 10px 26px rgba(48,182,222,0.4)", opacity: status === "sending" ? 0.7 : 1 }} hoverStyle={{ boxShadow: "0 14px 34px rgba(48,182,222,0.55)" }}>
