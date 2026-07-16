@@ -11,7 +11,7 @@ import { servicesContent } from "@/lib/content/services";
 import { casesContent } from "@/lib/content/cases";
 import { blogPosts, blogsUi } from "@/lib/content/blogs";
 import { mediaContent, GALLERY_SLOTS } from "@/lib/content/media";
-import { COMMON } from "@/lib/content/common";
+import { COMMON, CONTACT_INFO } from "@/lib/content/common";
 import { heroSlidesSeed, statsSeed, valuesSeed, featuresSeed } from "@/lib/data/sections";
 
 export const runtime = "nodejs";
@@ -159,14 +159,24 @@ export async function POST(request: Request) {
     { key: "nav.home", section: "Header", value_ar: A.navHome, value_en: E.navHome },
     { key: "nav.about", section: "Header", value_ar: A.navAbout, value_en: E.navAbout },
     { key: "nav.services", section: "Header", value_ar: A.navServices, value_en: E.navServices },
+    { key: "nav.cases", section: "Header", value_ar: A.navCases, value_en: E.navCases },
+    { key: "nav.success", section: "Header", value_ar: A.navSuccess, value_en: E.navSuccess },
+    { key: "nav.celebs", section: "Header", value_ar: A.navCelebs, value_en: E.navCelebs },
     { key: "nav.blogs", section: "Header", value_ar: A.navBlogs, value_en: E.navBlogs },
+    { key: "nav.media", section: "Header", value_ar: A.navMedia, value_en: E.navMedia },
+    { key: "nav.gallery", section: "Header", value_ar: A.navGallery, value_en: E.navGallery },
+    { key: "nav.videos", section: "Header", value_ar: A.navVideos, value_en: E.navVideos },
     { key: "nav.contact", section: "Header", value_ar: A.navContact, value_en: E.navContact },
+    { key: "nav.lang", section: "Header", value_ar: A.langBtn, value_en: E.langBtn },
     { key: "nav.book", section: "Header", value_ar: A.book, value_en: E.book },
     { key: "footer.about", section: "Footer", value_ar: A.footerAbout, value_en: E.footerAbout },
     { key: "footer.linksTitle", section: "Footer", value_ar: A.footerLinks, value_en: E.footerLinks },
     { key: "footer.contactTitle", section: "Footer", value_ar: A.footerContact, value_en: E.footerContact },
     { key: "footer.clinic1", section: "Footer", value_ar: A.clinic1, value_en: E.clinic1 },
     { key: "footer.clinic2", section: "Footer", value_ar: A.clinic2, value_en: E.clinic2 },
+    { key: "footer.phone1", section: "Footer", value_ar: CONTACT_INFO.phone1, value_en: CONTACT_INFO.phone1 },
+    { key: "footer.phone2", section: "Footer", value_ar: CONTACT_INFO.phone2, value_en: CONTACT_INFO.phone2 },
+    { key: "footer.email", section: "Footer", value_ar: CONTACT_INFO.email, value_en: CONTACT_INFO.email },
     { key: "footer.copyright", section: "Footer", value_ar: A.copyright, value_en: E.copyright },
   ];
   // Every page's text — editable in the "Site text" admin section (key: page.field)

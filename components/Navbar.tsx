@@ -67,6 +67,16 @@ export default function Navbar({
   const mobileSub = (href: string, label: string) => (
     <Link href={href} onClick={() => setMenuOpen(false)} style={{ padding: "9px 6px", color: "#5B7A88", fontSize: 14, textDecoration: "none" }}>— {label}</Link>
   );
+  // Collapsible parent row: label links to the page, chevron toggles the sub-items.
+  const mobileParent = (href: string, label: string, open: boolean, toggle: () => void, subs: React.ReactNode) => (
+    <div style={{ borderBottom: "1px solid rgba(12,52,70,0.06)" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Link href={href} onClick={() => setMenuOpen(false)} style={{ flex: 1, padding: "13px 6px", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
+        <button onClick={toggle} aria-label="Toggle submenu" aria-expanded={open} style={{ background: "none", border: "none", padding: 12, cursor: "pointer", color: "#5B7A88", display: "flex", alignItems: "center", transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>{CHEVRON}</button>
+      </div>
+      {open && <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14, paddingBottom: 8 }}>{subs}</div>}
+    </div>
+  );
 
   return (
     <>
@@ -150,7 +160,7 @@ export default function Navbar({
                 }}
                 hoverStyle={{ color: "#30B6DE" }}
               >
-                {t.navCases} {CHEVRON}
+                {st("nav.cases", lang, t.navCases)} {CHEVRON}
               </HoverBox>
               {casesOpen && (
                 <span
@@ -169,13 +179,13 @@ export default function Navbar({
                     zIndex: 10,
                   }}
                 >
-                  {menuItem("/cases#success", t.navSuccess)}
-                  {menuItem("/cases#celebs", t.navCelebs)}
+                  {menuItem("/cases#success", st("nav.success", lang, t.navSuccess))}
+                  {menuItem("/cases#celebs", st("nav.celebs", lang, t.navCelebs))}
                 </span>
               )}
             </span>
           ) : (
-            plainLink("cases", "/cases", t.navCases)
+            plainLink("cases", "/cases", st("nav.cases", lang, t.navCases))
           )}
 
           {plainLink("blogs", "/blogs", st("nav.blogs", lang, t.navBlogs))}
@@ -203,7 +213,7 @@ export default function Navbar({
                 }}
                 hoverStyle={{ color: "#30B6DE" }}
               >
-                {t.navMedia} {CHEVRON}
+                {st("nav.media", lang, t.navMedia)} {CHEVRON}
               </HoverBox>
               {mediaOpen && (
                 <span
@@ -222,13 +232,13 @@ export default function Navbar({
                     zIndex: 10,
                   }}
                 >
-                  {menuItem("/media#gallery", t.navGallery)}
-                  {menuItem("/media#videos", t.navVideos)}
+                  {menuItem("/media#gallery", st("nav.gallery", lang, t.navGallery))}
+                  {menuItem("/media#videos", st("nav.videos", lang, t.navVideos))}
                 </span>
               )}
             </span>
           ) : (
-            plainLink("media", "/media", t.navMedia)
+            plainLink("media", "/media", st("nav.media", lang, t.navMedia))
           )}
 
           {plainLink("contact", "/contact", st("nav.contact", lang, t.navContact))}
@@ -252,7 +262,7 @@ export default function Navbar({
             }}
             hoverStyle={{ background: "#EAF7FB" }}
           >
-            {t.langBtn}
+            {st("nav.lang", lang, t.langBtn)}
           </HoverBox>
 
           {cta === "phone" ? (
@@ -309,20 +319,22 @@ export default function Navbar({
             {mobileLink("/", st("nav.home", lang, t.navHome))}
             {mobileLink("/about", st("nav.about", lang, t.navAbout))}
             {mobileLink("/services", st("nav.services", lang, t.navServices))}
-            {mobileLink("/cases", t.navCases)}
-            <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14 }}>
-              {mobileSub("/cases#success", t.navSuccess)}
-              {mobileSub("/cases#celebs", t.navCelebs)}
-            </div>
+            {mobileParent("/cases", st("nav.cases", lang, t.navCases), casesOpen, () => setCasesOpen((v) => !v), (
+              <>
+                {mobileSub("/cases#success", st("nav.success", lang, t.navSuccess))}
+                {mobileSub("/cases#celebs", st("nav.celebs", lang, t.navCelebs))}
+              </>
+            ))}
             {mobileLink("/blogs", st("nav.blogs", lang, t.navBlogs))}
-            {mobileLink("/media", t.navMedia)}
-            <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14 }}>
-              {mobileSub("/media#gallery", t.navGallery)}
-              {mobileSub("/media#videos", t.navVideos)}
-            </div>
+            {mobileParent("/media", st("nav.media", lang, t.navMedia), mediaOpen, () => setMediaOpen((v) => !v), (
+              <>
+                {mobileSub("/media#gallery", st("nav.gallery", lang, t.navGallery))}
+                {mobileSub("/media#videos", st("nav.videos", lang, t.navVideos))}
+              </>
+            ))}
             {mobileLink("/contact", st("nav.contact", lang, t.navContact))}
             <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-              <button onClick={() => toggleLang()} style={{ flex: 1, background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer" }}>{t.langBtn}</button>
+              <button onClick={() => toggleLang()} style={{ flex: 1, background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer" }}>{st("nav.lang", lang, t.langBtn)}</button>
               <Link href="/contact" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", borderRadius: 10, padding: "11px", fontWeight: 800, textDecoration: "none" }}>{st("nav.book", lang, t.book)}</Link>
             </div>
           </div>

@@ -133,12 +133,12 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
           <div>
             <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{st("footer.linksTitle", lang, t.footerLinks)}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 14.5 }}>
-              {footerLink("/", t.navHome)}
-              {footerLink("/about", t.navAbout)}
-              {footerLink("/services", t.navServices)}
-              {footerLink("/cases", t.navCases)}
-              {footerLink("/blogs", t.navBlogs)}
-              {footerLink("/contact", t.navContact)}
+              {footerLink("/", st("nav.home", lang, t.navHome))}
+              {footerLink("/about", st("nav.about", lang, t.navAbout))}
+              {footerLink("/services", st("nav.services", lang, t.navServices))}
+              {footerLink("/cases", st("nav.cases", lang, t.navCases))}
+              {footerLink("/blogs", st("nav.blogs", lang, t.navBlogs))}
+              {footerLink("/contact", st("nav.contact", lang, t.navContact))}
             </div>
           </div>
 
@@ -148,10 +148,10 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
               <div>{st("footer.clinic1", lang, t.clinic1)}</div>
               <div>{st("footer.clinic2", lang, t.clinic2)}</div>
               <div style={{ color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
-                <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{CONTACT_INFO.phone1} · {CONTACT_INFO.phone2}</bdi>
+                <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} · {st("footer.phone2", lang, CONTACT_INFO.phone2)}</bdi>
               </div>
-              <HoverBox as="a" href={`mailto:${CONTACT_INFO.email}`} style={{ color: "rgba(255,255,255,0.75)" }} hoverStyle={{ color: "#30B6DE" }}>
-                {CONTACT_INFO.email}
+              <HoverBox as="a" href={`mailto:${st("footer.email", lang, CONTACT_INFO.email)}`} style={{ color: "rgba(255,255,255,0.75)" }} hoverStyle={{ color: "#30B6DE" }}>
+                {st("footer.email", lang, CONTACT_INFO.email)}
               </HoverBox>
             </div>
           </div>
