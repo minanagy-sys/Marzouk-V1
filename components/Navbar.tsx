@@ -37,6 +37,7 @@ export default function Navbar({
   const st = useSetting();
   const [casesOpen, setCasesOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const linkStyle = (key: NavKey) =>
     active === key
@@ -60,7 +61,15 @@ export default function Navbar({
     </HoverBox>
   );
 
+  const mobileLink = (href: string, label: string) => (
+    <Link href={href} onClick={() => setMenuOpen(false)} style={{ padding: "13px 6px", borderBottom: "1px solid rgba(12,52,70,0.06)", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
+  );
+  const mobileSub = (href: string, label: string) => (
+    <Link href={href} onClick={() => setMenuOpen(false)} style={{ padding: "9px 6px", color: "#5B7A88", fontSize: 14, textDecoration: "none" }}>— {label}</Link>
+  );
+
   return (
+    <>
     <header
       data-screen-label="Navigation"
       style={{
@@ -226,6 +235,7 @@ export default function Navbar({
         </nav>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div className="dam-desktop-actions" style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <HoverBox
             as="button"
             onClick={toggleLang}
@@ -281,8 +291,43 @@ export default function Navbar({
               {st("nav.book", lang, t.book)}
             </HoverBox>
           )}
+          </div>
+
+          <button className="dam-hamburger" onClick={() => setMenuOpen(true)} aria-label="Menu" style={{ width: 46, height: 46, borderRadius: 12, border: "1.5px solid rgba(48,182,222,0.4)", background: "#fff", color: "#0C3446", cursor: "pointer", alignItems: "center", justifyContent: "center", fontSize: 20 }}>☰</button>
         </div>
       </div>
     </header>
+
+      {/* Mobile flyout menu */}
+      {menuOpen && (
+        <div onClick={() => setMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(4,32,46,0.5)", backdropFilter: "blur(2px)" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ position: "absolute", insetInlineEnd: 0, top: 0, height: "100%", width: "min(320px, 85vw)", background: "#fff", boxShadow: "-10px 0 40px rgba(4,32,46,0.3)", padding: "22px 20px", display: "flex", flexDirection: "column", gap: 4, overflowY: "auto" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <span style={{ fontFamily: SERIF, fontWeight: 800, fontSize: 18, color: "#0C3446" }}>{st("brand", lang, t.brand)}</span>
+              <button onClick={() => setMenuOpen(false)} aria-label="Close" style={{ width: 38, height: 38, borderRadius: 10, border: "1px solid rgba(12,52,70,0.15)", background: "#fff", fontSize: 18, cursor: "pointer" }}>✕</button>
+            </div>
+            {mobileLink("/", st("nav.home", lang, t.navHome))}
+            {mobileLink("/about", st("nav.about", lang, t.navAbout))}
+            {mobileLink("/services", st("nav.services", lang, t.navServices))}
+            {mobileLink("/cases", t.navCases)}
+            <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14 }}>
+              {mobileSub("/cases#success", t.navSuccess)}
+              {mobileSub("/cases#celebs", t.navCelebs)}
+            </div>
+            {mobileLink("/blogs", st("nav.blogs", lang, t.navBlogs))}
+            {mobileLink("/media", t.navMedia)}
+            <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14 }}>
+              {mobileSub("/media#gallery", t.navGallery)}
+              {mobileSub("/media#videos", t.navVideos)}
+            </div>
+            {mobileLink("/contact", st("nav.contact", lang, t.navContact))}
+            <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
+              <button onClick={() => toggleLang()} style={{ flex: 1, background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer" }}>{t.langBtn}</button>
+              <Link href="/contact" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", borderRadius: 10, padding: "11px", fontWeight: 800, textDecoration: "none" }}>{st("nav.book", lang, t.book)}</Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

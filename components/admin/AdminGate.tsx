@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { COLLECTIONS, COLLECTION_KEYS, GROUPS } from "@/lib/admin/config";
+import { COLLECTIONS, NAV_TREE } from "@/lib/admin/config";
 
 const CY = "#30B6DE";
 
@@ -16,6 +16,7 @@ export default function AdminGate({ children }: { children: React.ReactNode }) {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [openParents, setOpenParents] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
 
   const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -106,15 +107,24 @@ export default function AdminGate({ children }: { children: React.ReactNode }) {
 
         {navItem("/admin", "🏠", "Dashboard", "Overview", activeKey === "")}
 
-        {GROUPS.map((g) => {
-          const items = COLLECTION_KEYS.filter((k) => COLLECTIONS[k].group === g);
-          if (items.length === 0) return null;
+        {NAV_TREE.map((p) => {
+          const containsActive = p.children.includes(activeKey);
+          const open = openParents[p.label] ?? containsActive;
           return (
-            <div key={g} style={{ marginTop: 14 }}>
-              <div style={{ color: "rgba(255,255,255,0.35)", fontSize: 10.5, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", padding: "0 12px 8px" }}>{g}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {items.map((k) => navItem(`/admin/${k}`, COLLECTIONS[k].icon, COLLECTIONS[k].label, COLLECTIONS[k].labelAr, activeKey === k))}
-              </div>
+            <div key={p.label} style={{ marginTop: 6 }}>
+              <button
+                onClick={() => setOpenParents((s) => ({ ...s, [p.label]: !open }))}
+                style={{ width: "100%", display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 12, background: containsActive ? "rgba(48,182,222,0.12)" : "transparent", border: "1px solid transparent", color: "rgba(255,255,255,0.85)", cursor: "pointer", fontFamily: "inherit" }}
+              >
+                <span style={{ fontSize: 18, width: 22, textAlign: "center" }}>{p.icon}</span>
+                <span style={{ flex: 1, textAlign: "start", fontSize: 14, fontWeight: 700 }}>{p.label}<span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>  {p.labelAr}</span></span>
+                <span style={{ transform: open ? "rotate(90deg)" : "none", transition: "transform 0.2s", color: "rgba(255,255,255,0.5)", fontSize: 16 }}>›</span>
+              </button>
+              {open && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 3, paddingInlineStart: 16, marginTop: 3 }}>
+                  {p.children.map((k) => navItem(`/admin/${k}`, COLLECTIONS[k].icon, COLLECTIONS[k].label, COLLECTIONS[k].labelAr, activeKey === k))}
+                </div>
+              )}
             </div>
           );
         })}
