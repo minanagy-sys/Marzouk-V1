@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
+import RichTextField from "@/components/admin/RichTextField";
+
+const arrToHtml = (v: unknown): string =>
+  Array.isArray(v) ? (v as string[]).map((p) => `<p>${p}</p>`).join("") : typeof v === "string" ? v : "";
 
 type Row = Record<string, unknown>;
 type RefData = Record<string, Row[]>;
@@ -21,6 +25,7 @@ export default function AdminCollectionPage() {
   const [form, setForm] = useState<Row>({});
   const [saving, setSaving] = useState(false);
   const [refData, setRefData] = useState<RefData>({});
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     if (!col) return;
@@ -46,6 +51,7 @@ export default function AdminCollectionPage() {
     const f: Row = { ...row };
     col.fields.forEach((fld) => {
       if (fld.type === "paragraphs") f[fld.name] = Array.isArray(row[fld.name]) ? (row[fld.name] as string[]).join("\n\n") : String(row[fld.name] ?? "");
+      if (fld.type === "richtext") f[fld.name] = arrToHtml(row[fld.name]);
       if (fld.type === "repeater") f[fld.name] = Array.isArray(row[fld.name]) ? row[fld.name] : [];
       if (fld.type === "reference") f[fld.name] = row[fld.name] ?? "";
     });
@@ -86,6 +92,20 @@ export default function AdminCollectionPage() {
   };
 
   const setField = (name: string, v: unknown) => setForm((f) => ({ ...f, [name]: v }));
+
+  const canReorder = !col.readOnly && col.defaultOrder === "sort_order" && editing === null;
+  const dropRow = async (to: number) => {
+    if (dragIndex === null || dragIndex === to) { setDragIndex(null); return; }
+    const copy = [...rows];
+    const [moved] = copy.splice(dragIndex, 1);
+    copy.splice(to, 0, moved);
+    const reindexed: Row[] = copy.map((r, i) => ({ ...r, sort_order: i }));
+    setRows(reindexed);
+    setDragIndex(null);
+    try {
+      await Promise.all(reindexed.map((r, i) => (rows[i]?.id === r.id ? null : adminUpdate(table, { id: r.id, sort_order: i }))).filter(Boolean) as Promise<unknown>[]);
+    } catch (e) { setError((e as Error).message); await load(); }
+  };
 
   // group fields for the form
   const groups: string[] = [];
@@ -129,13 +149,22 @@ export default function AdminCollectionPage() {
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
             <thead>
               <tr style={{ background: "#F4FBFD" }}>
+                {canReorder && <th style={{ ...th, width: 30 }}></th>}
                 {col.listColumns.map((c) => <th key={c} style={th}>{prettify(c)}</th>)}
                 <th style={th}></th>
               </tr>
             </thead>
             <tbody>
               {rows.map((row, i) => (
-                <tr key={String(row.id) || i} style={{ borderTop: "1px solid rgba(12,52,70,0.07)" }}>
+                <tr
+                  key={String(row.id) || i}
+                  draggable={canReorder}
+                  onDragStart={() => setDragIndex(i)}
+                  onDragOver={(e) => { if (canReorder) e.preventDefault(); }}
+                  onDrop={() => canReorder && dropRow(i)}
+                  style={{ borderTop: "1px solid rgba(12,52,70,0.07)", background: dragIndex === i ? "#EAF7FB" : undefined, cursor: canReorder ? "grab" : undefined }}
+                >
+                  {canReorder && <td style={{ ...td, color: "#9BB3BF", cursor: "grab" }} title="Drag to reorder">⠿</td>}
                   {col.listColumns.map((c) => <td key={c} style={td}>{formatCell(row[c], c, refData)}</td>)}
                   <td style={{ ...td, textAlign: "end", whiteSpace: "nowrap" }}>
                     <button onClick={() => startEdit(row)} style={btnSmall}>Edit</button>
@@ -163,7 +192,7 @@ function formatCell(v: unknown, col: string, refData: RefData) {
 /* ---------------- Field renderers ---------------- */
 
 function FieldRenderer({ field, value, onChange, refData, readOnly }: { field: Field; value: unknown; onChange: (v: unknown) => void; refData: RefData; readOnly?: boolean }) {
-  const full = ["textarea", "paragraphs", "repeater", "image"].includes(field.type);
+  const full = ["textarea", "paragraphs", "richtext", "repeater", "image"].includes(field.type);
   return (
     <div style={{ gridColumn: full ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 6 }}>
       <label style={lbl}>{field.label}{field.help && <span style={{ fontWeight: 400, color: "#8AA5B1" }}> — {field.help}</span>}</label>
@@ -195,6 +224,9 @@ function SimpleField({ field, value, onChange, refData, readOnly }: { field: Fie
   if (field.type === "paragraphs") {
     return <textarea value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} rows={8} style={{ ...inp, resize: "vertical", lineHeight: 1.7 }} />;
   }
+  if (field.type === "richtext") {
+    return <RichTextField value={value} onChange={onChange} disabled={readOnly} />;
+  }
   if (field.type === "icon") {
     return <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
       <input type="text" value={String(value ?? "")} disabled={readOnly} onChange={(e) => onChange(e.target.value)} placeholder="e.g. ⚕ ♡ ❀" style={{ ...inp, width: 120 }} />
@@ -212,6 +244,7 @@ function SimpleField({ field, value, onChange, refData, readOnly }: { field: Fie
 
 function RepeaterField({ field, value, onChange, refData, readOnly }: { field: Field; value: Row[]; onChange: (v: Row[]) => void; refData: RefData; readOnly?: boolean }) {
   const sub = field.subfields || [];
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
   const add = () => onChange([...value, Object.fromEntries(sub.map((s) => [s.name, ""]))]);
   const update = (i: number, name: string, v: unknown) => onChange(value.map((it, idx) => (idx === i ? { ...it, [name]: v } : it)));
   const removeAt = (i: number) => onChange(value.filter((_, idx) => idx !== i));
@@ -219,12 +252,24 @@ function RepeaterField({ field, value, onChange, refData, readOnly }: { field: F
     const j = i + dir; if (j < 0 || j >= value.length) return;
     const copy = [...value]; [copy[i], copy[j]] = [copy[j], copy[i]]; onChange(copy);
   };
+  const dropTo = (to: number) => {
+    if (dragIdx === null || dragIdx === to) { setDragIdx(null); return; }
+    const copy = [...value]; const [m] = copy.splice(dragIdx, 1); copy.splice(to, 0, m);
+    onChange(copy); setDragIdx(null);
+  };
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {value.map((item, i) => (
-        <div key={i} style={{ border: "1px solid rgba(48,182,222,0.3)", borderRadius: 12, padding: 16, background: "#F8FCFE" }}>
+        <div
+          key={i}
+          draggable={!readOnly}
+          onDragStart={() => setDragIdx(i)}
+          onDragOver={(e) => { if (!readOnly) e.preventDefault(); }}
+          onDrop={() => dropTo(i)}
+          style={{ border: "1px solid rgba(48,182,222,0.3)", borderRadius: 12, padding: 16, background: dragIdx === i ? "#EAF7FB" : "#F8FCFE" }}
+        >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-            <strong style={{ fontSize: 13, color: "#1E92B8" }}>{field.itemLabel || "Item"} {i + 1}</strong>
+            <strong style={{ fontSize: 13, color: "#1E92B8" }}>⠿ {field.itemLabel || "Item"} {i + 1}</strong>
             {!readOnly && <div style={{ display: "flex", gap: 6 }}>
               <button type="button" onClick={() => move(i, -1)} style={btnMini}>↑</button>
               <button type="button" onClick={() => move(i, 1)} style={btnMini}>↓</button>

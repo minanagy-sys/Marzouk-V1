@@ -11,6 +11,7 @@ export type FieldType =
   | "icon"
   | "date"
   | "paragraphs" // stored as string[]; edited as one textarea (blank line = new paragraph)
+  | "richtext"   // stored as HTML string; edited with a formatting toolbar
   | "repeater"   // stored as array of objects; edited as add/remove item cards
   | "reference"; // stored as an id; edited as a dropdown from another table
 
@@ -142,8 +143,8 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "title_en", label: "Title (English)", type: "text", group: "Basics" },
       { name: "excerpt_ar", label: "Short summary (Arabic)", type: "textarea", group: "Basics" },
       { name: "excerpt_en", label: "Short summary (English)", type: "textarea", group: "Basics" },
-      { name: "body_ar", label: "Article body (Arabic)", type: "paragraphs", help: "Leave a blank line between paragraphs", group: "Article" },
-      { name: "body_en", label: "Article body (English)", type: "paragraphs", help: "Leave a blank line between paragraphs", group: "Article" },
+      { name: "body_ar", label: "Article body (Arabic)", type: "richtext", group: "Article" },
+      { name: "body_en", label: "Article body (English)", type: "richtext", group: "Article" },
       { name: "meta_title_ar", label: "SEO title (Arabic)", type: "text", group: "SEO" },
       { name: "meta_title_en", label: "SEO title (English)", type: "text", group: "SEO" },
       { name: "meta_desc_ar", label: "SEO description (Arabic)", type: "textarea", group: "SEO" },

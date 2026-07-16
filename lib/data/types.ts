@@ -86,7 +86,7 @@ export type BlogPostBi = {
   tag: BiText;
   title: BiText;
   excerpt: BiText;
-  body: { ar: string[]; en: string[] };
+  body: { ar: string; en: string }; // HTML
   categorySlug?: string;
   categoryName?: BiText;
 };

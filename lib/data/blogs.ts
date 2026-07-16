@@ -2,6 +2,8 @@ import type { BlogPostBi, BlogCategory } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 import { blogPosts as seedPosts } from "@/lib/content/blogs";
 
+const paragraphsToHtml = (arr: string[]): string => arr.map((p) => `<p>${p}</p>`).join("");
+
 export function blogSeed(): BlogPostBi[] {
   const ar = seedPosts("ar");
   const en = seedPosts("en");
@@ -11,13 +13,14 @@ export function blogSeed(): BlogPostBi[] {
     tag: { ar: p.tag, en: en[i]?.tag ?? "" },
     title: { ar: p.title, en: en[i]?.title ?? "" },
     excerpt: { ar: p.excerpt, en: en[i]?.excerpt ?? "" },
-    body: { ar: p.body, en: en[i]?.body ?? [] },
+    body: { ar: paragraphsToHtml(p.body), en: paragraphsToHtml(en[i]?.body ?? []) },
   }));
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowTo(r: any): BlogPostBi {
-  const toArr = (v: any): string[] => (Array.isArray(v) ? v : typeof v === "string" && v ? [v] : []);
+  // body columns may hold HTML (from the rich-text editor) or a paragraph array (seed).
+  const toHtml = (v: any): string => (Array.isArray(v) ? v.map((p) => `<p>${p}</p>`).join("") : typeof v === "string" ? v : "");
   const cat = r.blog_categories;
   return {
     slug: r.slug,
@@ -26,7 +29,7 @@ function rowTo(r: any): BlogPostBi {
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     excerpt: { ar: r.excerpt_ar ?? "", en: r.excerpt_en ?? "" },
-    body: { ar: toArr(r.body_ar), en: toArr(r.body_en) },
+    body: { ar: toHtml(r.body_ar), en: toHtml(r.body_en) },
     categorySlug: cat?.slug ?? undefined,
     categoryName: cat ? { ar: cat.name_ar ?? "", en: cat.name_en ?? "" } : undefined,
   };
