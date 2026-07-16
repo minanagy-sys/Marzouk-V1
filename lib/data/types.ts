@@ -61,6 +61,15 @@ export type Testimonial = {
   id: string;
   name: string;
   text: BiText;
+  rating?: number;
+};
+
+export type InstagramPost = {
+  id: string;
+  imageUrl?: string;
+  permalink?: string;
+  isVideo?: boolean;
+  caption: BiText;
 };
 
 export type Clinic = {

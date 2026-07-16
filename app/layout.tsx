@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { El_Messiri, Tajawal } from "next/font/google";
 import { LangProvider } from "@/lib/lang";
+import { SettingsProvider } from "@/lib/settings";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -55,7 +56,9 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${elMessiri.variable} ${tajawal.variable}`}>
-        <LangProvider>{children}</LangProvider>
+        <LangProvider>
+          <SettingsProvider>{children}</SettingsProvider>
+        </LangProvider>
       </body>
     </html>
   );

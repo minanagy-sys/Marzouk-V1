@@ -53,6 +53,7 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["title_ar", "tag_ar", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", help: "e.g. pain-free-cesarean", group: "Settings" },
+      { name: "parent_id", label: "Parent service", type: "reference", refTable: "services", refLabelColumn: "title_ar", group: "Settings", help: "Optional — group this under a main service" },
       ...publish,
       { name: "glyph", label: "Icon", type: "icon", group: "Basics" },
       { name: "image_url", label: "Main image", type: "image", group: "Basics" },
@@ -184,8 +185,22 @@ export const COLLECTIONS: Record<string, Collection> = {
     fields: [
       ...publish,
       { name: "name", label: "Patient name", type: "text", group: "Basics" },
+      { name: "rating", label: "Rating (1-5 stars)", type: "number", group: "Basics" },
       { name: "text_ar", label: "Testimonial (Arabic)", type: "textarea", group: "Basics" },
       { name: "text_en", label: "Testimonial (English)", type: "textarea", group: "Basics" },
+    ],
+  },
+
+  instagram_posts: {
+    table: "instagram_posts", label: "Instagram", labelAr: "إنستجرام", singular: "Post", icon: "📸", group: "Content",
+    listColumns: ["caption_ar", "is_video", "sort_order", "is_published"], titleColumn: "caption_ar", defaultOrder: "sort_order",
+    fields: [
+      ...publish,
+      { name: "image_url", label: "Image / thumbnail", type: "image", group: "Basics" },
+      { name: "permalink", label: "Instagram link", type: "text", group: "Basics" },
+      { name: "is_video", label: "This is a video", type: "boolean", group: "Basics" },
+      { name: "caption_ar", label: "Caption (Arabic)", type: "textarea", group: "Basics" },
+      { name: "caption_en", label: "Caption (English)", type: "textarea", group: "Basics" },
     ],
   },
 

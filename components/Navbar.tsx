@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import HoverBox from "./HoverBox";
 import { useLang } from "@/lib/lang";
+import { useSetting } from "@/lib/settings";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { SERIF, SANS } from "@/lib/theme";
 
@@ -33,6 +34,7 @@ export default function Navbar({
 }) {
   const { lang, toggleLang } = useLang();
   const t = common(lang);
+  const st = useSetting();
   const [casesOpen, setCasesOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
 
@@ -103,8 +105,8 @@ export default function Navbar({
             Dr
           </span>
           <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.15 }}>
-            <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, color: "#0C3446" }}>{t.brand}</span>
-            <span style={{ fontSize: 11.5, color: "#5B7A88", letterSpacing: "0.4px" }}>{t.brandSub}</span>
+            <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, color: "#0C3446" }}>{st("brand", lang, t.brand)}</span>
+            <span style={{ fontSize: 11.5, color: "#5B7A88", letterSpacing: "0.4px" }}>{st("brand.sub", lang, t.brandSub)}</span>
           </span>
         </Link>
 
@@ -112,9 +114,9 @@ export default function Navbar({
           className="dam-navlinks"
           style={{ display: "flex", alignItems: "center", gap: 26, fontSize: 15, fontWeight: 500 }}
         >
-          {plainLink("home", "/", t.navHome)}
-          {plainLink("about", "/about", t.navAbout)}
-          {plainLink("services", "/services", t.navServices)}
+          {plainLink("home", "/", st("nav.home", lang, t.navHome))}
+          {plainLink("about", "/about", st("nav.about", lang, t.navAbout))}
+          {plainLink("services", "/services", st("nav.services", lang, t.navServices))}
 
           {dropdowns ? (
             <span style={{ position: "relative" }}>
@@ -167,7 +169,7 @@ export default function Navbar({
             plainLink("cases", "/cases", t.navCases)
           )}
 
-          {plainLink("blogs", "/blogs", t.navBlogs)}
+          {plainLink("blogs", "/blogs", st("nav.blogs", lang, t.navBlogs))}
 
           {dropdowns ? (
             <span style={{ position: "relative" }}>
@@ -220,7 +222,7 @@ export default function Navbar({
             plainLink("media", "/media", t.navMedia)
           )}
 
-          {plainLink("contact", "/contact", t.navContact)}
+          {plainLink("contact", "/contact", st("nav.contact", lang, t.navContact))}
         </nav>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -276,7 +278,7 @@ export default function Navbar({
               }}
               hoverStyle={{ boxShadow: "0 10px 26px rgba(48,182,222,0.55)", color: "#ffffff" }}
             >
-              {t.book}
+              {st("nav.book", lang, t.book)}
             </HoverBox>
           )}
         </div>
