@@ -50,7 +50,7 @@ export default function ServiceDetailView({ service, related }: { service: Servi
       <section style={{ padding: "80px 24px" }}>
         <div className="dam-2col" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 0.85fr", gap: 50, alignItems: "center" }}>
           <div>
-            <p style={{ fontSize: 18, lineHeight: 2.1, color: "#46687A", margin: 0, textWrap: "pretty" }}>{pick(service.intro, lang)}</p>
+            <div className="article-body" dir={isAr ? "rtl" : "ltr"} style={{ fontSize: 18, lineHeight: 2.1, color: "#46687A" }} dangerouslySetInnerHTML={{ __html: pick(service.intro, lang) }} />
           </div>
           <div style={{ borderRadius: 26, overflow: "hidden", border: "1px solid rgba(48,182,222,0.25)", boxShadow: "0 20px 50px rgba(12,52,70,0.12)", height: 320, background: "linear-gradient(160deg, #0A3950, #0E5372)" }}>
             <ImageSlot src={service.imageUrl} placeholder={isAr ? "أسقطي صورة هنا" : "Drop a photo here"} style={{ width: "100%", height: "100%" }} />
@@ -64,7 +64,7 @@ export default function ServiceDetailView({ service, related }: { service: Servi
           {service.sections.map((s, i) => (
             <div key={i} style={{ borderInlineStart: "3px solid #30B6DE", paddingInlineStart: 24 }}>
               <h2 style={{ fontFamily: SERIF, fontSize: "clamp(22px, 2.6vw, 30px)", fontWeight: 700, color: "#0C3446", margin: 0 }}>{pick(s.heading, lang)}</h2>
-              <p style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", margin: "14px 0 0", textWrap: "pretty" }}>{pick(s.body, lang)}</p>
+              <div className="article-body" dir={isAr ? "rtl" : "ltr"} style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", marginTop: 14 }} dangerouslySetInnerHTML={{ __html: pick(s.body, lang) }} />
             </div>
           ))}
         </div>
