@@ -299,7 +299,7 @@ function RepeaterField({ field, value, onChange, refData, readOnly }: { field: F
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {sub.map((sf) => (
-              <div key={sf.name} style={{ gridColumn: sf.type === "textarea" ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 4 }}>
+              <div key={sf.name} style={{ gridColumn: ["textarea", "richtext", "paragraphs", "image"].includes(sf.type) ? "1 / -1" : "auto", display: "flex", flexDirection: "column", gap: 4 }}>
                 <label style={{ ...lbl, fontSize: 11.5 }}>{sf.label}</label>
                 <SimpleField field={sf} value={item[sf.name]} onChange={(v) => update(i, sf.name, v)} refData={refData} readOnly={readOnly} />
               </div>

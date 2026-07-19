@@ -78,15 +78,15 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "short_desc_en", label: "Short description (English)", type: "textarea", group: "Basics" },
       { name: "hero_sub_ar", label: "Hero subtitle (Arabic)", type: "textarea", group: "Detail page" },
       { name: "hero_sub_en", label: "Hero subtitle (English)", type: "textarea", group: "Detail page" },
-      { name: "intro_ar", label: "Intro paragraph (Arabic)", type: "textarea", group: "Detail page" },
-      { name: "intro_en", label: "Intro paragraph (English)", type: "textarea", group: "Detail page" },
+      { name: "intro_ar", label: "Intro paragraph (Arabic)", type: "richtext", group: "Detail page" },
+      { name: "intro_en", label: "Intro paragraph (English)", type: "richtext", group: "Detail page" },
       {
         name: "sections", label: "Content sections", type: "repeater", group: "Detail page", itemLabel: "Section",
         subfields: [
           { name: "heading_ar", label: "Heading (Arabic)", type: "text" },
           { name: "heading_en", label: "Heading (English)", type: "text" },
-          { name: "body_ar", label: "Body (Arabic)", type: "textarea" },
-          { name: "body_en", label: "Body (English)", type: "textarea" },
+          { name: "body_ar", label: "Body (Arabic)", type: "richtext" },
+          { name: "body_en", label: "Body (English)", type: "richtext" },
         ],
       },
       {
@@ -127,8 +127,8 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "title_en", label: "Title (English)", type: "text", group: "Basics" },
       { name: "excerpt_ar", label: "Short summary (Arabic)", type: "textarea", group: "Basics" },
       { name: "excerpt_en", label: "Short summary (English)", type: "textarea", group: "Basics" },
-      { name: "body_ar", label: "Full story (Arabic)", type: "textarea", group: "Story" },
-      { name: "body_en", label: "Full story (English)", type: "textarea", group: "Story" },
+      { name: "body_ar", label: "Full story (Arabic)", type: "richtext", group: "Story" },
+      { name: "body_en", label: "Full story (English)", type: "richtext", group: "Story" },
     ],
   },
 

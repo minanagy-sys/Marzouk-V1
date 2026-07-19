@@ -40,7 +40,7 @@ export default function CaseDetailView({ item, related }: { item: CaseItem; rela
         <div style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 14px 40px rgba(12,52,70,0.08)", height: 360, marginBottom: 40, background: "linear-gradient(160deg, #0A3950, #0E5372)" }}>
           <ImageSlot src={item.imageUrl} placeholder={ui.photoPh} style={{ width: "100%", height: "100%" }} />
         </div>
-        <p style={{ fontSize: 17.5, lineHeight: 2.15, color: "#46687A", margin: 0, textWrap: "pretty" }}>{pick(item.body, lang)}</p>
+        <div className="article-body" dir={dir} style={{ fontSize: 17.5, lineHeight: 2.15, color: "#46687A" }} dangerouslySetInnerHTML={{ __html: pick(item.body, lang) }} />
 
         <div style={{ marginTop: 34, paddingTop: 26, borderTop: "1px solid rgba(12,52,70,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <HoverBox as={Link} href="/cases" style={{ color: "#30B6DE", fontWeight: 800, fontSize: 15 }} hoverStyle={{ color: "#1E92B8" }}>
