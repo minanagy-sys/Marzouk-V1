@@ -1,5 +1,6 @@
 import type { CaseItem } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
+import { slugify } from "@/lib/admin/slug";
 
 /** Cases seed — feeds the cases page and each /cases/[slug] story page. */
 export const CASES_SEED: CaseItem[] = [
@@ -118,11 +119,13 @@ function rowToCase(r: any): CaseItem {
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+const CASES_SEED_SLUGS: CaseItem[] = CASES_SEED.map((c) => ({ ...c, slugAr: c.slugAr || slugify(c.title.ar), slugEn: c.slugEn || c.slug }));
+
 export async function getCases(): Promise<CaseItem[]> {
   const supabase = getServiceClient() ?? getAnonClient();
-  if (!supabase) return CASES_SEED;
+  if (!supabase) return CASES_SEED_SLUGS;
   const { data, error } = await supabase.from("cases").select("*").eq("is_published", true).order("sort_order", { ascending: true });
-  if (error || !data || data.length === 0) return CASES_SEED;
+  if (error || !data || data.length === 0) return CASES_SEED_SLUGS;
   return data.map(rowToCase);
 }
 

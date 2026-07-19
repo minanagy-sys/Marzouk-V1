@@ -1,6 +1,7 @@
 import type { BlogPostBi, BlogCategory } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 import { blogPosts as seedPosts } from "@/lib/content/blogs";
+import { slugify } from "@/lib/admin/slug";
 
 const paragraphsToHtml = (arr: string[]): string => arr.map((p) => `<p>${p}</p>`).join("");
 
@@ -9,6 +10,8 @@ export function blogSeed(): BlogPostBi[] {
   const en = seedPosts("en");
   return ar.map((p, i) => ({
     slug: p.slug,
+    slugAr: slugify(p.title),
+    slugEn: p.slug,
     date: p.date,
     tag: { ar: p.tag, en: en[i]?.tag ?? "" },
     title: { ar: p.title, en: en[i]?.title ?? "" },
