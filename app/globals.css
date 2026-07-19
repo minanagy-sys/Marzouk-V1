@@ -129,6 +129,11 @@ textarea::placeholder {
   .dam-hero-stat-label { font-size: 9px !important; }
 }
 
+/* ---------- Reviews section: tighter vertical padding on mobile ---------- */
+@media (max-width: 700px) {
+  .dam-reviews-sec { padding-top: 30px !important; padding-bottom: 30px !important; }
+}
+
 /* ---------- Instagram card hover ---------- */
 .ig-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .ig-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(193,53,132,0.28); }
