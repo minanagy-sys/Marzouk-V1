@@ -101,9 +101,20 @@ textarea::placeholder {
   .dam-slide-arrow { display: none !important; }
 }
 
-/* ---------- Full-bleed slider arrows: hide on mobile (swipe) ---------- */
+/* ---------- Full-bleed slider ---------- */
+.dam-bleed { margin-inline: -24px; }
+.dam-bleed-track { padding: 8px; }
 @media (max-width: 700px) {
   .dam-bleed-arrow { display: none !important; }
+  /* Align the slider's start edge with the heading text; bleed only the far side. */
+  .dam-bleed { margin-inline-start: 0; }
+  .dam-bleed-track { padding-inline-start: 0; }
+}
+
+/* ---------- Section heading: keep the "view all" link opposite the title on mobile ---------- */
+@media (max-width: 700px) {
+  .dam-sechead { flex-wrap: nowrap !important; align-items: center !important; gap: 12px !important; margin-bottom: 26px !important; }
+  .dam-sechead-cta { flex-shrink: 0 !important; }
 }
 
 /* ---------- Hero stats: shrink to a single line on mobile ---------- */
