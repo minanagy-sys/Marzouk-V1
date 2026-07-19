@@ -72,11 +72,13 @@ export async function getBlogCategories(): Promise<BlogCategory[]> {
   return data.map((c: any) => ({ id: c.id, slug: c.slug, name: { ar: c.name_ar ?? "", en: c.name_en ?? "" } }));
 }
 
-/** { lang, slug } params for static generation (both languages). */
+/** { lang, slug } params for static generation — ASCII only (Arabic slugs render on-demand). */
 export async function getBlogParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getBlogPostsBi();
-  return all.flatMap((p) => [
-    { lang: "ar", slug: p.slugAr || p.slug },
-    { lang: "en", slug: p.slugEn || p.slug },
-  ]);
+  return all
+    .flatMap((p) => [
+      { lang: "ar", slug: p.slugAr || p.slug },
+      { lang: "en", slug: p.slugEn || p.slug },
+    ])
+    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }

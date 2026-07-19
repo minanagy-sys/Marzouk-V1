@@ -499,11 +499,17 @@ export async function getService(slug: string): Promise<Service | undefined> {
   return all.find((s) => s.slug === slug || s.slugAr === slug || s.slugEn === slug);
 }
 
-/** { lang, slug } params for static generation (both languages). */
+/**
+ * { lang, slug } params for static generation. Only ASCII slugs are
+ * pre-rendered — non-ASCII (Arabic) slugs render on-demand (ISR), which avoids
+ * a Vercel serving bug with encoded non-ASCII static file paths.
+ */
 export async function getServiceParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getServices();
-  return all.flatMap((s) => [
-    { lang: "ar", slug: s.slugAr || s.slug },
-    { lang: "en", slug: s.slugEn || s.slug },
-  ]);
+  return all
+    .flatMap((s) => [
+      { lang: "ar", slug: s.slugAr || s.slug },
+      { lang: "en", slug: s.slugEn || s.slug },
+    ])
+    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }

@@ -8,6 +8,7 @@ import { altLangs } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
+export const dynamicParams = true; // Arabic slugs render on-demand
 
 export async function generateStaticParams() {
   return getCaseParams();
