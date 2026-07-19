@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export type Lang = "ar" | "en";
 
@@ -8,53 +9,52 @@ interface LangCtx {
   lang: Lang;
   isAr: boolean;
   dir: "rtl" | "ltr";
-  setLang: (l: Lang) => void;
+  /** Prefix an internal path with the current locale, e.g. lp("/services") → "/ar/services". */
+  lp: (path: string) => string;
+  /** Detail pages with localized slugs set this so the toggle jumps to the right URL. */
+  setAltUrl: (url: string | null) => void;
   toggleLang: () => void;
+  setLang: (l: Lang) => void;
 }
 
 const Ctx = createContext<LangCtx | null>(null);
 
-export function LangProvider({ children }: { children: React.ReactNode }) {
-  // Mirror the original default: Arabic first, remembered via localStorage.
-  const [lang, setLangState] = useState<Lang>("ar");
+export function LangProvider({ lang, children }: { lang: Lang; children: React.ReactNode }) {
+  const isAr = lang === "ar";
+  const dir: "rtl" | "ltr" = isAr ? "rtl" : "ltr";
+  const pathname = usePathname();
+  const router = useRouter();
+  const [altUrl, setAltUrl] = useState<string | null>(null);
 
-  // Read the saved preference on mount (client only, like the original).
+  // A new page owns its own alt URL.
+  useEffect(() => { setAltUrl(null); }, [pathname]);
+
+  // Remember the choice (used to pick a language on the bare "/" entry).
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("dam-lang") as Lang | null;
-      if (saved === "ar" || saved === "en") setLangState(saved);
+      localStorage.setItem("dam-lang", lang);
+      document.cookie = `dam-lang=${lang}; path=/; max-age=31536000`;
     } catch {}
-  }, []);
-
-  // Keep <html> lang/dir in sync so the whole document flips RTL/LTR.
-  useEffect(() => {
-    const el = document.documentElement;
-    el.lang = lang;
-    el.dir = lang === "ar" ? "rtl" : "ltr";
   }, [lang]);
 
-  const setLang = useCallback((l: Lang) => {
-    try {
-      localStorage.setItem("dam-lang", l);
-    } catch {}
-    setLangState(l);
-  }, []);
+  const lp = useCallback((path: string) => {
+    if (!path || /^(https?:|mailto:|tel:|#)/.test(path)) return path;
+    const clean = path.startsWith("/") ? path : "/" + path;
+    return `/${lang}${clean === "/" ? "" : clean}`;
+  }, [lang]);
 
-  const toggleLang = useCallback(() => {
-    setLangState((prev) => {
-      const next = prev === "ar" ? "en" : "ar";
-      try {
-        localStorage.setItem("dam-lang", next);
-      } catch {}
-      return next;
-    });
-  }, []);
+  const go = useCallback((target: Lang) => {
+    if (target === lang) return;
+    if (altUrl) { router.push(altUrl); return; }
+    const rest = (pathname || "/").replace(/^\/(ar|en)(?=\/|$)/, "") || "/";
+    router.push(`/${target}${rest === "/" ? "" : rest}`);
+  }, [lang, altUrl, pathname, router]);
 
-  const isAr = lang === "ar";
-  const dir = isAr ? "rtl" : "ltr";
+  const toggleLang = useCallback(() => go(isAr ? "en" : "ar"), [go, isAr]);
+  const setLang = useCallback((l: Lang) => go(l), [go]);
 
   return (
-    <Ctx.Provider value={{ lang, isAr, dir, setLang, toggleLang }}>
+    <Ctx.Provider value={{ lang, isAr, dir, lp, setAltUrl, toggleLang, setLang }}>
       {children}
     </Ctx.Provider>
   );

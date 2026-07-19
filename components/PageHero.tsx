@@ -21,7 +21,7 @@ export default function PageHero({
   padding?: string;
   children?: React.ReactNode;
 }) {
-  const { lang } = useLang();
+  const { lang, lp } = useLang();
   const t = common(lang);
 
   return (
@@ -61,7 +61,7 @@ export default function PageHero({
       )}
       <div style={{ maxWidth: 1240, margin: "0 auto", position: "relative", animation: "damFadeUp 0.8s ease-out both" }}>
         <div style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", fontWeight: 500 }}>
-          <Link href="/" style={{ color: "#8FE0F7" }}>
+          <Link href={lp("/")} style={{ color: "#8FE0F7" }}>
             {t.navHome}
           </Link>{" "}
           · {crumbLabel}

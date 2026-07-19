@@ -51,7 +51,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
   // The footer is now identical on every page (enhanced 3-column layout).
   const variant: "full" | "simple" = "full";
   void _props;
-  const { lang } = useLang();
+  const { lang, lp } = useLang();
   const t = common(lang);
   const st = useSetting();
 
@@ -133,12 +133,12 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
           <div>
             <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{st("footer.linksTitle", lang, t.footerLinks)}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 14.5 }}>
-              {footerLink("/", st("nav.home", lang, t.navHome))}
-              {footerLink("/about", st("nav.about", lang, t.navAbout))}
-              {footerLink("/services", st("nav.services", lang, t.navServices))}
-              {footerLink("/cases", st("nav.cases", lang, t.navCases))}
-              {footerLink("/blogs", st("nav.blogs", lang, t.navBlogs))}
-              {footerLink("/contact", st("nav.contact", lang, t.navContact))}
+              {footerLink(lp("/"), st("nav.home", lang, t.navHome))}
+              {footerLink(lp("/about"), st("nav.about", lang, t.navAbout))}
+              {footerLink(lp("/services"), st("nav.services", lang, t.navServices))}
+              {footerLink(lp("/cases"), st("nav.cases", lang, t.navCases))}
+              {footerLink(lp("/blogs"), st("nav.blogs", lang, t.navBlogs))}
+              {footerLink(lp("/contact"), st("nav.contact", lang, t.navContact))}
             </div>
           </div>
 
@@ -169,10 +169,10 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
       <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 30, flexWrap: "wrap", paddingBottom: 40 }}>
         <Logo />
         <div style={{ display: "flex", gap: 22, fontSize: 14, flexWrap: "wrap" }}>
-          {footerLink("/", t.navHome)}
-          {footerLink("/services", t.navServices)}
-          {footerLink("/cases", t.navCases)}
-          {footerLink("/contact", t.navContact)}
+          {footerLink(lp("/"), t.navHome)}
+          {footerLink(lp("/services"), t.navServices)}
+          {footerLink(lp("/cases"), t.navCases)}
+          {footerLink(lp("/contact"), t.navContact)}
         </div>
         <div style={{ direction: "ltr", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>{CONTACT_INFO.phone1}</div>
       </div>

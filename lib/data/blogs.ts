@@ -24,6 +24,8 @@ function rowTo(r: any): BlogPostBi {
   const cat = r.blog_categories;
   return {
     slug: r.slug,
+    slugAr: r.slug_ar ?? undefined,
+    slugEn: r.slug_en ?? undefined,
     imageUrl: r.image_url ?? undefined,
     date: r.published_date ?? "",
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
@@ -54,12 +56,8 @@ export async function getBlogPostsHome(): Promise<BlogPostBi[]> {
 }
 
 export async function getBlogPostBi(slug: string): Promise<BlogPostBi | undefined> {
-  const supabase = getServiceClient() ?? getAnonClient();
-  if (!supabase) return blogSeed().find((p) => p.slug === slug);
-  let res = await supabase.from("blog_posts").select(SELECT_WITH_CAT).eq("slug", slug).single();
-  if (res.error) res = await supabase.from("blog_posts").select("*").eq("slug", slug).single();
-  if (res.error || !res.data) return blogSeed().find((p) => p.slug === slug);
-  return rowTo(res.data);
+  const all = await getBlogPostsBi();
+  return all.find((p) => p.slug === slug || p.slugAr === slug || p.slugEn === slug);
 }
 
 export async function getBlogCategories(): Promise<BlogCategory[]> {
@@ -71,6 +69,11 @@ export async function getBlogCategories(): Promise<BlogCategory[]> {
   return data.map((c: any) => ({ id: c.id, slug: c.slug, name: { ar: c.name_ar ?? "", en: c.name_en ?? "" } }));
 }
 
-export async function getBlogSlugsBi(): Promise<string[]> {
-  return (await getBlogPostsBi()).map((p) => p.slug);
+/** { lang, slug } params for static generation (both languages). */
+export async function getBlogParams(): Promise<{ lang: string; slug: string }[]> {
+  const all = await getBlogPostsBi();
+  return all.flatMap((p) => [
+    { lang: "ar", slug: p.slugAr || p.slug },
+    { lang: "en", slug: p.slugEn || p.slug },
+  ]);
 }

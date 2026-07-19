@@ -9,9 +9,15 @@ converted from the original HTML design to **Next.js 15 (App Router) + TypeScrip
 - **next/font** (El Messiri + Tajawal) for optimized bilingual fonts
 - **Supabase** — database for bookings and (upcoming) editable content + admin
 
-## Pages
-`/` Home · `/about` · `/services` · `/cases` · `/blogs` + `/blogs/[slug]` · `/media` · `/contact`
-Plus API: `/api/booking` (booking form submissions).
+## Pages & URLs
+The public site is served under a language prefix for SEO — **`/ar/...`** and
+**`/en/...`** — each with its own `<html lang>`, localized metadata, hreflang
+alternates, and (optionally) localized slugs. Visiting `/` redirects to the
+preferred language; old unprefixed links redirect into `/ar`.
+
+`/[lang]` Home · `/[lang]/about` · `/[lang]/services` · `/[lang]/cases` ·
+`/[lang]/blogs` + `/[lang]/blogs/[slug]` · `/[lang]/media` · `/[lang]/contact`.
+Admin stays at `/admin`. API: `/api/booking`.
 
 ## Run locally
 ```bash
@@ -38,6 +44,7 @@ host's environment settings. Never commit secrets.
 6. `supabase/service_categories_and_flags.sql` — parent-service categories + "show on home" toggles.
 7. `supabase/booking_email.sql` — adds an email field to contact-form submissions.
 8. `supabase/cases_show_on_home.sql` — adds a "show on home" flag to cases (celebrity slider).
+9. `supabase/localized_slugs.sql` — optional per-language URL slugs (slug_ar / slug_en).
 Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
 
 ## Deploy (Vercel — recommended)

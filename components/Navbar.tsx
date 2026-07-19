@@ -32,7 +32,7 @@ export default function Navbar({
   dropdowns?: boolean;
   cta?: "book" | "phone";
 }) {
-  const { lang, toggleLang } = useLang();
+  const { lang, toggleLang, lp } = useLang();
   const t = common(lang);
   const st = useSetting();
   const [casesOpen, setCasesOpen] = useState(false);
@@ -45,7 +45,7 @@ export default function Navbar({
       : { color: "#0C3446" };
 
   const plainLink = (key: NavKey, href: string, label: string) => (
-    <HoverBox as={Link} href={href} style={linkStyle(key)} hoverStyle={active === key ? undefined : { color: "#30B6DE" }}>
+    <HoverBox as={Link} href={lp(href)} style={linkStyle(key)} hoverStyle={active === key ? undefined : { color: "#30B6DE" }}>
       {label}
     </HoverBox>
   );
@@ -53,7 +53,7 @@ export default function Navbar({
   const menuItem = (href: string, label: string) => (
     <HoverBox
       as={Link}
-      href={href}
+      href={lp(href)}
       style={{ padding: "10px 14px", borderRadius: 9, color: "#0C3446" }}
       hoverStyle={{ background: "#EAF7FB", color: "#30B6DE" }}
     >
@@ -62,16 +62,16 @@ export default function Navbar({
   );
 
   const mobileLink = (href: string, label: string) => (
-    <Link href={href} onClick={() => setMenuOpen(false)} style={{ padding: "13px 6px", borderBottom: "1px solid rgba(12,52,70,0.06)", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
+    <Link href={lp(href)} onClick={() => setMenuOpen(false)} style={{ padding: "13px 6px", borderBottom: "1px solid rgba(12,52,70,0.06)", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
   );
   const mobileSub = (href: string, label: string) => (
-    <Link href={href} onClick={() => setMenuOpen(false)} style={{ padding: "9px 6px", color: "#5B7A88", fontSize: 14, textDecoration: "none" }}>— {label}</Link>
+    <Link href={lp(href)} onClick={() => setMenuOpen(false)} style={{ padding: "9px 6px", color: "#5B7A88", fontSize: 14, textDecoration: "none" }}>— {label}</Link>
   );
   // Collapsible parent row: label links to the page, chevron toggles the sub-items.
   const mobileParent = (href: string, label: string, open: boolean, toggle: () => void, subs: React.ReactNode) => (
     <div style={{ borderBottom: "1px solid rgba(12,52,70,0.06)" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <Link href={href} onClick={() => setMenuOpen(false)} style={{ flex: 1, padding: "13px 6px", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
+        <Link href={lp(href)} onClick={() => setMenuOpen(false)} style={{ flex: 1, padding: "13px 6px", color: "#0C3446", fontWeight: 700, fontSize: 15.5, textDecoration: "none" }}>{label}</Link>
         <button onClick={toggle} aria-label="Toggle submenu" aria-expanded={open} style={{ background: "none", border: "none", padding: 12, cursor: "pointer", color: "#5B7A88", display: "flex", alignItems: "center", transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>{CHEVRON}</button>
       </div>
       {open && <div style={{ display: "flex", flexDirection: "column", paddingInlineStart: 14, paddingBottom: 8 }}>{subs}</div>}
@@ -104,7 +104,7 @@ export default function Navbar({
           gap: 24,
         }}
       >
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 12, color: "#0C3446" }}>
+        <Link href={lp("/")} style={{ display: "flex", alignItems: "center", gap: 12, color: "#0C3446" }}>
           <span
             style={{
               width: 46,
@@ -286,7 +286,7 @@ export default function Navbar({
           ) : (
             <HoverBox
               as={Link}
-              href="/contact"
+              href={lp("/contact")}
               style={{
                 background: "linear-gradient(135deg, #30B6DE, #1E92B8)",
                 color: "#ffffff",
@@ -335,7 +335,7 @@ export default function Navbar({
             {mobileLink("/contact", st("nav.contact", lang, t.navContact))}
             <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
               <button onClick={() => toggleLang()} style={{ flex: 1, background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer" }}>{st("nav.lang", lang, t.langBtn)}</button>
-              <Link href="/contact" onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", borderRadius: 10, padding: "11px", fontWeight: 800, textDecoration: "none" }}>{st("nav.book", lang, t.book)}</Link>
+              <Link href={lp("/contact")} onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", borderRadius: 10, padding: "11px", fontWeight: 800, textDecoration: "none" }}>{st("nav.book", lang, t.book)}</Link>
             </div>
           </div>
         </div>
