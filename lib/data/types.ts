@@ -51,6 +51,7 @@ export type CaseItem = {
   title: BiText;
   excerpt: BiText;
   body: BiText;
+  showOnHome?: boolean;
 };
 
 export type MediaItem = {

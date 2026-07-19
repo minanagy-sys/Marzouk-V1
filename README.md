@@ -37,6 +37,7 @@ host's environment settings. Never commit secrets.
 5. `supabase/home_sections.sql` — editable hero slides, stats, values, and features.
 6. `supabase/service_categories_and_flags.sql` — parent-service categories + "show on home" toggles.
 7. `supabase/booking_email.sql` — adds an email field to contact-form submissions.
+8. `supabase/cases_show_on_home.sql` — adds a "show on home" flag to cases (celebrity slider).
 Then create an admin user in Supabase → Authentication → Users, and open `/admin`.
 
 ## Deploy (Vercel — recommended)
