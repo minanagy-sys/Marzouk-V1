@@ -140,11 +140,13 @@ export async function getCase(slug: string): Promise<CaseItem | undefined> {
   return all.find((c) => c.slug === slug || c.slugAr === slug || c.slugEn === slug);
 }
 
-/** { lang, slug } params for static generation (both languages). */
+/** { lang, slug } params for static generation — ASCII only (Arabic slugs render on-demand). */
 export async function getCaseParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getCases();
-  return all.flatMap((c) => [
-    { lang: "ar", slug: c.slugAr || c.slug },
-    { lang: "en", slug: c.slugEn || c.slug },
-  ]);
+  return all
+    .flatMap((c) => [
+      { lang: "ar", slug: c.slugAr || c.slug },
+      { lang: "en", slug: c.slugEn || c.slug },
+    ])
+    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }
