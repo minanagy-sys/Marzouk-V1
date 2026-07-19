@@ -111,9 +111,12 @@ export default function AdminCollectionPage() {
     } catch (e) { setError((e as Error).message); await load(); }
   };
 
-  // group fields for the form
+  // Conditional field visibility (e.g. show a field only when another field has a value).
+  const isVisible = (f: Field) => !f.showIf || form[f.showIf.field] === f.showIf.equals;
+
+  // group fields for the form (only groups that have at least one visible field)
   const groups: string[] = [];
-  col.fields.forEach((f) => { const g = f.group || "Details"; if (!groups.includes(g)) groups.push(g); });
+  col.fields.forEach((f) => { const g = f.group || "Details"; if (isVisible(f) && !groups.includes(g)) groups.push(g); });
 
   return (
     <div>
@@ -137,7 +140,7 @@ export default function AdminCollectionPage() {
             <div key={g} style={card}>
               <div style={cardHead}>{g}</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-                {col.fields.filter((f) => (f.group || "Details") === g).map((fld) => (
+                {col.fields.filter((f) => (f.group || "Details") === g && isVisible(f)).map((fld) => (
                   <FieldRenderer key={fld.name} field={fld} value={form[fld.name]} onChange={(v) => setField(fld.name, v)} refData={refData} readOnly={col.readOnly && fld.name !== "status"} />
                 ))}
               </div>

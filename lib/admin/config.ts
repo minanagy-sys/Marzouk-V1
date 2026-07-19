@@ -26,6 +26,7 @@ export type Field = {
   itemLabel?: string;    // for repeater item heading
   refTable?: string;     // for reference
   refLabelColumn?: string; // column shown in the reference dropdown
+  showIf?: { field: string; equals: string | number | boolean }; // conditional visibility
 };
 
 export type Collection = {
@@ -118,7 +119,7 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
       { name: "category", label: "Type", type: "select", options: ["success", "celebrity"], group: "Settings", help: "Celebrity cases can appear in the home celebrities slider" },
       ...publish,
-      { name: "show_on_home", label: "Show in home celebrities slider", type: "boolean", group: "Settings", help: "Only used for celebrity cases" },
+      { name: "show_on_home", label: "Show in home celebrities slider", type: "boolean", group: "Settings", help: "Shows this on the home celebrities slider", showIf: { field: "category", equals: "celebrity" } },
       { name: "image_url", label: "Image", type: "image", group: "Basics" },
       { name: "tag_ar", label: "Tag (Arabic)", type: "text", group: "Basics" },
       { name: "tag_en", label: "Tag (English)", type: "text", group: "Basics" },
