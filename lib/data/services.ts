@@ -1,6 +1,7 @@
 import type { Lang } from "@/lib/lang";
 import type { Service } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
+import { slugify } from "@/lib/admin/slug";
 
 const SPANS = [
   { gc: "span 2", gr: "span 2" },
@@ -468,17 +469,22 @@ function rowToService(r: any): Service {
 
 const SELECT_WITH_CAT = "*, service_categories(slug, name_ar, name_en)";
 
+// Seed fallback with computed per-language slugs (Arabic from the title).
+const SEED_WITH_SLUGS: Service[] = SERVICES_SEED.map((s) => ({
+  ...s, slugAr: s.slugAr || slugify(s.title.ar), slugEn: s.slugEn || s.slug,
+}));
+
 /** All published services (Supabase → seed fallback). Server-side. */
 export async function getServices(): Promise<Service[]> {
   const supabase = getServiceClient() ?? getAnonClient();
-  if (!supabase) return SERVICES_SEED;
+  if (!supabase) return SEED_WITH_SLUGS;
   let res = await supabase
     .from("services")
     .select(SELECT_WITH_CAT)
     .eq("is_published", true)
     .order("sort_order", { ascending: true });
   if (res.error) res = await supabase.from("services").select("*").eq("is_published", true).order("sort_order", { ascending: true });
-  if (res.error || !res.data || res.data.length === 0) return SERVICES_SEED;
+  if (res.error || !res.data || res.data.length === 0) return SEED_WITH_SLUGS;
   return res.data.map(rowToService);
 }
 
