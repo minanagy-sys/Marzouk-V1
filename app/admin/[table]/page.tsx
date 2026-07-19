@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { COLLECTIONS, type Field } from "@/lib/admin/config";
 import { adminList, adminCreate, adminUpdate, adminDelete, adminUpload } from "@/lib/admin/client";
 import { compressImage } from "@/lib/admin/image";
+import { slugify } from "@/lib/admin/slug";
 import RichTextField from "@/components/admin/RichTextField";
 import SiteTextEditor from "@/components/admin/SiteTextEditor";
 import BookingsTable from "@/components/admin/BookingsTable";
@@ -30,6 +31,7 @@ export default function AdminCollectionPage() {
   const [saving, setSaving] = useState(false);
   const [refData, setRefData] = useState<RefData>({});
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragGroup, setDragGroup] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     if (!col) return;
@@ -83,6 +85,10 @@ export default function AdminCollectionPage() {
         else if (fld.type === "repeater") v = Array.isArray(v) ? v : [];
         payload[fld.name] = v;
       });
+      // Normalise the slug (spaces → dashes); derive from the title when empty.
+      if (hasSlug) {
+        payload.slug = slugify(String(payload.slug || form.title_en || form.title_ar || form.name_en || form.name_ar || form.name || form[col.titleColumn] || ""));
+      }
       if (editing === "new") await adminCreate(table, payload);
       else await adminUpdate(table, { id: (editing as Row).id, ...payload });
       setEditing(null); await load();
@@ -95,19 +101,35 @@ export default function AdminCollectionPage() {
     try { await adminDelete(table, String(row.id)); await load(); } catch (e) { setError((e as Error).message); }
   };
 
-  const setField = (name: string, v: unknown) => setForm((f) => ({ ...f, [name]: v }));
+  const hasSlug = col.fields.some((f) => f.name === "slug");
+  const setField = (name: string, v: unknown) =>
+    setForm((f) => {
+      const next = { ...f, [name]: v };
+      // Auto-fill the slug from a title/name field while the slug is still empty
+      // (prefer English for a clean ASCII URL, fall back to Arabic).
+      if (hasSlug && !String(f.slug ?? "").trim() && ["title_en", "title_ar", "name_en", "name_ar", "name"].includes(name)) {
+        next.slug = slugify(String(next.title_en || next.title_ar || next.name_en || next.name_ar || next.name || v || ""));
+      }
+      return next;
+    });
 
   const canReorder = !col.readOnly && col.defaultOrder === "sort_order" && editing === null;
-  const dropRow = async (to: number) => {
-    if (dragIndex === null || dragIndex === to) { setDragIndex(null); return; }
-    const copy = [...rows];
-    const [moved] = copy.splice(dragIndex, 1);
+  // Reorder a list (a whole collection, or one group when groupBy is set). Each
+  // group is reindexed independently, so its order starts from 1 on its own.
+  const applyReorder = async (list: Row[], from: number, to: number, groupKey: string | null) => {
+    setDragIndex(null); setDragGroup(null);
+    if (from === to) return;
+    const copy = [...list];
+    const [moved] = copy.splice(from, 1);
     copy.splice(to, 0, moved);
     const reindexed: Row[] = copy.map((r, i) => ({ ...r, sort_order: i }));
-    setRows(reindexed);
-    setDragIndex(null);
+    const gb = col.groupBy;
+    const newRows = groupKey === null || !gb
+      ? reindexed
+      : [...rows.filter((r) => String(r[gb] ?? "") !== groupKey), ...reindexed];
+    setRows(newRows);
     try {
-      await Promise.all(reindexed.map((r, i) => (rows[i]?.id === r.id ? null : adminUpdate(table, { id: r.id, sort_order: i }))).filter(Boolean) as Promise<unknown>[]);
+      await Promise.all(reindexed.map((r, i) => (list[i]?.id === r.id ? null : adminUpdate(table, { id: r.id, sort_order: i }))).filter(Boolean) as Promise<unknown>[]);
     } catch (e) { setError((e as Error).message); await load(); }
   };
 
@@ -117,6 +139,48 @@ export default function AdminCollectionPage() {
   // group fields for the form (only groups that have at least one visible field)
   const groups: string[] = [];
   col.fields.forEach((f) => { const g = f.group || "Details"; if (isVisible(f) && !groups.includes(g)) groups.push(g); });
+
+  // One list card. `list`/`groupKey` scope drag-reorder to the current group.
+  const renderCard = (row: Row, i: number, list: Row[], groupKey: string | null) => {
+    const img = (row.image_url as string) || (row.video_url ? ytThumb(String(row.video_url)) : "");
+    const published = "is_published" in row ? !!row.is_published : true;
+    const title = String(row[col.titleColumn] ?? "—") || "—";
+    const meta = col.listColumns.filter((cc) => cc !== col.titleColumn && cc !== "is_published" && cc !== col.groupBy);
+    const dragging = dragIndex === i && dragGroup === groupKey;
+    return (
+      <div
+        key={String(row.id) || i}
+        draggable={canReorder}
+        onDragStart={() => { setDragIndex(i); setDragGroup(groupKey); }}
+        onDragOver={(e) => { if (canReorder && dragGroup === groupKey) e.preventDefault(); }}
+        onDrop={() => { if (canReorder && dragGroup === groupKey && dragIndex !== null) applyReorder(list, dragIndex, i, groupKey); }}
+        style={{ background: "#fff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 16, overflow: "hidden", boxShadow: dragging ? "0 12px 30px rgba(48,182,222,0.25)" : "0 2px 10px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", cursor: canReorder ? "grab" : "default" }}
+      >
+        <div style={{ position: "relative", height: 150, background: "linear-gradient(160deg, #0A3950, #0E5372)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {img
+            ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            : <span style={{ fontSize: 38, opacity: 0.5 }}>{col.icon}</span>}
+          {canReorder && <span style={{ position: "absolute", top: 10, insetInlineStart: 10, background: "rgba(4,32,46,0.72)", color: "#fff", borderRadius: 999, minWidth: 24, height: 24, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800 }}>{i + 1}</span>}
+          <span style={{ position: "absolute", top: 10, insetInlineEnd: 10, background: published ? "rgba(39,174,96,0.95)" : "rgba(120,140,150,0.95)", color: "#fff", borderRadius: 999, padding: "3px 12px", fontSize: 11, fontWeight: 800 }}>{published ? "Published" : "Hidden"}</span>
+        </div>
+        <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+          <div style={{ fontWeight: 800, fontSize: 15.5, color: "#0C3446", lineHeight: 1.4 }}>{title.length > 70 ? title.slice(0, 70) + "…" : title}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {meta.map((cc) => {
+              const val = formatCell(row[cc], cc, refData);
+              if (val === "—") return null;
+              return <span key={cc} style={{ background: "#F4FBFD", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 8, padding: "3px 9px", fontSize: 11.5, color: "#5B7A88" }}>{String(val)}</span>;
+            })}
+          </div>
+          <div style={{ marginTop: "auto", paddingTop: 10, display: "flex", gap: 8, borderTop: "1px solid rgba(12,52,70,0.06)" }}>
+            <button onClick={() => startEdit(row)} style={{ ...btnSmall, background: "#EAF7FB", borderRadius: 8, padding: "7px 14px" }}>✎ Edit</button>
+            {!col.readOnly && <button onClick={() => remove(row)} style={{ ...btnSmall, color: "#C0392B", background: "#FDECEA", borderRadius: 8, padding: "7px 14px" }}>Delete</button>}
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const gridStyle: React.CSSProperties = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 18 };
 
   return (
     <div>
@@ -155,46 +219,23 @@ export default function AdminCollectionPage() {
         <div style={{ color: "#5B7A88" }}>Loading…</div>
       ) : rows.length === 0 ? (
         <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>No items yet. Click “+ New {col.singular}”.</div>
-      ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 18 }}>
-          {rows.map((row, i) => {
-            const img = (row.image_url as string) || (row.video_url ? ytThumb(String(row.video_url)) : "");
-            const published = "is_published" in row ? !!row.is_published : true;
-            const title = String(row[col.titleColumn] ?? "—") || "—";
-            const meta = col.listColumns.filter((cc) => cc !== col.titleColumn && cc !== "is_published");
+      ) : col.groupBy ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
+          {(col.groupOptions ?? []).map((g) => {
+            const items = rows.filter((r) => String(r[col.groupBy!] ?? "") === g.value);
             return (
-              <div
-                key={String(row.id) || i}
-                draggable={canReorder}
-                onDragStart={() => setDragIndex(i)}
-                onDragOver={(e) => { if (canReorder) e.preventDefault(); }}
-                onDrop={() => canReorder && dropRow(i)}
-                style={{ background: "#fff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 16, overflow: "hidden", boxShadow: dragIndex === i ? "0 12px 30px rgba(48,182,222,0.25)" : "0 2px 10px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", cursor: canReorder ? "grab" : "default" }}
-              >
-                <div style={{ position: "relative", height: 150, background: "linear-gradient(160deg, #0A3950, #0E5372)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  {img
-                    ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <span style={{ fontSize: 38, opacity: 0.5 }}>{col.icon}</span>}
-                  <span style={{ position: "absolute", top: 10, insetInlineStart: 10, background: published ? "rgba(39,174,96,0.95)" : "rgba(120,140,150,0.95)", color: "#fff", borderRadius: 999, padding: "3px 12px", fontSize: 11, fontWeight: 800 }}>{published ? "Published" : "Hidden"}</span>
-                  {canReorder && <span title="Drag to reorder" style={{ position: "absolute", top: 10, insetInlineEnd: 10, background: "rgba(4,32,46,0.55)", color: "#fff", borderRadius: 8, padding: "3px 8px", fontSize: 13, cursor: "grab" }}>⠿</span>}
-                </div>
-                <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-                  <div style={{ fontWeight: 800, fontSize: 15.5, color: "#0C3446", lineHeight: 1.4 }}>{title.length > 70 ? title.slice(0, 70) + "…" : title}</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {meta.map((cc) => {
-                      const val = formatCell(row[cc], cc, refData);
-                      if (val === "—") return null;
-                      return <span key={cc} style={{ background: "#F4FBFD", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 8, padding: "3px 9px", fontSize: 11.5, color: "#5B7A88" }}>{String(val)}</span>;
-                    })}
-                  </div>
-                  <div style={{ marginTop: "auto", paddingTop: 10, display: "flex", gap: 8, borderTop: "1px solid rgba(12,52,70,0.06)" }}>
-                    <button onClick={() => startEdit(row)} style={{ ...btnSmall, background: "#EAF7FB", borderRadius: 8, padding: "7px 14px" }}>✎ Edit</button>
-                    {!col.readOnly && <button onClick={() => remove(row)} style={{ ...btnSmall, color: "#C0392B", background: "#FDECEA", borderRadius: 8, padding: "7px 14px" }}>Delete</button>}
-                  </div>
-                </div>
+              <div key={g.value}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#8AA5B1", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 12 }}>{g.label} <span style={{ color: "#B4C4CC" }}>· {items.length}</span></div>
+                {items.length === 0
+                  ? <div style={{ ...card, textAlign: "center", color: "#8AA5B1", fontSize: 13 }}>None yet.</div>
+                  : <div style={gridStyle}>{items.map((row, i) => renderCard(row, i, items, g.value))}</div>}
               </div>
             );
           })}
+        </div>
+      ) : (
+        <div style={gridStyle}>
+          {rows.map((row, i) => renderCard(row, i, rows, null))}
         </div>
       )}
     </div>

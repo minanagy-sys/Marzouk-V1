@@ -40,6 +40,8 @@ export type Collection = {
   titleColumn: string;
   defaultOrder: string;
   readOnly?: boolean;
+  groupBy?: string;                                   // split the list into groups, each independently ordered
+  groupOptions?: { value: string; label: string }[];  // group values + labels (in display order)
   fields: Field[];
 };
 
@@ -115,6 +117,8 @@ export const COLLECTIONS: Record<string, Collection> = {
   cases: {
     table: "cases", label: "Cases", labelAr: "الحالات", singular: "Case", icon: "⭐", group: "Content",
     listColumns: ["title_ar", "category", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
+    groupBy: "category",
+    groupOptions: [{ value: "success", label: "Success stories" }, { value: "celebrity", label: "Celebrities" }],
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
       { name: "category", label: "Type", type: "select", options: ["success", "celebrity"], group: "Settings", help: "Celebrity cases can appear in the home celebrities slider" },
