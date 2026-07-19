@@ -105,6 +105,8 @@ export const CASES_SEED: CaseItem[] = [
 function rowToCase(r: any): CaseItem {
   return {
     slug: r.slug,
+    slugAr: r.slug_ar ?? undefined,
+    slugEn: r.slug_en ?? undefined,
     category: r.category === "celebrity" ? "celebrity" : "success",
     imageUrl: r.image_url ?? undefined,
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
@@ -131,14 +133,15 @@ export async function getHomeCelebrities(): Promise<CaseItem[]> {
 }
 
 export async function getCase(slug: string): Promise<CaseItem | undefined> {
-  const supabase = getServiceClient() ?? getAnonClient();
-  if (!supabase) return CASES_SEED.find((c) => c.slug === slug);
-  const { data, error } = await supabase.from("cases").select("*").eq("slug", slug).single();
-  if (error || !data) return CASES_SEED.find((c) => c.slug === slug);
-  return rowToCase(data);
+  const all = await getCases();
+  return all.find((c) => c.slug === slug || c.slugAr === slug || c.slugEn === slug);
 }
 
-export async function getCaseSlugs(): Promise<string[]> {
-  const cases = await getCases();
-  return cases.map((c) => c.slug);
+/** { lang, slug } params for static generation (both languages). */
+export async function getCaseParams(): Promise<{ lang: string; slug: string }[]> {
+  const all = await getCases();
+  return all.flatMap((c) => [
+    { lang: "ar", slug: c.slugAr || c.slug },
+    { lang: "en", slug: c.slugEn || c.slug },
+  ]);
 }

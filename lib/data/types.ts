@@ -1,4 +1,5 @@
 import type { Lang } from "@/lib/lang";
+export type { Lang } from "@/lib/lang";
 
 /** A bilingual string. */
 export type BiText = { ar: string; en: string };
@@ -8,11 +9,18 @@ export function pick(v: BiText, lang: Lang): string {
   return v[lang] ?? v.ar ?? "";
 }
 
+/** The localized URL slug for a record, falling back to the canonical slug. */
+export function slugFor(item: { slug: string; slugAr?: string; slugEn?: string }, lang: Lang): string {
+  return (lang === "en" ? item.slugEn : item.slugAr) || item.slug;
+}
+
 export type ServiceSection = { heading: BiText; body: BiText };
 export type ServiceFaq = { q: BiText; a: BiText };
 
 export type Service = {
   slug: string;
+  slugAr?: string;
+  slugEn?: string;
   slotId: string;
   glyph: string;
   parentId?: string;
@@ -45,6 +53,8 @@ export type ServiceCategory = {
 
 export type CaseItem = {
   slug: string;
+  slugAr?: string;
+  slugEn?: string;
   category: "success" | "celebrity";
   imageUrl?: string;
   tag: BiText;
@@ -135,6 +145,8 @@ export type BlogCategory = {
 
 export type BlogPostBi = {
   slug: string;
+  slugAr?: string;
+  slugEn?: string;
   imageUrl?: string;
   date: string;
   tag: BiText;

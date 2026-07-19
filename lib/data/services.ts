@@ -433,6 +433,8 @@ function rowToService(r: any): Service {
   const cat = r.service_categories;
   return {
     slug: r.slug,
+    slugAr: r.slug_ar ?? undefined,
+    slugEn: r.slug_en ?? undefined,
     slotId: r.slug,
     glyph: r.glyph ?? "",
     id: r.id,
@@ -485,18 +487,17 @@ export async function getServicesHome(): Promise<Service[]> {
   return (await getServices()).filter((s) => s.showOnHome !== false);
 }
 
-/** One service by slug (Supabase → seed fallback). Server-side. */
+/** One service by slug — matches the canonical, Arabic, or English slug. */
 export async function getService(slug: string): Promise<Service | undefined> {
-  const supabase = getServiceClient() ?? getAnonClient();
-  if (!supabase) return SERVICES_SEED.find((s) => s.slug === slug);
-  let res = await supabase.from("services").select(SELECT_WITH_CAT).eq("slug", slug).single();
-  if (res.error) res = await supabase.from("services").select("*").eq("slug", slug).single();
-  if (res.error || !res.data) return SERVICES_SEED.find((s) => s.slug === slug);
-  return rowToService(res.data);
+  const all = await getServices();
+  return all.find((s) => s.slug === slug || s.slugAr === slug || s.slugEn === slug);
 }
 
-/** Slugs for static generation. */
-export async function getServiceSlugs(): Promise<string[]> {
-  const services = await getServices();
-  return services.map((s) => s.slug);
+/** { lang, slug } params for static generation (both languages). */
+export async function getServiceParams(): Promise<{ lang: string; slug: string }[]> {
+  const all = await getServices();
+  return all.flatMap((s) => [
+    { lang: "ar", slug: s.slugAr || s.slug },
+    { lang: "en", slug: s.slugEn || s.slug },
+  ]);
 }

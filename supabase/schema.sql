@@ -32,6 +32,8 @@ create table if not exists public.site_content (
 create table if not exists public.services (
   id              uuid primary key default gen_random_uuid(),
   slug            text unique not null,
+  slug_ar         text,
+  slug_en         text,
   sort_order      int not null default 0,
   is_published    boolean not null default true,
   glyph           text default '',
@@ -58,6 +60,8 @@ create table if not exists public.services (
 create table if not exists public.cases (
   id            uuid primary key default gen_random_uuid(),
   slug          text unique not null,
+  slug_ar         text,
+  slug_en         text,
   category      text not null default 'success',
   sort_order    int not null default 0,
   is_published  boolean not null default true,
@@ -79,6 +83,8 @@ create table if not exists public.cases (
 create table if not exists public.blog_posts (
   id            uuid primary key default gen_random_uuid(),
   slug          text unique not null,
+  slug_ar         text,
+  slug_en         text,
   sort_order    int not null default 0,
   is_published  boolean not null default true,
   image_url     text,

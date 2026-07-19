@@ -67,6 +67,8 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["title_ar", "tag_ar", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", help: "e.g. pain-free-cesarean", group: "Settings" },
+      { name: "slug_ar", label: "Arabic URL slug (optional)", type: "text", group: "Settings", help: "For /ar links — leave empty to reuse the main slug" },
+      { name: "slug_en", label: "English URL slug (optional)", type: "text", group: "Settings", help: "For /en links — leave empty to reuse the main slug" },
       { name: "category_id", label: "Parent service (category)", type: "reference", refTable: "service_categories", refLabelColumn: "name_ar", group: "Settings", help: "Groups this under a main service — powers the filter on the services page" },
       ...publish,
       { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the services slider on the home page" },
@@ -121,6 +123,8 @@ export const COLLECTIONS: Record<string, Collection> = {
     groupOptions: [{ value: "success", label: "Success stories" }, { value: "celebrity", label: "Celebrities" }],
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
+      { name: "slug_ar", label: "Arabic URL slug (optional)", type: "text", group: "Settings", help: "For /ar links — leave empty to reuse the main slug" },
+      { name: "slug_en", label: "English URL slug (optional)", type: "text", group: "Settings", help: "For /en links — leave empty to reuse the main slug" },
       { name: "category", label: "Type", type: "select", options: ["success", "celebrity"], group: "Settings", help: "Celebrity cases can appear in the home celebrities slider" },
       ...publish,
       { name: "show_on_home", label: "Show in home celebrities slider", type: "boolean", group: "Settings", help: "Shows this on the home celebrities slider", showIf: { field: "category", equals: "celebrity" } },
@@ -152,6 +156,8 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["title_ar", "published_date", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
+      { name: "slug_ar", label: "Arabic URL slug (optional)", type: "text", group: "Settings", help: "For /ar links — leave empty to reuse the main slug" },
+      { name: "slug_en", label: "English URL slug (optional)", type: "text", group: "Settings", help: "For /en links — leave empty to reuse the main slug" },
       { name: "category_id", label: "Category", type: "reference", refTable: "blog_categories", refLabelColumn: "name_ar", group: "Settings" },
       ...publish,
       { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the latest-articles slider on the home page" },
