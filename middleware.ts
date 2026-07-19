@@ -21,5 +21,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|admin|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets|.*\\..*).*)"],
+  // Skip paths that already have a locale (/ar, /en) so the middleware never
+  // touches (and re-encodes) non-ASCII slug URLs — it only handles "/" and
+  // legacy unprefixed links.
+  matcher: ["/((?!ar(?:/|$)|en(?:/|$)|api|admin|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|assets|.*\\..*).*)"],
 };
