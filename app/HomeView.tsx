@@ -200,7 +200,7 @@ export default function HomeView({
 
       {/* ============ REVIEWS (slider) ============ */}
       {reviews.length > 0 && (
-        <section data-screen-label="Reviews" style={{ padding: "90px 24px" }}>
+        <section data-screen-label="Reviews" className="dam-reviews-sec" style={{ padding: "90px 24px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <div style={{ textAlign: "center", marginBottom: 40 }}>
               <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.revKicker}</div>
