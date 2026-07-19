@@ -46,8 +46,8 @@ export default function Slider({ children, gap = 22, bleed = false }: { children
   const track = (
     <div
       ref={ref}
-      className="dam-slider dam-scroll-row"
-      style={{ ["--slider-gap" as string]: gap + "px", display: "flex", gap, overflowX: "auto", scrollSnapType: "x mandatory", flex: 1, padding: bleed ? "8px 8px" : "8px 2px", minWidth: 0 }}
+      className={`dam-slider dam-scroll-row${bleed ? " dam-bleed-track" : ""}`}
+      style={{ ["--slider-gap" as string]: gap + "px", display: "flex", gap, overflowX: "auto", scrollSnapType: "x mandatory", flex: 1, ...(bleed ? {} : { padding: "8px 2px" }), minWidth: 0 }}
     >
       {React.Children.map(children, (child, i) => (
         <div className="dam-slide" key={i}>{child}</div>
@@ -57,8 +57,9 @@ export default function Slider({ children, gap = 22, bleed = false }: { children
 
   if (bleed) {
     // Full-bleed: cancel the section's 24px side padding; arrows overlaid.
+    // On mobile the start edge realigns with the heading (see .dam-bleed CSS).
     return (
-      <div style={{ position: "relative", marginInlineStart: -24, marginInlineEnd: -24 }}>
+      <div className="dam-bleed" style={{ position: "relative" }}>
         {arrowBtn(-1, isAr ? "→" : "←", "start")}
         {track}
         {arrowBtn(1, isAr ? "←" : "→", "end")}

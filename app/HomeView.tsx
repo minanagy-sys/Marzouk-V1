@@ -303,12 +303,12 @@ export default function HomeView({
 
 function SectionHead({ kicker, title, href, cta, arrow }: { kicker: string; title: string; href: string; cta: string; arrow: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 40 }}>
+    <div className="dam-sechead" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 40 }}>
       <div>
         <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{kicker}</div>
         <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{title}</h2>
       </div>
-      <HoverBox as={Link} href={href} style={{ fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", gap: 8 }}>{cta} <span style={{ fontSize: 18 }}>{arrow}</span></HoverBox>
+      <HoverBox as={Link} href={href} className="dam-sechead-cta" style={{ fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>{cta} <span style={{ fontSize: 18 }}>{arrow}</span></HoverBox>
     </div>
   );
 }
