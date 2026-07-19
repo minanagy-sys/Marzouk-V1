@@ -13,6 +13,7 @@ import { blogPosts, blogsUi } from "@/lib/content/blogs";
 import { mediaContent, GALLERY_SLOTS } from "@/lib/content/media";
 import { COMMON, CONTACT_INFO } from "@/lib/content/common";
 import { heroSlidesSeed, statsSeed, valuesSeed, featuresSeed } from "@/lib/data/sections";
+import { slugify } from "@/lib/admin/slug";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
   // Services (upsert by slug)
   const serviceRows = SERVICES_SEED.map((s, i) => ({
-    slug: s.slug, sort_order: i, is_published: true, show_on_home: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
+    slug: s.slug, slug_ar: slugify(s.title.ar), slug_en: s.slug, sort_order: i, is_published: true, show_on_home: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
     category_id: catIdBySlug[SERVICE_CAT_MAP[s.slug] ?? ""] ?? null,
     span_gc: s.gc, span_gr: s.gr,
     tag_ar: s.tag.ar, tag_en: s.tag.en, title_ar: s.title.ar, title_en: s.title.en,
@@ -77,7 +78,7 @@ export async function POST(request: Request) {
       // Older schema without category_id / show_on_home — retry without them.
       const fallback = serviceRows.map((r) => {
         const copy: Record<string, unknown> = { ...r };
-        delete copy.category_id; delete copy.show_on_home;
+        delete copy.category_id; delete copy.show_on_home; delete copy.slug_ar; delete copy.slug_en;
         return copy;
       });
       ({ error } = await supabase.from("services").upsert(fallback, { onConflict: "slug" }));
@@ -87,12 +88,16 @@ export async function POST(request: Request) {
 
   // Cases (upsert by slug)
   const caseRows = CASES_SEED.map((c, i) => ({
-    slug: c.slug, category: c.category, sort_order: i, is_published: true, image_url: c.imageUrl ?? null,
+    slug: c.slug, slug_ar: slugify(c.title.ar), slug_en: c.slug, category: c.category, sort_order: i, is_published: true, image_url: c.imageUrl ?? null,
     tag_ar: c.tag.ar, tag_en: c.tag.en, title_ar: c.title.ar, title_en: c.title.en,
     excerpt_ar: c.excerpt.ar, excerpt_en: c.excerpt.en, body_ar: c.body.ar, body_en: c.body.en,
   }));
   {
-    const { error } = await supabase.from("cases").upsert(caseRows, { onConflict: "slug" });
+    let { error } = await supabase.from("cases").upsert(caseRows, { onConflict: "slug" });
+    if (error) {
+      const fb = caseRows.map((r) => { const c: Record<string, unknown> = { ...r }; delete c.slug_ar; delete c.slug_en; return c; });
+      ({ error } = await supabase.from("cases").upsert(fb, { onConflict: "slug" }));
+    }
     results.cases = error ? `error: ${error.message}` : `${caseRows.length} upserted`;
   }
 
@@ -100,12 +105,16 @@ export async function POST(request: Request) {
   const ar = blogPosts("ar");
   const en = blogPosts("en");
   const blogRows = ar.map((p, i) => ({
-    slug: p.slug, sort_order: i, is_published: true,
+    slug: p.slug, slug_ar: slugify(p.title), slug_en: p.slug, sort_order: i, is_published: true,
     tag_ar: p.tag, tag_en: en[i]?.tag ?? "", title_ar: p.title, title_en: en[i]?.title ?? "",
     excerpt_ar: p.excerpt, excerpt_en: en[i]?.excerpt ?? "", body_ar: p.body, body_en: en[i]?.body ?? [],
   }));
   {
-    const { error } = await supabase.from("blog_posts").upsert(blogRows, { onConflict: "slug" });
+    let { error } = await supabase.from("blog_posts").upsert(blogRows, { onConflict: "slug" });
+    if (error) {
+      const fb = blogRows.map((r) => { const c: Record<string, unknown> = { ...r }; delete c.slug_ar; delete c.slug_en; return c; });
+      ({ error } = await supabase.from("blog_posts").upsert(fb, { onConflict: "slug" }));
+    }
     results.blog_posts = error ? `error: ${error.message}` : `${blogRows.length} upserted`;
   }
 
