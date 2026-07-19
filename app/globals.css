@@ -67,7 +67,18 @@ textarea::placeholder {
   .dam-casebody { padding: 30px 22px 44px !important; }
 }
 @media (max-width: 480px) {
-  .dam-mosaic { grid-auto-rows: 150px !important; }
+  .dam-mosaic { grid-auto-rows: 165px !important; }
+}
+
+/* Services mosaic card text — shrink to fit small cards without changing the mosaic shape */
+@media (max-width: 640px) {
+  .dam-svc-cap { padding: 16px 16px 15px !important; gap: 8px !important; }
+  .dam-svc-title { font-size: 16px !important; line-height: 1.3 !important; }
+  .dam-svc-tag { font-size: 10px !important; padding: 4px 11px !important; top: 12px !important; inset-inline-start: 12px !important; }
+  .dam-svc-arrow { width: 32px !important; height: 32px !important; font-size: 14px !important; }
+}
+@media (max-width: 400px) {
+  .dam-svc-title { font-size: 14.5px !important; }
 }
 
 /* ---------- Slider slides: 4 visible on desktop, slide one at a time ---------- */
@@ -88,6 +99,23 @@ textarea::placeholder {
 @media (max-width: 640px) {
   .dam-slide { flex-basis: clamp(240px, 80vw, 290px); min-width: 240px; }
   .dam-slide-arrow { display: none !important; }
+}
+
+/* ---------- Full-bleed slider arrows: hide on mobile (swipe) ---------- */
+@media (max-width: 700px) {
+  .dam-bleed-arrow { display: none !important; }
+}
+
+/* ---------- Hero stats: shrink to a single line on mobile ---------- */
+@media (max-width: 600px) {
+  .dam-hero-stats { gap: 16px !important; flex-wrap: nowrap !important; width: 100%; justify-content: space-between; }
+  .dam-hero-stat { gap: 0 !important; flex: 1 1 0; min-width: 0; }
+  .dam-hero-stat-num { font-size: 18px !important; }
+  .dam-hero-stat-label { font-size: 9.5px !important; line-height: 1.3 !important; max-width: none !important; }
+}
+@media (max-width: 380px) {
+  .dam-hero-stat-num { font-size: 16px !important; }
+  .dam-hero-stat-label { font-size: 9px !important; }
 }
 
 /* ---------- Instagram card hover ---------- */

@@ -12,14 +12,14 @@ import { useLang } from "@/lib/lang";
 import { usePageText } from "@/lib/settings";
 import { homeContent } from "@/lib/content/home";
 import { common, CONTACT_INFO } from "@/lib/content/common";
-import { pick, type Service, type Celebrity, type Testimonial, type InstagramPost, type BlogPostBi, type HeroSlide, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
+import { pick, type Service, type CaseItem, type Testimonial, type InstagramPost, type BlogPostBi, type HeroSlide, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
 import { ytThumb } from "@/lib/youtube";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function HomeView({
   services, celebrities, reviews, instagram, posts, heroSlides, stats, values, features,
 }: {
-  services: Service[]; celebrities: Celebrity[]; reviews: Testimonial[]; instagram: InstagramPost[]; posts: BlogPostBi[];
+  services: Service[]; celebrities: CaseItem[]; reviews: Testimonial[]; instagram: InstagramPost[]; posts: BlogPostBi[];
   heroSlides: HeroSlide[]; stats: Stat[]; values: ValueItem[]; features: Feature[];
 }) {
   const { lang, dir, isAr } = useLang();
@@ -92,11 +92,11 @@ export default function HomeView({
               <HoverBox as="button" onClick={() => goSlide(slide + 1)} style={{ width: 50, height: 50, borderRadius: "50%", border: "1.5px solid rgba(255,255,255,0.3)", background: "rgba(255,255,255,0.05)", color: "#ffffff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }} hoverStyle={{ borderColor: "#30B6DE", color: "#8FE0F7", background: "rgba(48,182,222,0.12)" }}>{arrowNext}</HoverBox>
               <span style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.55)", letterSpacing: "2px", direction: "ltr" }}>{pad(slide + 1) + " / " + pad(N)}</span>
             </div>
-            <div style={{ display: "flex", gap: 36, flexWrap: "wrap" }}>
+            <div className="dam-hero-stats" style={{ display: "flex", gap: 36, flexWrap: "wrap" }}>
               {stats.map((s) => (
-                <div key={s.id} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 24, color: "#30B6DE" }}>{pick(s.num, lang)}</span>
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", maxWidth: 170 }}>{pick(s.label, lang)}</span>
+                <div key={s.id} className="dam-hero-stat" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span className="dam-hero-stat-num" style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 24, color: "#30B6DE" }}>{pick(s.num, lang)}</span>
+                  <span className="dam-hero-stat-label" style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", maxWidth: 170 }}>{pick(s.label, lang)}</span>
                 </div>
               ))}
             </div>
@@ -122,7 +122,7 @@ export default function HomeView({
       <section data-screen-label="Services" style={{ padding: "90px 24px", background: "linear-gradient(180deg, #F4FBFD 0%, #ffffff 100%)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead kicker={t.svcKicker} title={t.svcTitle} href="/services" cta={t.viewAll} arrow={arrow} />
-          <Slider>
+          <Slider bleed>
             {services.map((svc) => (
               <HoverBox key={svc.slug} as={Link} href={`/services/${svc.slug}`} style={{ flex: "0 0 300px", scrollSnapAlign: "start", position: "relative", height: 440, borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 10px 30px rgba(12,52,70,0.08)", background: "linear-gradient(160deg, #0A3950, #0E5372)", transition: "all 0.35s ease", color: "#ffffff", display: "block" }} hoverStyle={{ transform: "translateY(-8px)", boxShadow: "0 28px 60px rgba(48,182,222,0.28)", color: "#ffffff" }}>
                 <ImageSlot src={svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
@@ -182,14 +182,16 @@ export default function HomeView({
       <section data-screen-label="Celebrity cases" style={{ padding: "90px 24px", background: "linear-gradient(180deg, #F4FBFD 0%, #ffffff 100%)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionHead kicker={t.celebKicker} title={t.celebTitle} href="/cases#celebs" cta={t.viewAll} arrow={arrow} />
-          <Slider>
+          <Slider bleed>
             {celebrities.map((cel) => (
-              <HoverBox key={cel.id} as={Link} href="/cases#celebs" style={{ display: "block", flex: "0 0 240px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: 26, textAlign: "center", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.05)" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.18)", color: "#0C3446" }}>
-                <span style={{ display: "block", width: 110, height: 110, margin: "0 auto", borderRadius: "50%", padding: 4, background: "linear-gradient(135deg, #30B6DE, #8FE0F7)" }}>
-                  <ImageSlot src={cel.imageUrl} shape="circle" placeholder={t.photoPh} style={{ width: 102, height: 102 }} />
+              <HoverBox key={cel.slug} as={Link} href={`/cases/${cel.slug}`} style={{ display: "block", position: "relative", height: 420, borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 12px 34px rgba(12,52,70,0.12)", background: "linear-gradient(160deg, #0A3950, #0E5372)", color: "#ffffff", transition: "all 0.35s ease" }} hoverStyle={{ transform: "translateY(-8px)", boxShadow: "0 30px 64px rgba(48,182,222,0.32)", color: "#ffffff" }}>
+                <ImageSlot src={cel.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+                <span style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.15) 0%, rgba(4,32,46,0) 34%, rgba(4,32,46,0.72) 66%, rgba(4,32,46,0.96) 100%)", pointerEvents: "none" }} />
+                <span style={{ position: "absolute", top: 18, insetInlineStart: 18, display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#ffffff", borderRadius: 999, padding: "6px 15px", fontSize: 11.5, fontWeight: 800, letterSpacing: "0.4px", pointerEvents: "none", boxShadow: "0 6px 16px rgba(4,32,46,0.4)" }}>★ {pick(cel.tag, lang) || t.celebKicker}</span>
+                <span style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "30px 26px 28px", pointerEvents: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+                  <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 22, lineHeight: 1.4, color: "#ffffff", textShadow: "0 2px 16px rgba(4,32,46,0.6)" }}>{pick(cel.title, lang)}</span>
+                  <span style={{ fontSize: 13.5, color: "rgba(255,255,255,0.82)", lineHeight: 1.7, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{pick(cel.excerpt, lang)}</span>
                 </span>
-                <span style={{ display: "block", fontFamily: SERIF, fontWeight: 700, fontSize: 18, marginTop: 18 }}>{pick(cel.name, lang)}</span>
-                <span style={{ display: "block", fontSize: 13, color: "#5B7A88", marginTop: 6, lineHeight: 1.7 }}>{pick(cel.caption, lang)}</span>
               </HoverBox>
             ))}
           </Slider>
@@ -204,7 +206,7 @@ export default function HomeView({
               <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.revKicker}</div>
               <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.revTitle}</h2>
             </div>
-            <Slider>
+            <Slider bleed>
               {reviews.map((r) => (
                 <div key={r.id} style={{ flex: "0 0 360px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: "32px 30px", boxShadow: "0 4px 14px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", gap: 14 }}>
                   <div style={{ color: "#F5B301", fontSize: 18, letterSpacing: 2 }}>{"★".repeat(r.rating || 5)}<span style={{ color: "#E3ECF0" }}>{"★".repeat(5 - (r.rating || 5))}</span></div>
@@ -234,7 +236,7 @@ export default function HomeView({
                 {t.igFollow}
               </HoverBox>
             </div>
-            <Slider gap={16}>
+            <Slider gap={16} bleed>
               {instagram.map((p) => (
                 <a key={p.id} href={p.permalink || CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="ig-card" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }}>
                   <ImageSlot src={p.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
@@ -273,7 +275,7 @@ export default function HomeView({
         <section data-screen-label="News" style={{ padding: "0 24px 100px" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto" }}>
             <SectionHead kicker={t.newsKicker} title={t.newsTitle} href="/blogs" cta={t.viewAll} arrow={arrow} />
-            <Slider>
+            <Slider bleed>
               {posts.map((n) => (
                 <HoverBox key={n.slug} as={Link} href={`/blogs/${n.slug}`} style={{ flex: "0 0 340px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, overflow: "hidden", color: "#0C3446", boxShadow: "0 4px 14px rgba(12,52,70,0.04)", display: "flex", flexDirection: "column" }} hoverStyle={{ transform: "translateY(-6px)", boxShadow: "0 20px 44px rgba(48,182,222,0.16)", color: "#0C3446" }}>
                   <span style={{ display: "block", height: 190 }}>

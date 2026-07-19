@@ -61,6 +61,7 @@ create table if not exists public.cases (
   category      text not null default 'success',
   sort_order    int not null default 0,
   is_published  boolean not null default true,
+  show_on_home  boolean not null default true,
   image_url     text,
   tag_ar        text default '', tag_en        text default '',
   title_ar      text default '', title_en      text default '',

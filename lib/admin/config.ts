@@ -116,8 +116,9 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["title_ar", "category", "sort_order", "is_published"], titleColumn: "title_ar", defaultOrder: "sort_order",
     fields: [
       { name: "slug", label: "Page link (slug)", type: "text", group: "Settings" },
-      { name: "category", label: "Type", type: "select", options: ["success", "celebrity"], group: "Settings" },
+      { name: "category", label: "Type", type: "select", options: ["success", "celebrity"], group: "Settings", help: "Celebrity cases can appear in the home celebrities slider" },
       ...publish,
+      { name: "show_on_home", label: "Show in home celebrities slider", type: "boolean", group: "Settings", help: "Only used for celebrity cases" },
       { name: "image_url", label: "Image", type: "image", group: "Basics" },
       { name: "tag_ar", label: "Tag (Arabic)", type: "text", group: "Basics" },
       { name: "tag_en", label: "Tag (English)", type: "text", group: "Basics" },
@@ -176,20 +177,6 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "video_url", label: "Video link (YouTube)", type: "text", group: "Basics" },
       { name: "title_ar", label: "Title (Arabic)", type: "text", group: "Basics" },
       { name: "title_en", label: "Title (English)", type: "text", group: "Basics" },
-    ],
-  },
-
-  celebrities: {
-    table: "celebrities", label: "Celebrities", labelAr: "المشاهير", singular: "Celebrity", icon: "🌟", group: "Content",
-    listColumns: ["name_ar", "sort_order", "is_published"], titleColumn: "name_ar", defaultOrder: "sort_order",
-    fields: [
-      ...publish,
-      { name: "show_on_home", label: "Show in home slider", type: "boolean", group: "Settings", help: "Appears in the celebrities slider on the home page" },
-      { name: "image_url", label: "Photo", type: "image", group: "Basics" },
-      { name: "name_ar", label: "Name (Arabic)", type: "text", group: "Basics" },
-      { name: "name_en", label: "Name (English)", type: "text", group: "Basics" },
-      { name: "caption_ar", label: "Caption (Arabic)", type: "textarea", group: "Basics" },
-      { name: "caption_en", label: "Caption (English)", type: "textarea", group: "Basics" },
     ],
   },
 
@@ -326,7 +313,7 @@ export type NavParent = { label: string; labelAr: string; icon: string; children
 export const NAV_TREE: NavParent[] = [
   { label: "Home sections", labelAr: "أقسام الرئيسية", icon: "🏠", children: ["hero_slides", "hero_stats", "value_items", "feature_items"] },
   { label: "Services", labelAr: "الخدمات", icon: "🩺", children: ["service_categories", "services"] },
-  { label: "Cases", labelAr: "الحالات", icon: "⭐", children: ["cases", "celebrities"] },
+  { label: "Cases", labelAr: "الحالات", icon: "⭐", children: ["cases"] },
   { label: "Blog", labelAr: "المدونة", icon: "📝", children: ["blog_categories", "blog_posts"] },
   { label: "Media", labelAr: "الإعلام", icon: "🖼️", children: ["media_items", "instagram_posts"] },
   { label: "Content", labelAr: "المحتوى", icon: "✦", children: ["testimonials", "clinics", "site_content"] },

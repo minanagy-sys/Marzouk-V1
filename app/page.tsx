@@ -1,7 +1,7 @@
 import HomeView from "./HomeView";
 import JsonLd from "@/components/JsonLd";
 import { getServicesHome } from "@/lib/data/services";
-import { getCelebritiesHome } from "@/lib/data/celebrities";
+import { getHomeCelebrities } from "@/lib/data/cases";
 import { getTestimonialsHome } from "@/lib/data/testimonials";
 import { getInstagramPosts } from "@/lib/data/instagram";
 import { getBlogPostsHome } from "@/lib/data/blogs";
@@ -13,7 +13,7 @@ export const revalidate = 3600;
 export default async function HomePage() {
   const [services, celebrities, reviews, instagram, posts, heroSlides, stats, values, features] = await Promise.all([
     getServicesHome(),
-    getCelebritiesHome(),
+    getHomeCelebrities(),
     getTestimonialsHome(),
     getInstagramPosts(),
     getBlogPostsHome(),

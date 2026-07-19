@@ -111,6 +111,7 @@ function rowToCase(r: any): CaseItem {
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     excerpt: { ar: r.excerpt_ar ?? "", en: r.excerpt_en ?? "" },
     body: { ar: r.body_ar ?? "", en: r.body_en ?? "" },
+    showOnHome: r.show_on_home ?? true,
   };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -121,6 +122,12 @@ export async function getCases(): Promise<CaseItem[]> {
   const { data, error } = await supabase.from("cases").select("*").eq("is_published", true).order("sort_order", { ascending: true });
   if (error || !data || data.length === 0) return CASES_SEED;
   return data.map(rowToCase);
+}
+
+/** Celebrity cases flagged to appear in the home celebrities slider. */
+export async function getHomeCelebrities(): Promise<CaseItem[]> {
+  const cases = await getCases();
+  return cases.filter((c) => c.category === "celebrity" && c.showOnHome !== false);
 }
 
 export async function getCase(slug: string): Promise<CaseItem | undefined> {
