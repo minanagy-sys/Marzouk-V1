@@ -32,6 +32,7 @@ export default function AdminCollectionPage() {
   const [refData, setRefData] = useState<RefData>({});
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragGroup, setDragGroup] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("");
 
   const load = useCallback(async () => {
     if (!col) return;
@@ -64,11 +65,14 @@ export default function AdminCollectionPage() {
     return f;
   };
 
+  const curTab = activeTab || col.groupOptions?.[0]?.value || "";
   const startNew = () => {
     const f: Row = {};
     col.fields.forEach((fld) => {
-      f[fld.name] = fld.type === "boolean" ? true : fld.type === "number" ? 0 : fld.type === "repeater" ? [] : "";
+      f[fld.name] = fld.type === "boolean" ? true : fld.type === "number" ? 0 : fld.type === "repeater" ? [] : fld.type === "select" ? (fld.options?.[0] ?? "") : "";
     });
+    // A new item in a grouped collection defaults to the active tab's group.
+    if (col.groupBy && curTab) f[col.groupBy] = curTab;
     setForm(f); setEditing("new");
   };
   const startEdit = (row: Row) => { setForm(toForm(row)); setEditing(row); };
@@ -91,6 +95,11 @@ export default function AdminCollectionPage() {
       }
       if (hasField("slug_ar")) payload.slug_ar = payload.slug_ar ? slugify(String(payload.slug_ar)) : null;
       if (hasField("slug_en")) payload.slug_en = payload.slug_en ? slugify(String(payload.slug_en)) : null;
+      // New item in a grouped collection: append to the end of its group's order.
+      if (editing === "new" && col.groupBy) {
+        const grp = String(form[col.groupBy] ?? "");
+        payload.sort_order = rows.filter((r) => String(r[col.groupBy!] ?? "") === grp).length;
+      }
       if (editing === "new") await adminCreate(table, payload);
       else await adminUpdate(table, { id: (editing as Row).id, ...payload });
       setEditing(null); await load();
@@ -228,19 +237,27 @@ export default function AdminCollectionPage() {
       ) : rows.length === 0 ? (
         <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>No items yet. Click “+ New {col.singular}”.</div>
       ) : col.groupBy ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
-          {(col.groupOptions ?? []).map((g) => {
-            const items = rows.filter((r) => String(r[col.groupBy!] ?? "") === g.value);
-            return (
-              <div key={g.value}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#8AA5B1", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 12 }}>{g.label} <span style={{ color: "#B4C4CC" }}>· {items.length}</span></div>
-                {items.length === 0
-                  ? <div style={{ ...card, textAlign: "center", color: "#8AA5B1", fontSize: 13 }}>None yet.</div>
-                  : <div style={gridStyle}>{items.map((row, i) => renderCard(row, i, items, g.value))}</div>}
+        (() => {
+          const items = rows.filter((r) => String(r[col.groupBy!] ?? "") === curTab);
+          return (
+            <div>
+              <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+                {(col.groupOptions ?? []).map((g) => {
+                  const n = rows.filter((r) => String(r[col.groupBy!] ?? "") === g.value).length;
+                  const on = curTab === g.value;
+                  return (
+                    <button key={g.value} onClick={() => setActiveTab(g.value)} style={{ borderRadius: 999, padding: "9px 20px", fontSize: 14, fontWeight: 800, cursor: "pointer", border: "1.5px solid " + (on ? "#1E92B8" : "rgba(12,52,70,0.15)"), background: on ? "linear-gradient(135deg, #30B6DE, #1E92B8)" : "#fff", color: on ? "#fff" : "#46687A" }}>
+                      {g.label} <span style={{ opacity: 0.75 }}>· {n}</span>
+                    </button>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+              {items.length === 0
+                ? <div style={{ ...card, textAlign: "center", color: "#5B7A88" }}>None in this tab yet. Click “+ New {col.singular}”.</div>
+                : <div style={gridStyle}>{items.map((row, i) => renderCard(row, i, items, curTab))}</div>}
+            </div>
+          );
+        })()
       ) : (
         <div style={gridStyle}>
           {rows.map((row, i) => renderCard(row, i, rows, null))}
