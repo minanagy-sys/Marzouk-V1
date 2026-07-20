@@ -129,6 +129,7 @@ export const COLLECTIONS: Record<string, Collection> = {
       ...publish,
       { name: "show_on_home", label: "Show in home celebrities slider", type: "boolean", group: "Settings", help: "Shows this on the home celebrities slider", showIf: { field: "category", equals: "celebrity" } },
       { name: "image_url", label: "Image", type: "image", group: "Basics" },
+      { name: "image_url_2", label: "Hover image (celebrities slider)", type: "image", group: "Basics", help: "Shown when the card is hovered on the home page", showIf: { field: "category", equals: "celebrity" } },
       { name: "tag_ar", label: "Tag (Arabic)", type: "text", group: "Basics" },
       { name: "tag_en", label: "Tag (English)", type: "text", group: "Basics" },
       { name: "title_ar", label: "Title (Arabic)", type: "text", group: "Basics" },

@@ -62,6 +62,7 @@ export type CaseItem = {
   slugEn?: string;
   category: "success" | "celebrity";
   imageUrl?: string;
+  imageUrl2?: string;
   tag: BiText;
   title: BiText;
   excerpt: BiText;

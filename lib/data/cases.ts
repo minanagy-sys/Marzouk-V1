@@ -111,6 +111,7 @@ function rowToCase(r: any): CaseItem {
     slugEn: r.slug_en ?? undefined,
     category: r.category === "celebrity" ? "celebrity" : "success",
     imageUrl: r.image_url ?? undefined,
+    imageUrl2: r.image_url_2 ?? undefined,
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     excerpt: { ar: r.excerpt_ar ?? "", en: r.excerpt_en ?? "" },
