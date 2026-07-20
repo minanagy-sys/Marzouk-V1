@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLang } from "@/lib/lang";
 
 /**
@@ -11,9 +11,10 @@ import { useLang } from "@/lib/lang";
  * `bleed` makes the track run edge-to-edge (cancels the section's 24px side
  * padding) with the arrows overlaid, so the cards reach the screen edges.
  */
-export default function Slider({ children, gap = 22, bleed = false }: { children: React.ReactNode; gap?: number; bleed?: boolean }) {
+export default function Slider({ children, gap = 22, bleed = false, autoplay = true, interval = 4500 }: { children: React.ReactNode; gap?: number; bleed?: boolean; autoplay?: boolean; interval?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { isAr } = useLang();
+  const paused = useRef(false);
 
   const scrollByCard = (dir: -1 | 1) => {
     const el = ref.current;
@@ -22,6 +23,25 @@ export default function Slider({ children, gap = 22, bleed = false }: { children
     const step = slide ? slide.getBoundingClientRect().width + gap : el.clientWidth * 0.8;
     el.scrollBy({ left: (isAr ? -1 : 1) * step * dir, behavior: "smooth" });
   };
+
+  // Auto-advance one card at a time; loop back to the start when the end is
+  // reached. Pauses on hover / touch. Works in both LTR and RTL.
+  useEffect(() => {
+    if (!autoplay) return;
+    const id = setInterval(() => {
+      const el = ref.current;
+      if (!el || paused.current) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const atEnd = Math.abs(el.scrollLeft) >= maxScroll - 4;
+      if (atEnd) el.scrollTo({ left: 0, behavior: "smooth" });
+      else scrollByCard(1);
+    }, interval);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoplay, interval, isAr]);
+
+  const pause = () => { paused.current = true; };
+  const resume = () => { paused.current = false; };
 
   const arrowStyle: React.CSSProperties = {
     width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
@@ -55,11 +75,13 @@ export default function Slider({ children, gap = 22, bleed = false }: { children
     </div>
   );
 
+  const hoverProps = { onMouseEnter: pause, onMouseLeave: resume, onTouchStart: pause };
+
   if (bleed) {
     // Full-bleed: cancel the section's 24px side padding; arrows overlaid.
     // On mobile the start edge realigns with the heading (see .dam-bleed CSS).
     return (
-      <div className="dam-bleed" style={{ position: "relative" }}>
+      <div className="dam-bleed" style={{ position: "relative" }} {...hoverProps}>
         {arrowBtn(-1, isAr ? "→" : "←", "start")}
         {track}
         {arrowBtn(1, isAr ? "←" : "→", "end")}
@@ -68,7 +90,7 @@ export default function Slider({ children, gap = 22, bleed = false }: { children
   }
 
   return (
-    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }}>
+    <div style={{ position: "relative", display: "flex", alignItems: "center", gap: 8 }} {...hoverProps}>
       {arrowBtn(-1, isAr ? "→" : "←")}
       {track}
       {arrowBtn(1, isAr ? "←" : "→")}

@@ -37,7 +37,7 @@ export default function ServicesView({ services, categories = [] }: { services: 
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="services" cta="book" />
-      <PageHero crumbLabel={tc.navServices} title={t.pageTitle} sub={t.pageSub} />
+      <PageHero page="services" crumbLabel={tc.navServices} title={t.pageTitle} sub={t.pageSub} />
 
       <section data-screen-label="Services mosaic" style={{ padding: "60px 24px 90px" }}>
         {parents.length > 0 && (
