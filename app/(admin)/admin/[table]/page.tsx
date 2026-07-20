@@ -73,6 +73,12 @@ export default function AdminCollectionPage() {
     });
     // A new item in a grouped collection defaults to the active tab's group.
     if (col.groupBy && curTab) f[col.groupBy] = curTab;
+    // Pre-fill "Display order" with the next number after the existing items.
+    if (col.fields.some((fld) => fld.name === "sort_order")) {
+      const gb = col.groupBy;
+      const scope = gb ? rows.filter((r) => String(r[gb] ?? "") === String(curTab)) : rows;
+      f.sort_order = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), -1) + 1;
+    }
     setForm(f); setEditing("new");
   };
   const startEdit = (row: Row) => { setForm(toForm(row)); setEditing(row); };
