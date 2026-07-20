@@ -67,6 +67,7 @@ create table if not exists public.cases (
   is_published  boolean not null default true,
   show_on_home  boolean not null default true,
   image_url     text,
+  image_url_2   text,
   tag_ar        text default '', tag_en        text default '',
   title_ar      text default '', title_en      text default '',
   excerpt_ar    text default '', excerpt_en    text default '',
