@@ -77,7 +77,7 @@ export default function AdminCollectionPage() {
     if (col.fields.some((fld) => fld.name === "sort_order")) {
       const gb = col.groupBy;
       const scope = gb ? rows.filter((r) => String(r[gb] ?? "") === String(curTab)) : rows;
-      f.sort_order = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), -1) + 1;
+      f.sort_order = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), 0) + 1;
     }
     setForm(f); setEditing("new");
   };
@@ -111,7 +111,7 @@ export default function AdminCollectionPage() {
       if (editing === "new" && hasField("sort_order") && (!form.sort_order || Number(form.sort_order) === 0)) {
         const gb = col.groupBy;
         const scope = gb ? rows.filter((r) => String(r[gb] ?? "") === String(form[gb] ?? "")) : rows;
-        const maxOrder = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), -1);
+        const maxOrder = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), 0);
         payload.sort_order = maxOrder + 1;
       }
       if (editing === "new") await adminCreate(table, payload);
@@ -153,7 +153,7 @@ export default function AdminCollectionPage() {
     const copy = [...list];
     const [moved] = copy.splice(from, 1);
     copy.splice(to, 0, moved);
-    const reindexed: Row[] = copy.map((r, i) => ({ ...r, sort_order: i }));
+    const reindexed: Row[] = copy.map((r, i) => ({ ...r, sort_order: i + 1 }));
     const gb = col.groupBy;
     const newRows = groupKey === null || !gb
       ? reindexed
@@ -191,7 +191,7 @@ export default function AdminCollectionPage() {
           {img
             ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             : <span style={{ fontSize: 38, opacity: 0.5 }}>{col.icon}</span>}
-          {canReorder && <span style={{ position: "absolute", top: 10, insetInlineStart: 10, background: "rgba(4,32,46,0.72)", color: "#fff", borderRadius: 999, minWidth: 24, height: 24, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800 }}>{i + 1}</span>}
+          {canReorder && <span title="Display order" style={{ position: "absolute", top: 10, insetInlineStart: 10, background: "rgba(4,32,46,0.72)", color: "#fff", borderRadius: 999, minWidth: 24, height: 24, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 800 }}>{Number(row.sort_order) || i + 1}</span>}
           <span style={{ position: "absolute", top: 10, insetInlineEnd: 10, background: published ? "rgba(39,174,96,0.95)" : "rgba(120,140,150,0.95)", color: "#fff", borderRadius: 999, padding: "3px 12px", fontSize: 11, fontWeight: 800 }}>{published ? "Published" : "Hidden"}</span>
         </div>
         <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>

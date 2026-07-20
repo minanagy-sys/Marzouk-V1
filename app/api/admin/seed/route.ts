@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
   // Services (upsert by slug)
   const serviceRows = SERVICES_SEED.map((s, i) => ({
-    slug: s.slug, slug_ar: slugify(s.title.ar), slug_en: s.slug, sort_order: i, is_published: true, show_on_home: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
+    slug: s.slug, slug_ar: slugify(s.title.ar), slug_en: s.slug, sort_order: i + 1, is_published: true, show_on_home: true, glyph: s.glyph, image_url: s.imageUrl ?? null,
     category_id: catIdBySlug[SERVICE_CAT_MAP[s.slug] ?? ""] ?? null,
     span_gc: s.gc, span_gr: s.gr,
     tag_ar: s.tag.ar, tag_en: s.tag.en, title_ar: s.title.ar, title_en: s.title.en,
@@ -87,8 +87,9 @@ export async function POST(request: Request) {
   }
 
   // Cases (upsert by slug)
-  const caseRows = CASES_SEED.map((c, i) => ({
-    slug: c.slug, slug_ar: slugify(c.title.ar), slug_en: c.slug, category: c.category, sort_order: i, is_published: true, image_url: c.imageUrl ?? null,
+  let sOrder = 0, cOrder = 0;
+  const caseRows = CASES_SEED.map((c) => ({
+    slug: c.slug, slug_ar: slugify(c.title.ar), slug_en: c.slug, category: c.category, sort_order: c.category === "celebrity" ? ++cOrder : ++sOrder, is_published: true, image_url: c.imageUrl ?? null,
     tag_ar: c.tag.ar, tag_en: c.tag.en, title_ar: c.title.ar, title_en: c.title.en,
     excerpt_ar: c.excerpt.ar, excerpt_en: c.excerpt.en, body_ar: c.body.ar, body_en: c.body.en,
   }));
@@ -105,7 +106,7 @@ export async function POST(request: Request) {
   const ar = blogPosts("ar");
   const en = blogPosts("en");
   const blogRows = ar.map((p, i) => ({
-    slug: p.slug, slug_ar: slugify(p.title), slug_en: p.slug, sort_order: i, is_published: true,
+    slug: p.slug, slug_ar: slugify(p.title), slug_en: p.slug, sort_order: i + 1, is_published: true,
     tag_ar: p.tag, tag_en: en[i]?.tag ?? "", title_ar: p.title, title_en: en[i]?.title ?? "",
     excerpt_ar: p.excerpt, excerpt_en: en[i]?.excerpt ?? "", body_ar: p.body, body_en: en[i]?.body ?? [],
   }));
@@ -126,23 +127,16 @@ export async function POST(request: Request) {
     results[table] = error ? `error: ${error.message}` : `${rows.length} inserted`;
   }
 
-  // Celebrities (from home content, zipped ar/en)
-  const hAr = homeContent("ar"), hEn = homeContent("en");
-  await seedList("celebrities", hAr.celebs.map((c, i) => ({
-    sort_order: i, is_published: true, name_ar: c.name, name_en: hEn.celebs[i]?.name ?? "",
-    caption_ar: c.caption, caption_en: hEn.celebs[i]?.caption ?? "",
-  })));
-
   // Testimonials (from about content)
   const aAr = aboutContent("ar"), aEn = aboutContent("en");
   await seedList("testimonials", aAr.testimonials.map((t, i) => ({
-    sort_order: i, is_published: true, name: t.name, text_ar: t.text, text_en: aEn.testimonials[i]?.text ?? "",
+    sort_order: i + 1, is_published: true, name: t.name, text_ar: t.text, text_en: aEn.testimonials[i]?.text ?? "",
   })));
 
   // Clinics (from contact content)
   const cAr = contactContent("ar"), cEn = contactContent("en");
   await seedList("clinics", cAr.pins.map((p, i) => ({
-    sort_order: i, is_published: true, phone: p.phone, maps_url: p.url,
+    sort_order: i + 1, is_published: true, phone: p.phone, maps_url: p.url,
     name_ar: p.name, name_en: cEn.pins[i]?.name ?? "", address_ar: p.address, address_en: cEn.pins[i]?.address ?? "",
     hours_ar: cAr.clinics[i]?.hours ?? "", hours_en: cEn.clinics[i]?.hours ?? "",
     area_ar: p.area, area_en: cEn.pins[i]?.area ?? "",
@@ -150,15 +144,15 @@ export async function POST(request: Request) {
 
   // Media (gallery placeholders + videos)
   const mAr = mediaContent("ar"), mEn = mediaContent("en");
-  const galleryRows = GALLERY_SLOTS.map((g, i) => ({ type: "gallery", sort_order: i, is_published: true, span_gc: g.gc, span_gr: g.gr }));
+  const galleryRows = GALLERY_SLOTS.map((g, i) => ({ type: "gallery", sort_order: i + 1, is_published: true, span_gc: g.gc, span_gr: g.gr }));
   const videoRows = mAr.videos.map((v, i) => ({ type: "video", sort_order: 100 + i, is_published: true, span_gc: v.gc, span_gr: v.gr, title_ar: v.title, title_en: mEn.videos[i]?.title ?? "" }));
   await seedList("media_items", [...galleryRows, ...videoRows]);
 
   // Home list sections
-  await seedList("hero_slides", heroSlidesSeed().map((s, i) => ({ sort_order: i, is_published: true, image_url: s.imageUrl ?? null, kicker_ar: s.kicker.ar, kicker_en: s.kicker.en, title1_ar: s.title1.ar, title1_en: s.title1.en, title2_ar: s.title2.ar, title2_en: s.title2.en, sub_ar: s.sub.ar, sub_en: s.sub.en })));
-  await seedList("hero_stats", statsSeed().map((s, i) => ({ sort_order: i, is_published: true, num_ar: s.num.ar, num_en: s.num.en, label_ar: s.label.ar, label_en: s.label.en })));
-  await seedList("value_items", valuesSeed().map((v, i) => ({ sort_order: i, is_published: true, num: v.num, title_ar: v.title.ar, title_en: v.title.en, body_ar: v.body.ar, body_en: v.body.en })));
-  await seedList("feature_items", featuresSeed().map((f, i) => ({ sort_order: i, is_published: true, glyph: f.glyph, title_ar: f.title.ar, title_en: f.title.en, desc_ar: f.desc.ar, desc_en: f.desc.en })));
+  await seedList("hero_slides", heroSlidesSeed().map((s, i) => ({ sort_order: i + 1, is_published: true, image_url: s.imageUrl ?? null, kicker_ar: s.kicker.ar, kicker_en: s.kicker.en, title1_ar: s.title1.ar, title1_en: s.title1.en, title2_ar: s.title2.ar, title2_en: s.title2.en, sub_ar: s.sub.ar, sub_en: s.sub.en })));
+  await seedList("hero_stats", statsSeed().map((s, i) => ({ sort_order: i + 1, is_published: true, num_ar: s.num.ar, num_en: s.num.en, label_ar: s.label.ar, label_en: s.label.en })));
+  await seedList("value_items", valuesSeed().map((v, i) => ({ sort_order: i + 1, is_published: true, num: v.num, title_ar: v.title.ar, title_en: v.title.en, body_ar: v.body.ar, body_en: v.body.en })));
+  await seedList("feature_items", featuresSeed().map((f, i) => ({ sort_order: i + 1, is_published: true, glyph: f.glyph, title_ar: f.title.ar, title_en: f.title.en, desc_ar: f.desc.ar, desc_en: f.desc.en })));
 
   // Site text (header/footer) — editable in the "Site text" admin section
   const A = COMMON.ar, E = COMMON.en;
