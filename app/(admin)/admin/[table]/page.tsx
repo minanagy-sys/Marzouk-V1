@@ -95,10 +95,12 @@ export default function AdminCollectionPage() {
       }
       if (hasField("slug_ar")) payload.slug_ar = payload.slug_ar ? slugify(String(payload.slug_ar)) : null;
       if (hasField("slug_en")) payload.slug_en = payload.slug_en ? slugify(String(payload.slug_en)) : null;
-      // New item in a grouped collection: append to the end of its group's order.
-      if (editing === "new" && col.groupBy) {
-        const grp = String(form[col.groupBy] ?? "");
-        payload.sort_order = rows.filter((r) => String(r[col.groupBy!] ?? "") === grp).length;
+      // New item: auto-assign the next order number (append) unless one was typed.
+      if (editing === "new" && hasField("sort_order") && (!form.sort_order || Number(form.sort_order) === 0)) {
+        const gb = col.groupBy;
+        const scope = gb ? rows.filter((r) => String(r[gb] ?? "") === String(form[gb] ?? "")) : rows;
+        const maxOrder = scope.reduce((m, r) => Math.max(m, Number(r.sort_order) || 0), -1);
+        payload.sort_order = maxOrder + 1;
       }
       if (editing === "new") await adminCreate(table, payload);
       else await adminUpdate(table, { id: (editing as Row).id, ...payload });
