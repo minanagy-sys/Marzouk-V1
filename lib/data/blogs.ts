@@ -2,6 +2,7 @@ import type { BlogPostBi, BlogCategory } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 import { blogPosts as seedPosts } from "@/lib/content/blogs";
 import { slugify } from "@/lib/admin/slug";
+import { decodeSlug } from "./types";
 
 const paragraphsToHtml = (arr: string[]): string => arr.map((p) => `<p>${p}</p>`).join("");
 
@@ -59,8 +60,9 @@ export async function getBlogPostsHome(): Promise<BlogPostBi[]> {
 }
 
 export async function getBlogPostBi(slug: string): Promise<BlogPostBi | undefined> {
+  const q = decodeSlug(slug);
   const all = await getBlogPostsBi();
-  return all.find((p) => p.slug === slug || p.slugAr === slug || p.slugEn === slug);
+  return all.find((p) => p.slug === q || p.slugAr === q || p.slugEn === q);
 }
 
 export async function getBlogCategories(): Promise<BlogCategory[]> {
@@ -72,7 +74,7 @@ export async function getBlogCategories(): Promise<BlogCategory[]> {
   return data.map((c: any) => ({ id: c.id, slug: c.slug, name: { ar: c.name_ar ?? "", en: c.name_en ?? "" } }));
 }
 
-/** { lang, slug } params for static generation — ASCII only (Arabic slugs render on-demand). */
+/** { lang, slug } params for static generation (both languages). */
 export async function getBlogParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getBlogPostsBi();
   return all
@@ -80,5 +82,4 @@ export async function getBlogParams(): Promise<{ lang: string; slug: string }[]>
       { lang: "ar", slug: p.slugAr || p.slug },
       { lang: "en", slug: p.slugEn || p.slug },
     ])
-    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }
