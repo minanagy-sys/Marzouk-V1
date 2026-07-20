@@ -14,6 +14,11 @@ export function slugFor(item: { slug: string; slugAr?: string; slugEn?: string }
   return (lang === "en" ? item.slugEn : item.slugAr) || item.slug;
 }
 
+/** Decode a URL slug param (Next may hand it over still percent-encoded). */
+export function decodeSlug(s: string): string {
+  try { return decodeURIComponent(s); } catch { return s; }
+}
+
 export type ServiceSection = { heading: BiText; body: BiText };
 export type ServiceFaq = { q: BiText; a: BiText };
 

@@ -1,6 +1,7 @@
 import type { CaseItem } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 import { slugify } from "@/lib/admin/slug";
+import { decodeSlug } from "./types";
 
 /** Cases seed — feeds the cases page and each /cases/[slug] story page. */
 export const CASES_SEED: CaseItem[] = [
@@ -136,11 +137,12 @@ export async function getHomeCelebrities(): Promise<CaseItem[]> {
 }
 
 export async function getCase(slug: string): Promise<CaseItem | undefined> {
+  const q = decodeSlug(slug);
   const all = await getCases();
-  return all.find((c) => c.slug === slug || c.slugAr === slug || c.slugEn === slug);
+  return all.find((c) => c.slug === q || c.slugAr === q || c.slugEn === q);
 }
 
-/** { lang, slug } params for static generation — ASCII only (Arabic slugs render on-demand). */
+/** { lang, slug } params for static generation (both languages). */
 export async function getCaseParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getCases();
   return all
@@ -148,5 +150,4 @@ export async function getCaseParams(): Promise<{ lang: string; slug: string }[]>
       { lang: "ar", slug: c.slugAr || c.slug },
       { lang: "en", slug: c.slugEn || c.slug },
     ])
-    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }

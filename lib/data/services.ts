@@ -2,6 +2,7 @@ import type { Lang } from "@/lib/lang";
 import type { Service } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
 import { slugify } from "@/lib/admin/slug";
+import { decodeSlug } from "./types";
 
 const SPANS = [
   { gc: "span 2", gr: "span 2" },
@@ -495,15 +496,13 @@ export async function getServicesHome(): Promise<Service[]> {
 
 /** One service by slug — matches the canonical, Arabic, or English slug. */
 export async function getService(slug: string): Promise<Service | undefined> {
+  const q = decodeSlug(slug);
   const all = await getServices();
-  return all.find((s) => s.slug === slug || s.slugAr === slug || s.slugEn === slug);
+  return all.find((s) => s.slug === q || s.slugAr === q || s.slugEn === q);
 }
 
 /**
- * { lang, slug } params for static generation. Only ASCII slugs are
- * pre-rendered — non-ASCII (Arabic) slugs render on-demand (ISR), which avoids
- * a Vercel serving bug with encoded non-ASCII static file paths.
- */
+/** { lang, slug } params for static generation (both languages). */
 export async function getServiceParams(): Promise<{ lang: string; slug: string }[]> {
   const all = await getServices();
   return all
@@ -511,5 +510,4 @@ export async function getServiceParams(): Promise<{ lang: string; slug: string }
       { lang: "ar", slug: s.slugAr || s.slug },
       { lang: "en", slug: s.slugEn || s.slug },
     ])
-    .filter((p) => /^[\x20-\x7E]*$/.test(p.slug));
 }
