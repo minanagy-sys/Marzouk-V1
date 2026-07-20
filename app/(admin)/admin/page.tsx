@@ -34,12 +34,8 @@ export default function AdminDashboard() {
         );
       })}
 
-      <div style={{ marginTop: 12, background: "linear-gradient(135deg, #0A3950, #1E92B8)", borderRadius: 16, padding: 24, color: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-        <div>
-          <div style={{ fontWeight: 800, fontSize: 17 }}>First time setup</div>
-          <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginTop: 4 }}>Import the built-in site content into your database (safe to run once).</div>
-        </div>
-        <Link href="/admin/seed" style={{ background: "#fff", color: "#0A3950", padding: "10px 22px", borderRadius: 10, textDecoration: "none", fontWeight: 800 }}>Seed database →</Link>
+      <div style={{ marginTop: 12, background: "#EAF7FB", border: "1px solid rgba(48,182,222,0.3)", borderRadius: 16, padding: "18px 22px", color: "#0C3446", fontSize: 13.5, lineHeight: 1.7 }}>
+        Every change you make here saves to the database and appears on the live site right away — no import step needed.
       </div>
     </div>
   );
