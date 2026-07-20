@@ -46,7 +46,7 @@ export default function CasesView({ cases }: { cases: CaseItem[] }) {
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="cases" cta="book" />
-      <PageHero crumbLabel={tc.navCases} title={t.pageTitle} sub={t.pageSub} spin={false} padding="90px 24px 70px">
+      <PageHero page="cases" crumbLabel={tc.navCases} title={t.pageTitle} sub={t.pageSub} spin={false} padding="90px 24px 70px">
         <div style={{ display: "flex", gap: 12, marginTop: 34, flexWrap: "wrap" }}>
           {tabBtn("success", t.tabSuccess)}
           {tabBtn("celebrity", t.tabCelebs)}

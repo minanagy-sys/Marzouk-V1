@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLang } from "@/lib/lang";
+import { useSetting } from "@/lib/settings";
 import { common } from "@/lib/content/common";
 import { SERIF } from "@/lib/theme";
 
@@ -12,6 +13,7 @@ export default function PageHero({
   sub,
   spin = true,
   padding = "90px 24px",
+  page,
   children,
 }: {
   crumbLabel: string;
@@ -19,10 +21,13 @@ export default function PageHero({
   sub: string;
   spin?: boolean;
   padding?: string;
+  page?: string;
   children?: React.ReactNode;
 }) {
   const { lang, lp } = useLang();
   const t = common(lang);
+  const st = useSetting();
+  const heroImg = page ? st(`${page}.heroImage`, lang, "") : "";
 
   return (
     <section
@@ -34,6 +39,14 @@ export default function PageHero({
         padding,
       }}
     >
+      {heroImg && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={heroImg} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", transform: lang === "ar" ? "scaleX(-1)" : "none" }} />
+          {/* same fade as the gradient hero, over the image */}
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(140deg, rgba(4,32,46,0.92) 0%, rgba(10,57,80,0.86) 55%, rgba(14,83,114,0.8) 100%)" }} />
+        </>
+      )}
       <div
         style={{
           position: "absolute",

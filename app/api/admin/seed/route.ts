@@ -202,10 +202,20 @@ export async function POST(request: Request) {
     ...pageRows("contact", contactContent("ar").t, contactContent("en").t, "Contact page"),
   ];
 
+  // Editable hero background image per inner page (URL stored in both langs).
+  const heroImages = [
+    ["about", "About page"], ["services", "Services page"], ["cases", "Cases page"],
+    ["blogs", "Blog page"], ["media", "Media page"], ["contact", "Contact page"],
+  ].map(([p, section]) => ({ key: `${p}.heroImage`, section, value_ar: "", value_en: "" }));
+
   {
-    const all = [...sc, ...pageText];
-    const { error } = await supabase.from("site_content").upsert(all, { onConflict: "key" });
-    results.site_content = error ? `error: ${error.message}` : `${all.length} upserted`;
+    const all = [...sc, ...pageText, ...heroImages];
+    // Don't overwrite an existing hero image if the seed value is empty.
+    const { data: existing } = await supabase.from("site_content").select("key, value_ar").in("key", heroImages.map((h) => h.key));
+    const keep = new Set((existing ?? []).filter((r: { value_ar?: string }) => r.value_ar).map((r: { key: string }) => r.key));
+    const rows = all.filter((r) => !(keep.has(r.key)));
+    const { error } = await supabase.from("site_content").upsert(rows, { onConflict: "key" });
+    results.site_content = error ? `error: ${error.message}` : `${rows.length} upserted`;
   }
 
   revalidatePath("/", "layout");

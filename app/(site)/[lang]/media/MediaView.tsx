@@ -50,7 +50,7 @@ export default function MediaView({ media }: { media: MediaItem[] }) {
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="media" cta="book" />
-      <PageHero crumbLabel={tc.navMedia} title={t.pageTitle} sub={t.pageSub} spin={false} padding="90px 24px 70px">
+      <PageHero page="media" crumbLabel={tc.navMedia} title={t.pageTitle} sub={t.pageSub} spin={false} padding="90px 24px 70px">
         <div style={{ display: "flex", gap: 12, marginTop: 34, flexWrap: "wrap" }}>
           {tabBtn("gallery", t.tabGallery)}
           {tabBtn("videos", t.tabVideos)}

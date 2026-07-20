@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { adminList, adminUpdate, adminCreate, adminDelete } from "@/lib/admin/client";
+import { adminList, adminUpdate, adminCreate, adminDelete, adminUpload } from "@/lib/admin/client";
+import { compressImage } from "@/lib/admin/image";
 
 type Row = { id?: string; key: string; section?: string; value_ar?: string; value_en?: string } & Record<string, unknown>;
 
@@ -120,6 +121,11 @@ export default function SiteTextEditor() {
     setRows((rs) => rs.map((r) => (r.id === row.id ? { ...r, [field]: v } : r)));
     setDirty((d) => ({ ...d, [String(row.id)]: { ...(d[String(row.id)] ?? row), [field]: v, id: row.id } }));
   };
+  // Image rows (keys ending in "image") store the same URL in both languages.
+  const editImage = (row: Row, url: string) => {
+    setRows((rs) => rs.map((r) => (r.id === row.id ? { ...r, value_ar: url, value_en: url } : r)));
+    setDirty((d) => ({ ...d, [String(row.id)]: { ...(d[String(row.id)] ?? row), value_ar: url, value_en: url, id: row.id } }));
+  };
 
   const saveAll = async () => {
     const items = Object.values(dirty);
@@ -226,16 +232,20 @@ export default function SiteTextEditor() {
                           <label style={{ fontSize: 13, fontWeight: 700, color: "#46687A" }}>{prettifyField(field)} <span style={{ fontWeight: 400, color: "#B4C4CC", fontSize: 11.5 }}>· {String(r.key)}</span></label>
                           <button onClick={() => removeRow(r)} style={{ background: "none", border: "none", color: "#C99", fontSize: 12, cursor: "pointer" }}>Delete</button>
                         </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <span style={miniLbl}>Arabic</span>
-                            <textarea value={String(r.value_ar ?? "")} onChange={(e) => edit(r, "value_ar", e.target.value)} rows={2} dir="rtl" style={{ ...inp, resize: "vertical" }} />
+                        {/image$/i.test(String(r.key)) ? (
+                          <ImageRow value={String(r.value_ar ?? r.value_en ?? "")} onChange={(url) => editImage(r, url)} />
+                        ) : (
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                              <span style={miniLbl}>Arabic</span>
+                              <textarea value={String(r.value_ar ?? "")} onChange={(e) => edit(r, "value_ar", e.target.value)} rows={2} dir="rtl" style={{ ...inp, resize: "vertical" }} />
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                              <span style={miniLbl}>English</span>
+                              <textarea value={String(r.value_en ?? "")} onChange={(e) => edit(r, "value_en", e.target.value)} rows={2} style={{ ...inp, resize: "vertical" }} />
+                            </div>
                           </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                            <span style={miniLbl}>English</span>
-                            <textarea value={String(r.value_en ?? "")} onChange={(e) => edit(r, "value_en", e.target.value)} rows={2} style={{ ...inp, resize: "vertical" }} />
-                          </div>
-                        </div>
+                        )}
                       </div>
                     );
                   })}
@@ -253,6 +263,34 @@ export default function SiteTextEditor() {
           <button onClick={() => { setDirty({}); load(); }} disabled={saving} style={btnGhost}>Discard</button>
         </div>
       )}
+    </div>
+  );
+}
+
+function ImageRow({ value, onChange }: { value: string; onChange: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const [err, setErr] = useState("");
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; e.target.value = "";
+    if (!file) return;
+    setUploading(true); setErr("");
+    try { onChange(await adminUpload(await compressImage(file))); } catch (x) { setErr((x as Error).message); }
+    setUploading(false);
+  };
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+        {value
+          ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={value} alt="" style={{ width: 140, height: 78, objectFit: "cover", borderRadius: 10, border: "1px solid rgba(12,52,70,0.12)" }} />
+          : <div style={{ width: 140, height: 78, borderRadius: 10, background: "#EAF2F6", display: "flex", alignItems: "center", justifyContent: "center", color: "#9BB3BF", fontSize: 22 }}>🖼️</div>}
+        <label style={{ background: "#1E92B8", color: "#fff", borderRadius: 10, padding: "10px 16px", fontSize: 13, fontWeight: 700, cursor: uploading ? "wait" : "pointer", opacity: uploading ? 0.7 : 1 }}>
+          {uploading ? "Uploading…" : "⬆ Upload image"}
+          <input type="file" accept="image/*" onChange={onFile} disabled={uploading} style={{ display: "none" }} />
+        </label>
+        {value && <button type="button" onClick={() => onChange("")} style={btnGhost}>Remove</button>}
+      </div>
+      <input type="text" value={value} onChange={(e) => onChange(e.target.value)} placeholder="…or paste an image URL" style={{ ...inp, fontSize: 12.5 }} />
+      {err && <div style={{ color: "#C0392B", fontSize: 12 }}>{err}</div>}
     </div>
   );
 }

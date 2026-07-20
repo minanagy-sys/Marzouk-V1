@@ -78,7 +78,7 @@ export default function ContactView({ clinics, serviceOptions = [] }: { clinics:
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="contact" cta="phone" />
-      <PageHero crumbLabel={tc.navContact} title={t.pageTitle} sub={t.pageSub} spin={false} />
+      <PageHero page="contact" crumbLabel={tc.navContact} title={t.pageTitle} sub={t.pageSub} spin={false} />
 
       {/* MAP */}
       <section data-screen-label="Clinics map" style={{ padding: "90px 24px 0" }}>

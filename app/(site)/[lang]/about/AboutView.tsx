@@ -25,7 +25,7 @@ export default function AboutView({ testimonials, values, features, stats }: { t
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="about" cta="book" />
-      <PageHero crumbLabel={tc.navAbout} title={t.pageTitle} sub={t.pageSub} />
+      <PageHero page="about" crumbLabel={tc.navAbout} title={t.pageTitle} sub={t.pageSub} />
 
       {/* WHO WE ARE */}
       <section data-screen-label="Who we are" style={{ padding: "100px 24px" }}>

@@ -36,7 +36,7 @@ export default function BlogsView({ posts, categories }: { posts: BlogPostBi[]; 
   return (
     <div style={{ fontFamily: SANS, direction: dir, color: "#0C3446", background: "#ffffff", minHeight: "100vh" }}>
       <Navbar active="blogs" cta="book" />
-      <PageHero crumbLabel={tc.navBlogs} title={ui.pageTitle} sub={ui.pageSub} spin={false} />
+      <PageHero page="blogs" crumbLabel={tc.navBlogs} title={ui.pageTitle} sub={ui.pageSub} spin={false} />
 
       <section data-screen-label="Articles grid" style={{ padding: "60px 24px 90px" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
