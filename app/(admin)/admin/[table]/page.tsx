@@ -162,7 +162,7 @@ export default function AdminCollectionPage() {
     const img = (row.image_url as string) || (row.video_url ? ytThumb(String(row.video_url)) : "");
     const published = "is_published" in row ? !!row.is_published : true;
     const title = String(row[col.titleColumn] ?? "—") || "—";
-    const meta = col.listColumns.filter((cc) => cc !== col.titleColumn && cc !== "is_published" && cc !== col.groupBy);
+    const meta = col.listColumns.filter((cc) => cc !== col.titleColumn && cc !== "is_published" && cc !== col.groupBy && cc !== "sort_order");
     const dragging = dragIndex === i && dragGroup === groupKey;
     return (
       <div
