@@ -95,9 +95,15 @@ export default function AdminCollectionPage() {
         else if (fld.type === "repeater") v = Array.isArray(v) ? v : [];
         payload[fld.name] = v;
       });
-      // Normalise the slug (spaces → dashes); derive from the title when empty.
+      // Normalise the slug (spaces → dashes); derive from the title when empty,
+      // then make it unique so it can't collide with an existing row's slug.
       if (hasSlug) {
-        payload.slug = slugify(String(payload.slug || form.title_en || form.title_ar || form.name_en || form.name_ar || form.name || form[col.titleColumn] || ""));
+        const base = slugify(String(payload.slug || form.title_en || form.title_ar || form.name_en || form.name_ar || form.name || form[col.titleColumn] || "")) || "item";
+        const editingId = editing !== "new" ? String((editing as Row).id) : null;
+        const taken = new Set(rows.filter((r) => String(r.id) !== editingId).map((r) => String(r.slug ?? "")));
+        let s = base, n = 2;
+        while (taken.has(s)) s = `${base}-${n++}`;
+        payload.slug = s;
       }
       if (hasField("slug_ar")) payload.slug_ar = payload.slug_ar ? slugify(String(payload.slug_ar)) : null;
       if (hasField("slug_en")) payload.slug_en = payload.slug_en ? slugify(String(payload.slug_en)) : null;
