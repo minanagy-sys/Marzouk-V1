@@ -34,7 +34,7 @@ alter table public.blog_posts   add column if not exists show_on_home boolean no
 
 -- Starter service categories (safe to re-run)
 insert into public.service_categories (slug, sort_order, name_ar, name_en) values
-  ('delivery', 1, 'الولادة', 'Delivery'),
+  ('delivery', 1, 'الولادة', 'Birth'),
   ('tumor-surgery', 2, 'جراحة الأورام', 'Tumor Surgery'),
   ('cosmetic', 3, 'التجميل النسائي', 'Cosmetic Gynecology'),
   ('specialized', 4, 'رعاية تخصصية', 'Specialized Care')
