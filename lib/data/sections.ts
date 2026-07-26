@@ -30,7 +30,7 @@ export function featuresSeed(): Feature[] {
 }
 
 // ---------- Row mappers ----------
-const heroRow = (r: any): HeroSlide => ({ id: r.id, imageUrl: r.image_url ?? undefined, kicker: { ar: r.kicker_ar ?? "", en: r.kicker_en ?? "" }, title1: { ar: r.title1_ar ?? "", en: r.title1_en ?? "" }, title2: { ar: r.title2_ar ?? "", en: r.title2_en ?? "" }, sub: { ar: r.sub_ar ?? "", en: r.sub_en ?? "" } });
+const heroRow = (r: any): HeroSlide => ({ id: r.id, imageUrl: r.image_url ?? undefined, imageUrlAr: r.image_url_ar ?? undefined, kicker: { ar: r.kicker_ar ?? "", en: r.kicker_en ?? "" }, title1: { ar: r.title1_ar ?? "", en: r.title1_en ?? "" }, title2: { ar: r.title2_ar ?? "", en: r.title2_en ?? "" }, sub: { ar: r.sub_ar ?? "", en: r.sub_en ?? "" } });
 const statRow = (r: any): Stat => ({ id: r.id, num: { ar: r.num_ar ?? "", en: r.num_en ?? "" }, label: { ar: r.label_ar ?? "", en: r.label_en ?? "" } });
 const valueRow = (r: any): ValueItem => ({ id: r.id, num: r.num ?? "", title: { ar: r.title_ar ?? "", en: r.title_en ?? "" }, body: { ar: r.body_ar ?? "", en: r.body_en ?? "" } });
 const featureRow = (r: any): Feature => ({ id: r.id, glyph: r.glyph ?? "", title: { ar: r.title_ar ?? "", en: r.title_en ?? "" }, desc: { ar: r.desc_ar ?? "", en: r.desc_en ?? "" } });
