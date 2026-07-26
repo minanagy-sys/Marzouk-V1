@@ -117,9 +117,9 @@ textarea::placeholder {
   .dam-sechead-cta { flex-shrink: 0 !important; }
 }
 
-/* ---------- Hero background on mobile: show the whole photo (no cropping) ---------- */
+/* ---------- Hero background on mobile: keep cover, shift the focal point ---------- */
 @media (max-width: 640px) {
-  .dam-hero-img { object-fit: contain !important; object-position: top center !important; }
+  .dam-hero-img { object-fit: cover !important; object-position: 60% center !important; }
 }
 
 /* ---------- Hero stats: shrink to a single line on mobile ---------- */
