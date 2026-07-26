@@ -252,7 +252,8 @@ export const COLLECTIONS: Record<string, Collection> = {
     listColumns: ["title1_ar", "sort_order", "is_published"], titleColumn: "title1_ar", defaultOrder: "sort_order",
     fields: [
       ...publish,
-      { name: "image_url", label: "Background image", type: "image", group: "Basics" },
+      { name: "image_url", label: "Background image (English / LTR)", type: "image", group: "Basics", help: "Shown on the English site — text sits on the left, so place the doctor on the right." },
+      { name: "image_url_ar", label: "Background image (Arabic / RTL)", type: "image", group: "Basics", help: "Shown on the Arabic site — text sits on the right, so place the doctor on the left. If left empty, the English image is mirror-flipped automatically." },
       { name: "kicker_ar", label: "Kicker (Arabic)", type: "text", group: "Basics" },
       { name: "kicker_en", label: "Kicker (English)", type: "text", group: "Basics" },
       { name: "title1_ar", label: "Title line 1 (Arabic)", type: "text", group: "Basics" },

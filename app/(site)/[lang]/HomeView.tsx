@@ -52,8 +52,17 @@ export default function HomeView({
       {/* ============ HERO SLIDER ============ */}
       <section data-screen-label="Hero slider" style={{ position: "relative", overflow: "hidden", background: "#04202E", minHeight: "94vh", display: "flex", flexDirection: "column" }}>
         <div key={slide} style={{ position: "absolute", inset: 0, animation: visualAnim }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cur?.imageUrl || ""} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "78% center", transform: isAr ? "scaleX(-1)" : "none" }} />
+          {/* Per-language background: use the Arabic image in RTL and the English
+             image in LTR. If no Arabic image is set, fall back to the English one
+             mirror-flipped so the doctor still sits opposite the text. */}
+          {(() => {
+            const heroImg = isAr ? (cur?.imageUrlAr || cur?.imageUrl) : cur?.imageUrl;
+            const mirror = isAr && !cur?.imageUrlAr;
+            return (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={heroImg || ""} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "78% center", transform: mirror ? "scaleX(-1)" : "none" }} />
+            );
+          })()}
         </div>
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0) 82%, rgba(4,32,46,0.55) 100%)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", top: "14%", insetInlineStart: "5%", width: 200, height: 200, border: "1px solid rgba(48,182,222,0.22)", borderRadius: "50%", animation: "damFloatSlow 11s ease-in-out infinite", pointerEvents: "none" }} />

@@ -99,6 +99,7 @@ export type Testimonial = {
 export type HeroSlide = {
   id: string;
   imageUrl?: string;
+  imageUrlAr?: string;
   kicker: BiText;
   title1: BiText;
   title2: BiText;
