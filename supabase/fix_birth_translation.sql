@@ -19,3 +19,8 @@ where title_en like '%Delivery%';
 update public.services
 set meta_title_en = replace(meta_title_en, 'Delivery', 'Birth')
 where meta_title_en like '%Delivery%';
+
+-- Service category chip on the services page: "Delivery" -> "Birth"
+update public.service_categories
+set name_en = 'Birth'
+where name_en = 'Delivery';
