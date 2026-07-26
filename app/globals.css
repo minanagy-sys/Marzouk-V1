@@ -117,9 +117,9 @@ textarea::placeholder {
   .dam-sechead-cta { flex-shrink: 0 !important; }
 }
 
-/* ---------- Hero background: anchor the doctor's side on mobile ---------- */
+/* ---------- Hero background on mobile: show the whole photo (no cropping) ---------- */
 @media (max-width: 640px) {
-  .dam-hero-img { object-position: var(--hero-pos-mobile, 78% center) !important; }
+  .dam-hero-img { object-fit: contain !important; object-position: top center !important; }
 }
 
 /* ---------- Hero stats: shrink to a single line on mobile ---------- */
