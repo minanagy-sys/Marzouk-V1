@@ -7,7 +7,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import { useLang } from "@/lib/lang";
-import { usePageText } from "@/lib/settings";
+import { usePageText, useSetting } from "@/lib/settings";
 import { aboutContent } from "@/lib/content/about";
 import { common } from "@/lib/content/common";
 import { pick, type Testimonial, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
@@ -17,6 +17,8 @@ export default function AboutView({ testimonials, values, features, stats }: { t
   const { lang, dir, lp } = useLang();
   const a = aboutContent(lang);
   const t = usePageText("about", lang, a.t);
+  const st = useSetting();
+  const whoImage = st("about.whoImage", lang, "/assets/doctor-crop.png");
   const facts = stats;
   const vm = values;
   const why = features;
@@ -34,7 +36,7 @@ export default function AboutView({ testimonials, values, features, stats }: { t
             <div style={{ position: "absolute", inset: "-6%", borderRadius: "50%", background: "radial-gradient(circle, rgba(48,182,222,0.16), transparent 62%)" }} />
             <div style={{ position: "relative", width: "min(380px, 100%)", borderRadius: "220px 220px 24px 24px", overflow: "hidden", border: "1px solid rgba(48,182,222,0.4)", boxShadow: "0 30px 70px rgba(12,52,70,0.25)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/assets/doctor-crop.png" alt="Dr. Ahmed Marzouk" style={{ display: "block", width: "100%", height: "auto" }} />
+              <img src={whoImage} alt="Dr. Ahmed Marzouk" style={{ display: "block", width: "100%", height: "auto" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 60%, rgba(4,32,46,0.75) 100%)", pointerEvents: "none" }} />
             </div>
             <div style={{ position: "absolute", bottom: "6%", insetInlineEnd: 0, background: "#ffffff", border: "1px solid rgba(48,182,222,0.35)", borderRadius: 16, padding: "14px 22px", boxShadow: "0 14px 34px rgba(12,52,70,0.15)", animation: "damFloat 6s ease-in-out infinite" }}>
