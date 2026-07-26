@@ -110,8 +110,8 @@ export function homeContent(lang: Lang) {
         { tag: "تجميل", title: "التجميل النسائي" },
       ]
     : [
-        { tag: "Delivery", title: "Pain-Free Cesarean Delivery" },
-        { tag: "Delivery", title: "Pain-Free Natural Delivery" },
+        { tag: "Birth", title: "Pain-Free Cesarean Birth" },
+        { tag: "Birth", title: "Pain-Free Natural Birth" },
         { tag: "Tumor surgery", title: "Complex Fibroid Removal" },
         { tag: "Cosmetic", title: "Cosmetic Gynecology" },
       ]

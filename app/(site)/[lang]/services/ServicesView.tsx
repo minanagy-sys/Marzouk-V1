@@ -26,6 +26,19 @@ export default function ServicesView({ services, categories = [] }: { services: 
   // with the parent category each service belongs to).
   const parents = categories.filter((cat) => services.some((s) => s.categoryId === cat.id));
   const shown = filter === "all" ? services : services.filter((s) => s.categoryId === filter);
+
+  // Masonry spans are assigned by position so every card — including newly
+  // added ones — tiles into the same repeating pattern, regardless of what
+  // span values are stored on the row. Keeps the grid consistent as services
+  // are added over time.
+  const SPAN_PATTERN = [
+    { gc: "span 2", gr: "span 2" },
+    { gc: "auto", gr: "span 2" },
+    { gc: "auto", gr: "auto" },
+    { gc: "auto", gr: "auto" },
+    { gc: "span 2", gr: "auto" },
+    { gc: "span 2", gr: "auto" },
+  ];
   const allLabel = isAr ? "الكل" : "All";
   const chip = (key: string, label: string) => {
     const active = filter === key;
@@ -46,13 +59,15 @@ export default function ServicesView({ services, categories = [] }: { services: 
             {parents.map((p) => chip(p.id, pick(p.name, lang)))}
           </div>
         )}
-        <div className="dam-mosaic" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "215px", gap: 20 }}>
-          {shown.map((svc) => (
+        <div className="dam-mosaic" style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "215px", gridAutoFlow: "dense", gap: 20 }}>
+          {shown.map((svc, i) => {
+            const span = SPAN_PATTERN[i % SPAN_PATTERN.length];
+            return (
             <HoverBox
               key={svc.slug}
               as={Link}
               href={lp(`/services/${slugFor(svc, lang)}`)}
-              style={{ position: "relative", borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.1)", boxShadow: "0 10px 28px rgba(12,52,70,0.08)", gridColumn: svc.gc, gridRow: svc.gr, background: "linear-gradient(160deg, #0A3950, #0E5372)", transition: "all 0.35s ease", color: "#ffffff" }}
+              style={{ position: "relative", borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.1)", boxShadow: "0 10px 28px rgba(12,52,70,0.08)", gridColumn: span.gc, gridRow: span.gr, background: "linear-gradient(160deg, #0A3950, #0E5372)", transition: "all 0.35s ease", color: "#ffffff" }}
               hoverStyle={{ boxShadow: "0 26px 56px rgba(48,182,222,0.3)", borderColor: "rgba(48,182,222,0.5)", color: "#ffffff" }}
             >
               <ImageSlot src={svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
@@ -63,7 +78,8 @@ export default function ServicesView({ services, categories = [] }: { services: 
                 <span className="dam-svc-arrow" style={{ flexShrink: 0, width: 42, height: 42, borderRadius: "50%", background: "rgba(255,255,255,0.14)", border: "1px solid rgba(255,255,255,0.35)", backdropFilter: "blur(6px)", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17 }}>{arrow}</span>
               </span>
             </HoverBox>
-          ))}
+            );
+          })}
         </div>
       </section>
 

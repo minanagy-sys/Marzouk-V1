@@ -24,8 +24,8 @@ export const SERVICES_SEED: Service[] = [
     slotId: "svc-1",
     glyph: "⊕",
     gc: SPANS[0].gc, gr: SPANS[0].gr,
-    tag: { ar: "ولادة", en: "Delivery" },
-    title: { ar: "الولادة القيصرية بدون ألم", en: "Pain-Free Cesarean Delivery" },
+    tag: { ar: "ولادة", en: "Birth" },
+    title: { ar: "الولادة القيصرية بدون ألم", en: "Pain-Free Cesarean Birth" },
     shortDesc: {
       ar: "ولادة قيصرية آمنة تجنب النساء المعرضات للخطر أي مضاعفات، بتقنيات حديثة تجعل التجربة بدون ألم وبأجمل الذكريات.",
       en: "A safe cesarean that protects at-risk mothers from complications — modern techniques for a pain-free experience and beautiful memories.",
@@ -81,7 +81,7 @@ export const SERVICES_SEED: Service[] = [
         a: { ar: "نناقش معكِ كل التفاصيل مسبقًا لتوفير تجربة مطمئنة تناسب رغباتك قدر الإمكان.", en: "We discuss every detail with you in advance to provide a reassuring experience that fits your wishes as much as possible." },
       },
     ],
-    metaTitle: { ar: "الولادة القيصرية بدون ألم | د. أحمد مرزوق", en: "Pain-Free Cesarean Delivery | Dr. Ahmed Marzouk" },
+    metaTitle: { ar: "الولادة القيصرية بدون ألم | د. أحمد مرزوق", en: "Pain-Free Cesarean Birth | Dr. Ahmed Marzouk" },
     metaDesc: {
       ar: "ولادة قيصرية بدون ألم بأحدث تقنيات التخدير وأعلى معايير الأمان مع د. أحمد مرزوق — استشاري النساء والتوليد.",
       en: "Pain-free cesarean delivery with the latest anesthesia techniques and highest safety standards with Dr. Ahmed Marzouk, OB-GYN consultant.",
@@ -92,8 +92,8 @@ export const SERVICES_SEED: Service[] = [
     slotId: "svc-2",
     glyph: "♡",
     gc: SPANS[1].gc, gr: SPANS[1].gr,
-    tag: { ar: "ولادة", en: "Delivery" },
-    title: { ar: "الولادة الطبيعية بدون ألم", en: "Pain-Free Natural Delivery" },
+    tag: { ar: "ولادة", en: "Birth" },
+    title: { ar: "الولادة الطبيعية بدون ألم", en: "Pain-Free Natural Birth" },
     shortDesc: {
       ar: "تجربة ولادة طبيعية هادئة بدون معاناة، مع متابعة دقيقة طوال فترة الحمل وحتى أول احتضان لطفلك.",
       en: "A calm natural birth without suffering, with careful follow-up throughout pregnancy until your first embrace.",
@@ -149,7 +149,7 @@ export const SERVICES_SEED: Service[] = [
         a: { ar: "نعطيكِ إرشادات واضحة مسبقًا حول علامات الولادة ومتى تتوجهين إلينا.", en: "We give you clear guidance in advance about the signs of labor and when to come in." },
       },
     ],
-    metaTitle: { ar: "الولادة الطبيعية بدون ألم | د. أحمد مرزوق", en: "Pain-Free Natural Delivery | Dr. Ahmed Marzouk" },
+    metaTitle: { ar: "الولادة الطبيعية بدون ألم | د. أحمد مرزوق", en: "Pain-Free Natural Birth | Dr. Ahmed Marzouk" },
     metaDesc: {
       ar: "ولادة طبيعية بدون ألم بالتخدير النصفي ومتابعة دقيقة للحمل مع د. أحمد مرزوق.",
       en: "Pain-free natural delivery with epidural anesthesia and careful pregnancy follow-up with Dr. Ahmed Marzouk.",

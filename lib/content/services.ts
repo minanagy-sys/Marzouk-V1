@@ -38,8 +38,8 @@ export function servicesContent(lang: Lang) {
         { glyph: "⦿", tag: "تجميل", title: "شد البطن مع القيصرية", desc: "استعيدي رشاقة جسمك بعد الولادة مباشرةً — عملية شد البطن تُجرى مع القيصرية في جلسة واحدة." },
       ]
     : [
-        { glyph: "⊕", tag: "Delivery", title: "Pain-Free Cesarean Delivery", desc: "A safe cesarean that protects at-risk mothers from complications — modern techniques for a pain-free experience and beautiful memories." },
-        { glyph: "♡", tag: "Delivery", title: "Pain-Free Natural Delivery", desc: "A calm natural birth without suffering, with careful follow-up throughout pregnancy until your first embrace." },
+        { glyph: "⊕", tag: "Birth", title: "Pain-Free Cesarean Birth", desc: "A safe cesarean that protects at-risk mothers from complications — modern techniques for a pain-free experience and beautiful memories." },
+        { glyph: "♡", tag: "Birth", title: "Pain-Free Natural Birth", desc: "A calm natural birth without suffering, with careful follow-up throughout pregnancy until your first embrace." },
         { glyph: "❀", tag: "Tumor surgery", title: "Complex Fibroid Removal", desc: "Removal of complex fibroids while preserving the uterus — the best option for women with symptoms who want children in the future." },
         { glyph: "✿", tag: "Specialized care", title: "Endometriosis Care", desc: "Precise diagnosis and specialized treatment for endometriosis — relief from chronic pain and a better quality of life." },
         { glyph: "✦", tag: "Cosmetic", title: "Cosmetic Gynecology", desc: "Precise cosmetic gynecology procedures that restore confidence and comfort, with full privacy and the latest techniques." },
