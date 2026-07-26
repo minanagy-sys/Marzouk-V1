@@ -145,8 +145,14 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
           <div>
             <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17, color: "#ffffff", marginBottom: 20 }}>{st("footer.contactTitle", lang, t.footerContact)}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, fontSize: 14, lineHeight: 1.9 }}>
-              <div>{st("footer.clinic1", lang, t.clinic1)}</div>
-              <div>{st("footer.clinic2", lang, t.clinic2)}</div>
+              <HoverBox as="a" href={st("footer.map1", lang, "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("Silver Star Mall, Fifth Settlement, New Cairo"))} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.75)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.9 }} hoverStyle={{ color: "#30B6DE" }}>
+                <span aria-hidden style={{ color: "#30B6DE", flexShrink: 0 }}>📍</span>
+                <span>{st("footer.clinic1", lang, t.clinic1)}</span>
+              </HoverBox>
+              <HoverBox as="a" href={st("footer.map2", lang, "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent("Mostafa El-Nahas St, Nasr City, Cairo"))} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.75)", display: "flex", gap: 8, alignItems: "flex-start", lineHeight: 1.9 }} hoverStyle={{ color: "#30B6DE" }}>
+                <span aria-hidden style={{ color: "#30B6DE", flexShrink: 0 }}>📍</span>
+                <span>{st("footer.clinic2", lang, t.clinic2)}</span>
+              </HoverBox>
               <div style={{ color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
                 <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} · {st("footer.phone2", lang, CONTACT_INFO.phone2)}</bdi>
               </div>

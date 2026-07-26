@@ -58,9 +58,15 @@ export default function HomeView({
           {(() => {
             const heroImg = isAr ? (cur?.imageUrlAr || cur?.imageUrl) : cur?.imageUrl;
             const mirror = isAr && !cur?.imageUrlAr;
+            // On mobile, anchor the crop to the doctor's side so he stays fully
+            // visible: left in Arabic (text on the right), right in English.
+            // A mirror-flipped Arabic image keeps the English "right" anchor —
+            // the flip moves the doctor to the left visually.
+            const mobilePos = isAr && !mirror ? "left center" : "right center";
+            const imgStyle = { position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "78% center", transform: mirror ? "scaleX(-1)" : "none", ["--hero-pos-mobile"]: mobilePos } as React.CSSProperties;
             return (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={heroImg || ""} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "78% center", transform: mirror ? "scaleX(-1)" : "none" }} />
+              <img className="dam-hero-img" src={heroImg || ""} alt="" style={imgStyle} />
             );
           })()}
         </div>
