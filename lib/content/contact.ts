@@ -57,7 +57,7 @@ export function contactContent(lang: Lang) {
 
   const clinics = isAr
     ? [
-        { name: "عيادة التجمع الخامس", address: "بولاريس مول، التجمع الخامس.", hours: "يوميًا ما عدا الجمعة" },
+        { name: "عيادة التجمع الخامس", address: "بولاريس مول.", hours: "يوميًا ما عدا الجمعة" },
       ]
     : [
         { name: "Fifth Settlement Clinic", address: "Polaris Mall, Fifth Settlement.", hours: "Daily except Friday" },
