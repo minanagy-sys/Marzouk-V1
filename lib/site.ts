@@ -12,7 +12,7 @@ export const SITE = {
       nameEn: "Fifth Settlement Clinic",
       nameAr: "عيادة التجمع الخامس",
       addressEn: "Polaris Mall, Fifth Settlement, New Cairo",
-      addressAr: "بولاريس مول، التجمع الخامس، القاهرة الجديدة",
+      addressAr: "بولاريس مول، القاهرة الجديدة",
       city: "New Cairo",
       region: "Cairo",
       country: "EG",
