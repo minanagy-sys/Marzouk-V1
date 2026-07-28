@@ -94,12 +94,12 @@ export function homeContent(lang: Lang) {
     ? [
         { num: "+10,000", label: "ولادة بدون ألم" },
         { num: "14 كجم", label: "أكبر ورم مستأصل مع الحفاظ على الجنين" },
-        { num: "عيادتان", label: "التجمع الخامس ومدينة نصر" },
+        { num: "عيادة", label: "التجمع الخامس — بولاريس مول" },
       ]
     : [
         { num: "10,000+", label: "Pain-free deliveries" },
         { num: "14 kg", label: "Largest tumor removed while preserving the fetus" },
-        { num: "2 Clinics", label: "Fifth Settlement & Nasr City" },
+        { num: "1 Clinic", label: "Fifth Settlement — Polaris Mall" },
       ];
 
   const services = (isAr
@@ -165,13 +165,11 @@ export function homeContent(lang: Lang) {
   const news = (isAr
     ? [
         { date: "24 مارس 2021", title: "الاحتفال بعشرة آلاف حالة من الولادة بدون ألم" },
-        { date: "7 يونيو 2017", title: "افتتاح فرع التجمع الخامس" },
-        { date: "10 أكتوبر 2016", title: "افتتاح عيادة مدينة نصر" },
+        { date: "7 يونيو 2017", title: "افتتاح عيادة التجمع الخامس — بولاريس مول" },
       ]
     : [
         { date: "Mar 24, 2021", title: "Celebrating 10,000 pain-free deliveries" },
-        { date: "Jun 7, 2017", title: "Fifth Settlement branch opening" },
-        { date: "Oct 10, 2016", title: "Nasr City clinic opening" },
+        { date: "Jun 7, 2017", title: "Fifth Settlement clinic opening — Polaris Mall" },
       ]
   ).map((n, i) => ({ ...n, slotId: "news-" + (i + 1) }));
 

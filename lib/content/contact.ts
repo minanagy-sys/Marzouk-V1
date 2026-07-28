@@ -57,17 +57,14 @@ export function contactContent(lang: Lang) {
 
   const clinics = isAr
     ? [
-        { name: "عيادة التجمع الخامس", address: "سيلفر ستار مول — فوق سوبر ماركت سعودي، الدور الأول.", hours: "يوميًا ما عدا الجمعة" },
-        { name: "عيادة مدينة نصر", address: "شارع مصطفى النحاس — بعد المنهل وبجوار سنتر أنوار المدينة، عمارة 7، الدور الثاني.", hours: "يوميًا ما عدا الجمعة" },
+        { name: "عيادة التجمع الخامس", address: "بولاريس مول، التجمع الخامس.", hours: "يوميًا ما عدا الجمعة" },
       ]
     : [
-        { name: "Fifth Settlement Clinic", address: "Silver Star Mall — above Saoudi Market, 1st floor.", hours: "Daily except Friday" },
-        { name: "Nasr City Clinic", address: "Mostafa El-Nahas St. — next to Anwar El-Madina Center, Building 7, 2nd floor.", hours: "Daily except Friday" },
+        { name: "Fifth Settlement Clinic", address: "Polaris Mall, Fifth Settlement.", hours: "Daily except Friday" },
       ];
 
   const pins = [
-    { name: clinics[0].name, address: clinics[0].address, area: isAr ? "التجمع الخامس" : "Fifth Settlement", phone: "01063337333", url: "https://maps.google.com/?q=Silver+Star+Mall,+New+Cairo,+Egypt" },
-    { name: clinics[1].name, address: clinics[1].address, area: isAr ? "مدينة نصر" : "Nasr City", phone: "01022399994", url: "https://maps.google.com/?q=Mostafa+El-Nahas+Street,+Nasr+City,+Cairo,+Egypt" },
+    { name: clinics[0].name, address: clinics[0].address, area: isAr ? "التجمع الخامس" : "Fifth Settlement", phone: "01063337333", url: "https://maps.google.com/?q=Polaris+Mall,+Fifth+Settlement,+New+Cairo,+Egypt" },
   ];
 
   return { t, clinics, pins };
