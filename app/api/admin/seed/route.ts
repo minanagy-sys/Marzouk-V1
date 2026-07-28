@@ -176,7 +176,6 @@ export async function POST(request: Request) {
     { key: "footer.linksTitle", section: "Footer", value_ar: A.footerLinks, value_en: E.footerLinks },
     { key: "footer.contactTitle", section: "Footer", value_ar: A.footerContact, value_en: E.footerContact },
     { key: "footer.clinic1", section: "Footer", value_ar: A.clinic1, value_en: E.clinic1 },
-    { key: "footer.clinic2", section: "Footer", value_ar: A.clinic2, value_en: E.clinic2 },
     { key: "footer.phone1", section: "Footer", value_ar: CONTACT_INFO.phone1, value_en: CONTACT_INFO.phone1 },
     { key: "footer.phone2", section: "Footer", value_ar: CONTACT_INFO.phone2, value_en: CONTACT_INFO.phone2 },
     { key: "footer.email", section: "Footer", value_ar: CONTACT_INFO.email, value_en: CONTACT_INFO.email },

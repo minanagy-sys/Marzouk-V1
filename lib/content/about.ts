@@ -45,12 +45,12 @@ export function aboutContent(lang: Lang) {
     ? [
         { num: "+10,000", label: "ولادة بدون ألم" },
         { num: "14 كجم", label: "أكبر ورم مستأصل مع الحفاظ على الجنين" },
-        { num: "عيادتان", label: "التجمع الخامس ومدينة نصر" },
+        { num: "عيادة", label: "التجمع الخامس — بولاريس مول" },
       ]
     : [
         { num: "10,000+", label: "Pain-free deliveries" },
         { num: "14 kg", label: "Largest tumor removed while preserving the fetus" },
-        { num: "2 Clinics", label: "Fifth Settlement & Nasr City" },
+        { num: "1 Clinic", label: "Fifth Settlement — Polaris Mall" },
       ];
 
   const vm = isAr

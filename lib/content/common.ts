@@ -25,8 +25,7 @@ export const COMMON = {
     footerContact: "تواصل معنا",
     footerAbout:
       "كل امرأة تستحق ولادة بدون ألم، وأن تستمتع باليوم الذي تلتقي فيه بصغيرها وتعتز به مدى الحياة، ومن حقها الحفاظ على جنينها وقدرتها على الإنجاب حتى مع الأورام الليفية المعقدة.",
-    clinic1: "عيادة التجمع الخامس: سيلفر ستار مول — فوق سوبر ماركت سعودي، الدور الأول.",
-    clinic2: "عيادة مدينة نصر: شارع مصطفى النحاس — عمارة 7، الدور الثاني.",
+    clinic1: "عيادة التجمع الخامس: بولاريس مول، التجمع الخامس.",
     copyright: "© 2026 د. أحمد مرزوق — جميع الحقوق محفوظة",
   },
   en: {
@@ -49,8 +48,7 @@ export const COMMON = {
     footerContact: "Contact",
     footerAbout:
       "Every woman deserves a pain-free delivery — to enjoy and cherish the day she meets her little one, and to preserve her pregnancy and fertility even with complex fibroids.",
-    clinic1: "Fifth Settlement Clinic: Silver Star Mall — above Saoudi Market, 1st floor.",
-    clinic2: "Nasr City Clinic: Mostafa El-Nahas St. — Building 7, 2nd floor.",
+    clinic1: "Fifth Settlement Clinic: Polaris Mall, Fifth Settlement.",
     copyright: "© 2026 Dr. Ahmed Marzouk — All rights reserved",
   },
 } as const;

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ContactView from "./ContactView";
 import { getClinics } from "@/lib/data/clinics";
-import { getServices } from "@/lib/data/services";
 import { SITE } from "@/lib/site";
 import { altLangs } from "@/lib/seo";
 
@@ -13,13 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return {
   title: "اتصل بنا — Contact",
   description:
-    "احجزي موعدك مع د. أحمد مرزوق — عيادتا التجمع الخامس ومدينة نصر. Book an appointment — Fifth Settlement & Nasr City clinics.",
+    "احجزي موعدك مع د. أحمد مرزوق — عيادة التجمع الخامس، بولاريس مول. Book an appointment — Fifth Settlement clinic, Polaris Mall.",
   alternates: altLangs(l, "/contact", "/contact"),
   };
 }
 
 export default async function ContactPage() {
-  const [clinics, services] = await Promise.all([getClinics(), getServices()]);
-  const serviceOptions = services.map((s) => ({ ar: s.title.ar, en: s.title.en }));
-  return <ContactView clinics={clinics} serviceOptions={serviceOptions} />;
+  const clinics = await getClinics();
+  return <ContactView clinics={clinics} />;
 }
