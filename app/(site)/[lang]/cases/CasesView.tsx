@@ -59,7 +59,10 @@ export default function CasesView({ cases }: { cases: CaseItem[] }) {
           return (
             <div key={c.slug} className="dam-case" style={{ position: "sticky", top: 78, minHeight: "calc(100vh - 78px)", background: s.bg, boxShadow: "0 -30px 70px rgba(4,32,46,0.35)", display: "flex", flexWrap: "wrap", overflow: "hidden" }}>
               <div className="dam-caseimg" style={{ flex: "1 1 400px", minHeight: 380, position: "relative" }}>
-                <ImageSlot src={c.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+                {/* Celebrity photos are often portraits that don't fill the frame,
+                   so show them whole (contain) instead of cropping. Success-story
+                   images stay cover. */}
+                <ImageSlot src={c.imageUrl} placeholder={t.photoPh} objectFit={tab === "celebrity" ? "contain" : "cover"} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                 <span style={{ position: "absolute", inset: 0, background: s.imgGrad, pointerEvents: "none" }} />
               </div>
               <div className="dam-casebody" style={{ flex: "1.1 1 380px", padding: "clamp(40px, 6vw, 100px) clamp(24px, 5vw, 90px)", display: "flex", flexDirection: "column", gap: 18, justifyContent: "center", position: "relative", overflow: "hidden", boxSizing: "border-box" }}>
