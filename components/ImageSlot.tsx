@@ -7,6 +7,7 @@ type ImageSlotProps = {
   placeholder?: string;
   style?: CSSProperties;
   objectPosition?: string;
+  objectFit?: CSSProperties["objectFit"];
 };
 
 /**
@@ -22,6 +23,7 @@ export default function ImageSlot({
   placeholder = "",
   style,
   objectPosition = "center",
+  objectFit = "cover",
 }: ImageSlotProps) {
   const radius = shape === "circle" ? "50%" : undefined;
 
@@ -44,7 +46,7 @@ export default function ImageSlot({
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit,
             objectPosition,
             display: "block",
           }}
