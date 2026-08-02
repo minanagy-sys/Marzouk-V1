@@ -121,6 +121,7 @@ export default function AdminGate({
         </Link>
 
         {navItem("/admin", "🏠", "Dashboard", "Overview", activeKey === "")}
+        {user.role === "admin" && navItem("/admin/users", "👥", "Users", "Team & roles", activeKey === "users")}
 
         {NAV_TREE.map((p) => {
           const containsActive = p.children.includes(activeKey);
