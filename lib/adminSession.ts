@@ -42,7 +42,12 @@ export function readCookie(header: string | null, name: string): string {
 
 /** The Set-Cookie value for a logged-in session. */
 export function sessionCookie(token: string): string {
-  const secure = process.env.NODE_ENV === "production" ? " Secure;" : "";
+  // Mark the cookie `Secure` only when the site is actually served over HTTPS.
+  // Over plain HTTP (e.g. a test on http://IP:PORT) a Secure cookie is dropped
+  // by the browser, which would break login. On a real HTTPS domain it turns
+  // back on automatically. Force it with COOKIE_SECURE=true if needed.
+  const isHttps = /^https:/i.test(process.env.NEXT_PUBLIC_SITE_URL || "");
+  const secure = process.env.COOKIE_SECURE === "true" || isHttps ? " Secure;" : "";
   return `${ADMIN_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax;${secure} Max-Age=${MAX_AGE}`;
 }
 
