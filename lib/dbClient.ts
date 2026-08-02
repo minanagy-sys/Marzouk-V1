@@ -34,6 +34,32 @@ function toParam(v: unknown): unknown {
   return v;
 }
 
+/**
+ * MariaDB stores JSON columns as LONGTEXT, so the driver returns them as raw
+ * strings (unlike MySQL 8, which the pool's typeCast already parses). Parse any
+ * value that is clearly a JSON object/array so `sections`, `benefits`, `faq`
+ * and blog `body` come back as arrays/objects on both engines.
+ */
+function coerceValue(v: unknown): unknown {
+  if (typeof v !== "string") return v;
+  const t = v.trimStart();
+  if (t.length && (t[0] === "[" || t[0] === "{")) {
+    try {
+      return JSON.parse(v);
+    } catch {
+      return v;
+    }
+  }
+  return v;
+}
+
+function coerceRow<T extends Row | null>(row: T): T {
+  if (!row) return row;
+  const out: Row = {};
+  for (const k of Object.keys(row)) out[k] = coerceValue((row as Row)[k]);
+  return out as T;
+}
+
 class QueryBuilder implements PromiseLike<Result> {
   private pool: Pool;
   private table: string;
@@ -157,10 +183,10 @@ class QueryBuilder implements PromiseLike<Result> {
       w.params,
     );
     if (this.wantSingle) {
-      const row = (rows as Row[])[0] ?? null;
+      const row = coerceRow((rows as Row[])[0] ?? null);
       return { data: row, error: row ? null : { message: "No rows found" } };
     }
-    return { data: rows as Row[], error: null };
+    return { data: (rows as Row[]).map(coerceRow), error: null };
   }
 
   private async insertOne(row: Row): Promise<string> {
@@ -174,7 +200,7 @@ class QueryBuilder implements PromiseLike<Result> {
 
   private async fetchById(rowId: string): Promise<Row | null> {
     const [rows] = await this.pool.query<RowDataPacket[]>(`SELECT * FROM ${id(this.table)} WHERE \`id\` = ?`, [rowId]);
-    return (rows as Row[])[0] ?? null;
+    return coerceRow((rows as Row[])[0] ?? null);
   }
 
   private async runInsert(): Promise<Result> {
@@ -199,7 +225,7 @@ class QueryBuilder implements PromiseLike<Result> {
     }
     if (!this.wantRow) return { data: null, error: null };
     const [rows] = await this.pool.query<RowDataPacket[]>(`SELECT * FROM ${id(this.table)}${w.sql}`, w.params);
-    const list = rows as Row[];
+    const list = (rows as Row[]).map(coerceRow);
     return { data: this.wantSingle ? list[0] ?? null : list, error: null };
   }
 
