@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS services (
   slug_ar       VARCHAR(191),
   slug_en       VARCHAR(191),
   category_id   CHAR(36),
+  parent_id     CHAR(36),
   sort_order    INT NOT NULL DEFAULT 0,
   is_published  TINYINT(1) NOT NULL DEFAULT 1,
   show_on_home  TINYINT(1) NOT NULL DEFAULT 1,
