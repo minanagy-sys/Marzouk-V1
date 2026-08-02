@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { fontVars } from "@/lib/fonts";
 import { LangProvider, type Lang } from "@/lib/lang";
 import { SettingsProvider } from "@/lib/settings";
+import { getSiteContent } from "@/lib/data/siteContent";
 import { SITE } from "@/lib/site";
 import "../../globals.css";
 
@@ -31,11 +32,12 @@ export default async function SiteLayout({
   const { lang } = await params;
   const l: Lang = lang === "en" ? "en" : "ar";
   const dir = l === "ar" ? "rtl" : "ltr";
+  const settings = await getSiteContent();
   return (
     <html lang={l} dir={dir}>
       <body className={fontVars}>
         <LangProvider lang={l}>
-          <SettingsProvider>{children}</SettingsProvider>
+          <SettingsProvider initial={settings}>{children}</SettingsProvider>
         </LangProvider>
       </body>
     </html>

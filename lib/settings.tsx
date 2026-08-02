@@ -1,32 +1,20 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import type { Lang } from "@/lib/lang";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
 
-type Dict = Record<string, { ar: string; en: string }>;
-const Ctx = createContext<Dict>({});
+export type SettingsDict = Record<string, { ar: string; en: string }>;
+const Ctx = createContext<SettingsDict>({});
 
 /**
- * Loads all editable text blocks from Supabase `site_content` once, so the
- * header, footer and any page text can be edited from the admin "Site text" section.
+ * Holds the editable text blocks (`site_content`) so the header, footer and any
+ * page text can be overridden from the admin "Site text" section.
+ *
+ * The data is loaded ON THE SERVER (see the site layout) and passed in as
+ * `initial` — the browser never queries the database.
  */
-export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [dict, setDict] = useState<Dict>({});
-  useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
-    supabaseBrowser()
-      .from("site_content")
-      .select("key,value_ar,value_en")
-      .then(({ data }) => {
-        if (!data) return;
-        const d: Dict = {};
-        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-        data.forEach((r: any) => { d[r.key] = { ar: r.value_ar || "", en: r.value_en || "" }; });
-        setDict(d);
-      });
-  }, []);
-  return <Ctx.Provider value={dict}>{children}</Ctx.Provider>;
+export function SettingsProvider({ initial = {}, children }: { initial?: SettingsDict; children: React.ReactNode }) {
+  return <Ctx.Provider value={initial}>{children}</Ctx.Provider>;
 }
 
 /** Returns st(key, lang, fallback) — the edited value, or the fallback text. */

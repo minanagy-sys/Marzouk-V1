@@ -1,27 +1,28 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
 /**
- * Server-side Supabase client using the service_role key.
- * Returns null if env vars aren't configured yet, so the app keeps working
- * (e.g. the booking form still responds) before Supabase is wired up.
+ * Data access layer (Hostinger / MySQL build).
  *
- * Required env (in .env.local / Vercel — never committed):
- *   SUPABASE_URL=...            (or NEXT_PUBLIC_SUPABASE_URL)
- *   SUPABASE_SERVICE_ROLE_KEY=... (server only — keep secret)
+ * These keep the original `getServiceClient` / `getAnonClient` names so the
+ * entire `lib/data/*` layer and the API routes need no import changes. Both now
+ * return a MySQL-backed, Supabase-compatible query client (see lib/dbClient.ts).
+ *
+ * Required env (in .env / Hostinger — never committed):
+ *   MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+ *
+ * When the DB isn't configured the clients return null, so every getter falls
+ * back to seed content and the site still renders (same as before).
  */
-export function getServiceClient(): SupabaseClient | null {
-  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) return null;
-  return createClient(url, serviceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+import { getDbClient, type DbClient } from "./dbClient";
+
+/** Server-side client (full read/write). Used by pages and the admin API. */
+export function getServiceClient(): DbClient | null {
+  return getDbClient();
 }
 
-/** Public (anon) client for reading published content on the client side. */
-export function getAnonClient(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return null;
-  return createClient(url, anonKey, { auth: { persistSession: false } });
+/**
+ * Public read client. With MySQL there is no separate anon key — reads are made
+ * server-side and callers already filter to published rows, so this is the same
+ * client. Kept for API compatibility with the old Supabase code paths.
+ */
+export function getAnonClient(): DbClient | null {
+  return getDbClient();
 }

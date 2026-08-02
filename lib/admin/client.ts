@@ -1,14 +1,10 @@
 "use client";
 
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
-
-async function token(): Promise<string> {
-  const { data } = await supabaseBrowser().auth.getSession();
-  return data.session?.access_token ?? "";
-}
+// Admin API helpers. Auth travels in the httpOnly session cookie, so every
+// request just needs credentials: "include" — no tokens handled in the browser.
 
 export async function adminList(table: string) {
-  const res = await fetch(`/api/admin/${table}`, { headers: { Authorization: `Bearer ${await token()}` } });
+  const res = await fetch(`/api/admin/${table}`, { credentials: "include" });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error || "failed");
   return json.data as Record<string, unknown>[];
@@ -17,7 +13,8 @@ export async function adminList(table: string) {
 export async function adminCreate(table: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/admin/${table}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${await token()}` },
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   const json = await res.json();
@@ -28,7 +25,8 @@ export async function adminCreate(table: string, body: Record<string, unknown>) 
 export async function adminUpdate(table: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/admin/${table}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${await token()}` },
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   const json = await res.json();
@@ -41,7 +39,7 @@ export async function adminUpload(file: File): Promise<string> {
   fd.append("file", file);
   const res = await fetch(`/api/admin/upload`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${await token()}` },
+    credentials: "include",
     body: fd,
   });
   // The server may return a non-JSON body (e.g. a "Request Entity Too Large"
@@ -59,7 +57,7 @@ export async function adminUpload(file: File): Promise<string> {
 export async function adminDelete(table: string, id: string) {
   const res = await fetch(`/api/admin/${table}?id=${encodeURIComponent(id)}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${await token()}` },
+    credentials: "include",
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.error || "failed");

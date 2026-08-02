@@ -1,58 +1,73 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { Session } from "@supabase/supabase-js";
-import { supabaseBrowser } from "@/lib/supabaseBrowser";
+import { useRouter, usePathname } from "next/navigation";
 import { COLLECTIONS, NAV_TREE } from "@/lib/admin/config";
+import type { AdminUser } from "@/lib/adminSession";
 
-const CY = "#30B6DE";
-
-export default function AdminGate({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+/**
+ * Admin shell. Auth state comes from the server (SSR) via the `user` prop — the
+ * browser never queries the database. Login/logout hit small API routes that
+ * set/clear an httpOnly cookie, then we refresh so the server re-reads it.
+ */
+export default function AdminGate({
+  user,
+  configured,
+  children,
+}: {
+  user: AdminUser | null;
+  configured: boolean;
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
   const [openParents, setOpenParents] = useState<Record<string, boolean>>({});
-  const pathname = usePathname();
-
-  const configured = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-  useEffect(() => {
-    if (!configured) { setLoading(false); return; }
-    const sb = supabaseBrowser();
-    sb.auth.getSession().then(({ data }) => { setSession(data.session); setLoading(false); });
-    const { data: sub } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
-    return () => sub.subscription.unsubscribe();
-  }, [configured]);
 
   const signIn = async (e: React.FormEvent) => {
-    e.preventDefault(); setBusy(true); setErr("");
-    const { error } = await supabaseBrowser().auth.signInWithPassword({ email, password });
-    if (error) setErr(error.message);
-    setBusy(false);
+    e.preventDefault();
+    setBusy(true);
+    setErr("");
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(json.error === "invalid_credentials" ? "Wrong email or password." : json.error || "Sign in failed.");
+      } else {
+        router.refresh();
+      }
+    } finally {
+      setBusy(false);
+    }
   };
-  const signOut = async () => { await supabaseBrowser().auth.signOut(); };
+
+  const signOut = async () => {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.refresh();
+  };
 
   const page = (inner: React.ReactNode) => (
     <div style={{ fontFamily: "system-ui, -apple-system, sans-serif", minHeight: "100vh", background: "#EEF6FA", color: "#0C3446" }}>{inner}</div>
   );
 
-  if (loading) return page(<div style={{ padding: 80, textAlign: "center", color: "#5B7A88" }}>Loading…</div>);
-
   if (!configured) {
     return page(
       <div style={{ maxWidth: 560, margin: "80px auto", background: "#fff", border: "1px solid rgba(12,52,70,0.1)", borderRadius: 18, padding: 40 }}>
         <h1 style={{ fontSize: 22 }}>Admin not configured</h1>
-        <p style={{ color: "#5B7A88", lineHeight: 1.8 }}>Set <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> and <code>SUPABASE_SERVICE_ROLE_KEY</code> in your environment, then create an admin user in Supabase → Authentication → Users.</p>
+        <p style={{ color: "#5B7A88", lineHeight: 1.8 }}>Set <code>MYSQL_HOST</code>/<code>MYSQL_USER</code>/<code>MYSQL_PASSWORD</code>/<code>MYSQL_DATABASE</code> and <code>ADMIN_JWT_SECRET</code> in your environment, then create an admin with <code>node scripts/create-admin.mjs</code>.</p>
       </div>
     );
   }
 
-  if (!session) {
+  if (!user) {
     return page(
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(140deg, #04202E 0%, #0A3950 55%, #0E5372 100%)" }}>
         <div style={{ width: 420, maxWidth: "92vw", background: "#fff", borderRadius: 22, padding: 42, boxShadow: "0 30px 80px rgba(4,32,46,0.45)" }}>
@@ -131,7 +146,7 @@ export default function AdminGate({ children }: { children: React.ReactNode }) {
 
         <div style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", flexDirection: "column", gap: 10 }}>
           <Link href="/" target="_blank" style={{ color: "#8FE0F7", fontSize: 13, textDecoration: "none", padding: "0 12px" }}>↗ View website</Link>
-          <div style={{ padding: "0 12px", color: "rgba(255,255,255,0.45)", fontSize: 11, wordBreak: "break-all" }}>{session.user.email}</div>
+          <div style={{ padding: "0 12px", color: "rgba(255,255,255,0.45)", fontSize: 11, wordBreak: "break-all" }}>{user.email}{user.role ? ` · ${user.role}` : ""}</div>
           <button onClick={signOut} style={{ margin: "0 12px", background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "9px", fontSize: 13, cursor: "pointer" }}>Sign out</button>
         </div>
       </aside>
