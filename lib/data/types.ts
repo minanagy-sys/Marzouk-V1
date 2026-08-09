@@ -35,6 +35,7 @@ export type Service = {
   showOnHome?: boolean;
   id?: string;
   imageUrl?: string;
+  imageUrlHome?: string; // separate card image for the home-page services slider
   gc: string; // mosaic column span
   gr: string; // mosaic row span
   tag: BiText;
