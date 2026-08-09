@@ -140,7 +140,7 @@ export default function HomeView({
           <Slider bleed>
             {services.map((svc) => (
               <HoverBox key={svc.slug} as={Link} href={lp(`/services/${slugFor(svc, lang)}`)} style={{ flex: "0 0 300px", scrollSnapAlign: "start", position: "relative", height: 440, borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 10px 30px rgba(12,52,70,0.08)", background: "linear-gradient(160deg, #0A3950, #0E5372)", transition: "all 0.35s ease", color: "#ffffff", display: "block" }} hoverStyle={{ transform: "translateY(-8px)", boxShadow: "0 28px 60px rgba(48,182,222,0.28)", color: "#ffffff" }}>
-                <ImageSlot src={svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
+                <ImageSlot src={svc.imageUrlHome || svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.25) 0%, rgba(4,32,46,0) 38%, rgba(4,32,46,0.55) 62%, rgba(4,32,46,0.94) 100%)", pointerEvents: "none" }} />
                 <span style={{ position: "absolute", top: 18, insetInlineStart: 18, background: "rgba(48,182,222,0.92)", color: "#ffffff", borderRadius: 999, padding: "6px 16px", fontSize: 12, fontWeight: 800, pointerEvents: "none" }}>{pick(svc.tag, lang)}</span>
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 26px", pointerEvents: "none" }}>

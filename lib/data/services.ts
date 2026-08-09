@@ -446,6 +446,7 @@ function rowToService(r: any): Service {
     categoryName: cat ? { ar: cat.name_ar ?? "", en: cat.name_en ?? "" } : undefined,
     showOnHome: r.show_on_home ?? true,
     imageUrl: r.image_url ?? undefined,
+    imageUrlHome: r.image_url_home ?? undefined,
     gc: r.span_gc ?? "auto",
     gr: r.span_gr ?? "auto",
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
