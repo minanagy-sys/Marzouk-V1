@@ -100,8 +100,8 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
                 href={CONTACT_INFO.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid rgba(48,182,222,0.4)", display: "flex", alignItems: "center", justifyContent: "center", color: "#30B6DE", fontWeight: 800, fontSize: 15 }}
-                hoverStyle={{ background: "rgba(48,182,222,0.15)", color: "#8FE0F7" }}
+                style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontWeight: 800, fontSize: 17, boxShadow: "0 6px 18px rgba(48,182,222,0.5)", transition: "all 0.25s ease" }}
+                hoverStyle={{ background: "linear-gradient(135deg, #4ec7e8, #30B6DE)", color: "#ffffff", transform: "translateY(-3px)", boxShadow: "0 12px 26px rgba(48,182,222,0.65)" }}
               >
                 f
               </HoverBox>
@@ -111,8 +111,8 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid rgba(48,182,222,0.4)", display: "flex", alignItems: "center", justifyContent: "center", color: "#30B6DE" }}
-                hoverStyle={{ background: "rgba(48,182,222,0.15)", color: "#8FE0F7" }}
+                style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", boxShadow: "0 6px 18px rgba(48,182,222,0.5)", transition: "all 0.25s ease" }}
+                hoverStyle={{ background: "linear-gradient(135deg, #4ec7e8, #30B6DE)", color: "#ffffff", transform: "translateY(-3px)", boxShadow: "0 12px 26px rgba(48,182,222,0.65)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6 4.5v7l6-3.5-6-3.5z" /></svg>
               </HoverBox>
@@ -122,8 +122,8 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid rgba(48,182,222,0.4)", display: "flex", alignItems: "center", justifyContent: "center", color: "#30B6DE" }}
-                hoverStyle={{ background: "rgba(48,182,222,0.15)", color: "#8FE0F7" }}
+                style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", boxShadow: "0 6px 18px rgba(48,182,222,0.5)", transition: "all 0.25s ease" }}
+                hoverStyle={{ background: "linear-gradient(135deg, #4ec7e8, #30B6DE)", color: "#ffffff", transform: "translateY(-3px)", boxShadow: "0 12px 26px rgba(48,182,222,0.65)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
               </HoverBox>
