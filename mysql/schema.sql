@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS services (
   show_on_home  TINYINT(1) NOT NULL DEFAULT 1,
   glyph         TEXT,
   image_url     TEXT,
+  image_url_home TEXT,
   span_gc       VARCHAR(32) DEFAULT 'auto',
   span_gr       VARCHAR(32) DEFAULT 'auto',
   tag_ar        TEXT, tag_en        TEXT,
