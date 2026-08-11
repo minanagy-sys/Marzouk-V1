@@ -97,7 +97,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
             <div style={{ display: "flex", gap: 12, marginTop: 22 }}>
               <HoverBox
                 as="a"
-                href={CONTACT_INFO.facebook}
+                href={st("footer.facebook", lang, CONTACT_INFO.facebook)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", fontWeight: 800, fontSize: 17, boxShadow: "0 6px 18px rgba(48,182,222,0.5)", transition: "all 0.25s ease" }}
@@ -107,7 +107,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
               </HoverBox>
               <HoverBox
                 as="a"
-                href={CONTACT_INFO.youtube}
+                href={st("footer.youtube", lang, CONTACT_INFO.youtube)}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
@@ -118,7 +118,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
               </HoverBox>
               <HoverBox
                 as="a"
-                href={CONTACT_INFO.instagram}
+                href={st("footer.instagram", lang, CONTACT_INFO.instagram)}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -176,7 +176,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
           {footerLink(lp("/cases"), t.navCases)}
           {footerLink(lp("/contact"), t.navContact)}
         </div>
-        <div style={{ direction: "ltr", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>{CONTACT_INFO.phone1}</div>
+        <div style={{ direction: "ltr", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</div>
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "20px 0", textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
         {t.copyright}

@@ -9,7 +9,7 @@ import ImageSlot from "@/components/ImageSlot";
 import HoverBox from "@/components/HoverBox";
 import Slider from "@/components/Slider";
 import { useLang } from "@/lib/lang";
-import { usePageText } from "@/lib/settings";
+import { usePageText, useSetting } from "@/lib/settings";
 import { homeContent } from "@/lib/content/home";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, slugFor, type Service, type CaseItem, type Testimonial, type InstagramPost, type BlogPostBi, type HeroSlide, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
@@ -25,6 +25,7 @@ export default function HomeView({
   const { lang, dir, isAr, lp } = useLang();
   const c = homeContent(lang);
   const t = usePageText("home", lang, c.t);
+  const st = useSetting();
   const tc = common(lang);
 
   const N = Math.max(heroSlides.length, 1);
@@ -247,14 +248,14 @@ export default function HomeView({
                 <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.igKicker}</div>
                 <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.igTitle}</h2>
               </div>
-              <HoverBox as="a" href={CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
+              <HoverBox as="a" href={st("footer.instagram", lang, CONTACT_INFO.instagram)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
                 {t.igFollow}
               </HoverBox>
             </div>
             <Slider gap={16} bleed>
               {instagram.map((p) => (
-                <a key={p.id} href={p.permalink || CONTACT_INFO.instagram} target="_blank" rel="noopener noreferrer" className="ig-card" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }}>
+                <a key={p.id} href={p.permalink || st("footer.instagram", lang, CONTACT_INFO.instagram)} target="_blank" rel="noopener noreferrer" className="ig-card" style={{ flex: "0 0 260px", scrollSnapAlign: "start", position: "relative", height: 260, borderRadius: 18, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", display: "block", background: "#0A3950" }}>
                   <ImageSlot src={p.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                   {/* type badge (post / video) */}
                   <span style={{ position: "absolute", top: 12, insetInlineEnd: 12, background: "rgba(4,32,46,0.7)", color: "#fff", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, zIndex: 2 }}>{p.isVideo ? `▶ ${t.igVideo}` : t.igPost}</span>
@@ -281,7 +282,7 @@ export default function HomeView({
           </div>
           <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 14 }}>
             <HoverBox as={Link} href={lp("/contact")} style={{ background: "#ffffff", color: "#0A3950", borderRadius: 999, padding: "16px 32px", fontWeight: 800, fontSize: 16, textAlign: "center", boxShadow: "0 12px 30px rgba(4,32,46,0.3)" }} hoverStyle={{ transform: "translateY(-2px)", color: "#0A3950" }}>{tc.book}</HoverBox>
-            <HoverBox as="a" href={`tel:${CONTACT_INFO.phone1}`} style={{ border: "1.5px solid rgba(255,255,255,0.5)", color: "#ffffff", borderRadius: 999, padding: "15px 32px", fontWeight: 700, fontSize: 16, textAlign: "center", direction: "ltr" }} hoverStyle={{ borderColor: "#ffffff", background: "rgba(255,255,255,0.1)", color: "#ffffff" }}>{CONTACT_INFO.phone1}</HoverBox>
+            <HoverBox as="a" href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`} style={{ border: "1.5px solid rgba(255,255,255,0.5)", color: "#ffffff", borderRadius: 999, padding: "15px 32px", fontWeight: 700, fontSize: 16, textAlign: "center", direction: "ltr" }} hoverStyle={{ borderColor: "#ffffff", background: "rgba(255,255,255,0.1)", color: "#ffffff" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</HoverBox>
           </div>
         </div>
       </section>
