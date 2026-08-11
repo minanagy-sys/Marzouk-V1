@@ -2,13 +2,18 @@
 
 import HoverBox from "./HoverBox";
 import { CONTACT_INFO } from "@/lib/content/common";
+import { useLang } from "@/lib/lang";
+import { useSetting } from "@/lib/settings";
 
 // Floating WhatsApp button, fixed bottom corner — identical to the original.
 export default function WhatsappFloat() {
+  const { lang } = useLang();
+  const st = useSetting();
+  const whatsapp = st("footer.whatsapp", lang, CONTACT_INFO.whatsapp);
   return (
     <HoverBox
       as="a"
-      href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
+      href={`https://wa.me/${whatsapp}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"

@@ -268,7 +268,7 @@ export default function Navbar({
           {cta === "phone" ? (
             <HoverBox
               as="a"
-              href={`tel:${CONTACT_INFO.phone1}`}
+              href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`}
               style={{
                 background: "linear-gradient(135deg, #30B6DE, #1E92B8)",
                 color: "#ffffff",
@@ -281,7 +281,7 @@ export default function Navbar({
               }}
               hoverStyle={{ color: "#ffffff" }}
             >
-              {CONTACT_INFO.phone1}
+              {st("footer.phone1", lang, CONTACT_INFO.phone1)}
             </HoverBox>
           ) : (
             <HoverBox
