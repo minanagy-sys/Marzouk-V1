@@ -248,19 +248,22 @@ export default function HomeView({
                 <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.igKicker}</div>
                 <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.igTitle}</h2>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <HoverBox as="a" href={st("footer.instagram", lang, CONTACT_INFO.instagram)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
-                  {t.igFollow}
-                </HoverBox>
-                <HoverBox as="a" href={st("footer.facebook", lang, CONTACT_INFO.facebook)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1877F2", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" /></svg>
-                  Facebook
-                </HoverBox>
-                <HoverBox as="a" href={st("footer.youtube", lang, CONTACT_INFO.youtube)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FF0000", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7c-.2-.8-.9-1.5-1.7-1.7C19.4 5.2 12 5.2 12 5.2s-7.4 0-8.9.4c-.8.2-1.5.9-1.7 1.7C1 8.8 1 12 1 12s0 3.2.4 4.7c.2.8.9 1.5 1.7 1.7 1.5.4 8.9.4 8.9.4s7.4 0 8.9-.4c.8-.2 1.5-.9 1.7-1.7.4-1.5.4-4.7.4-4.7zM9.8 15.3V8.7l6.2 3.3-6.2 3.3z" /></svg>
-                  YouTube
-                </HoverBox>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap", overflowX: "auto" }}>
+                {([
+                  { key: "footer.instagram", def: CONTACT_INFO.instagram, label: t.igFollow, bg: "linear-gradient(135deg, #E1306C, #C13584)", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg> },
+                  { key: "footer.facebook", def: CONTACT_INFO.facebook, label: "Facebook", bg: "#1877F2", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" /></svg> },
+                  { key: "footer.youtube", def: CONTACT_INFO.youtube, label: "YouTube", bg: "#FF0000", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7c-.2-.8-.9-1.5-1.7-1.7C19.4 5.2 12 5.2 12 5.2s-7.4 0-8.9.4c-.8.2-1.5.9-1.7 1.7C1 8.8 1 12 1 12s0 3.2.4 4.7c.2.8.9 1.5 1.7 1.7 1.5.4 8.9.4 8.9.4s7.4 0 8.9-.4c.8-.2 1.5-.9 1.7-1.7.4-1.5.4-4.7.4-4.7zM9.8 15.3V8.7l6.2 3.3-6.2 3.3z" /></svg> },
+                  { key: "footer.tiktok", def: CONTACT_INFO.tiktok, label: "TikTok", bg: "#010101", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82a4.28 4.28 0 0 1-1.06-2.82h-3.2v12.44a2.53 2.53 0 0 1-2.53 2.53 2.53 2.53 0 1 1 .77-4.94V9.77a5.73 5.73 0 0 0-.77-.05A5.73 5.73 0 1 0 15.3 15.4V9.01a7.5 7.5 0 0 0 4.35 1.39V7.2a4.28 4.28 0 0 1-3.05-1.38z" /></svg> },
+                  { key: "footer.snapchat", def: CONTACT_INFO.snapchat, label: "Snapchat", bg: "#FFFC00", fg: "#111", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.02 2.5c1.7 0 3.86 1.05 4.36 3.6.16.83.09 1.68.03 2.5l-.01.15c-.03.42-.06.72.02.87.1.18.44.3.78.35.36.05.72-.02 1.02-.16.1-.05.24-.07.37-.07.4 0 .74.28.74.66 0 .5-.63.77-1.2.98-.24.09-.6.2-.68.4-.05.13.02.32.09.47.02.05 1.4 3.02 4.24 3.49.26.04.44.27.42.53-.05.55-1.5.98-2.6 1.17-.11.02-.2.2-.26.5-.03.13-.06.27-.11.42-.06.2-.2.3-.44.3h-.05c-.2 0-.46-.05-.79-.11-.44-.09-.98-.19-1.63-.19-.38 0-.78.03-1.18.1-.78.14-1.44.6-2.14 1.09-.83.58-1.69 1.18-2.9 1.18h-.13c-1.2 0-2.06-.6-2.89-1.18-.7-.49-1.36-.95-2.14-1.09a6.9 6.9 0 0 0-1.18-.1c-.68 0-1.24.11-1.68.2-.31.06-.55.1-.74.1-.32 0-.42-.18-.47-.33a5.4 5.4 0 0 1-.11-.42c-.06-.3-.15-.48-.26-.5-1.1-.19-2.55-.62-2.6-1.17a.47.47 0 0 1 .42-.53c2.84-.47 4.22-3.44 4.24-3.49.07-.15.14-.34.09-.47-.08-.2-.44-.31-.68-.4-.57-.21-1.2-.48-1.2-.98 0-.38.34-.66.74-.66.13 0 .27.02.37.07.3.14.66.21 1.02.16.34-.05.68-.17.78-.35.08-.15.05-.45.02-.87l-.01-.15c-.06-.82-.13-1.67.03-2.5.5-2.55 2.66-3.6 4.36-3.6z" /></svg> },
+                ] as const)
+                  .map((s) => ({ ...s, url: st(s.key, lang, s.def) }))
+                  .filter((s) => s.url)
+                  .map((s) => (
+                    <HoverBox key={s.key} as="a" href={s.url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: s.bg, color: s.fg, borderRadius: 999, padding: "8px 14px", fontWeight: 800, fontSize: 12.5, whiteSpace: "nowrap", flexShrink: 0 }} hoverStyle={{ opacity: 0.9, color: s.fg }}>
+                      {s.icon}
+                      {s.label}
+                    </HoverBox>
+                  ))}
               </div>
             </div>
             <Slider gap={16} bleed>

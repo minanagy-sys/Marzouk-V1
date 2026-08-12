@@ -12,5 +12,7 @@ insert into public.site_content (key, section, value_ar, value_en) values
   ('footer.whatsapp',  'Footer', '201063337333', '201063337333'),
   ('footer.facebook',  'Footer', 'https://www.facebook.com/Dr.AhmedMarzouk.official/', 'https://www.facebook.com/Dr.AhmedMarzouk.official/'),
   ('footer.youtube',   'Footer', 'https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ', 'https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ'),
-  ('footer.instagram', 'Footer', 'https://www.instagram.com/dr.ahmed.marzok/', 'https://www.instagram.com/dr.ahmed.marzok/')
+  ('footer.instagram', 'Footer', 'https://www.instagram.com/dr.ahmed.marzok/', 'https://www.instagram.com/dr.ahmed.marzok/'),
+  ('footer.tiktok',    'Footer', '', ''),
+  ('footer.snapchat',  'Footer', '', '')
 on conflict (key) do nothing;
