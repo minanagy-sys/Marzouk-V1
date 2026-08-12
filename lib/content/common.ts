@@ -62,6 +62,8 @@ export const CONTACT_INFO = {
   facebook: "https://www.facebook.com/Dr.AhmedMarzouk.official/",
   youtube: "https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ",
   instagram: "https://www.instagram.com/dr.ahmed.marzok/",
+  tiktok: "",
+  snapchat: "",
 };
 
 export function common(lang: Lang) {
