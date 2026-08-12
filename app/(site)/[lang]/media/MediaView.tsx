@@ -9,7 +9,7 @@ import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import Lightbox, { type LightboxItem } from "@/components/Lightbox";
 import { useLang } from "@/lib/lang";
-import { usePageText } from "@/lib/settings";
+import { usePageText, useSetting } from "@/lib/settings";
 import { mediaContent } from "@/lib/content/media";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type MediaItem } from "@/lib/data/types";
@@ -19,6 +19,7 @@ import { SERIF, SANS } from "@/lib/theme";
 export default function MediaView({ media }: { media: MediaItem[] }) {
   const { lang, dir } = useLang();
   const t = usePageText("media", lang, mediaContent(lang).t);
+  const st = useSetting();
   const tc = common(lang);
   const [tab, setTab] = useState<"gallery" | "videos">("gallery");
   const [lb, setLb] = useState<{ items: LightboxItem[]; index: number } | null>(null);
@@ -91,7 +92,7 @@ export default function MediaView({ media }: { media: MediaItem[] }) {
       )}
 
       {lb && (
-        <Lightbox items={lb.items} index={lb.index} onClose={() => setLb(null)} onIndex={(i) => setLb({ ...lb, index: i })} ytFallback={CONTACT_INFO.youtube} watchLabel={t.watchOnYt} />
+        <Lightbox items={lb.items} index={lb.index} onClose={() => setLb(null)} onIndex={(i) => setLb({ ...lb, index: i })} ytFallback={st("footer.youtube", lang, CONTACT_INFO.youtube)} watchLabel={t.watchOnYt} />
       )}
 
       <Footer variant="simple" />

@@ -7,7 +7,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import PageHero from "@/components/PageHero";
 import HoverBox from "@/components/HoverBox";
 import { useLang, type Lang } from "@/lib/lang";
-import { usePageText } from "@/lib/settings";
+import { usePageText, useSetting } from "@/lib/settings";
 import { contactContent } from "@/lib/content/contact";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type Clinic } from "@/lib/data/types";
@@ -44,6 +44,7 @@ function MapPin({ clinic, index, open, onToggle, directions, lang }: { clinic: C
 export default function ContactView({ clinics }: { clinics: Clinic[] }) {
   const { lang, dir } = useLang();
   const t = usePageText("contact", lang, contactContent(lang).t);
+  const st = useSetting();
   const tc = common(lang);
 
   const [activePin, setActivePin] = useState(0);
@@ -154,9 +155,9 @@ export default function ContactView({ clinics }: { clinics: Clinic[] }) {
             <div style={{ background: "linear-gradient(135deg, #0A3950, #1E92B8)", borderRadius: 22, padding: 30, color: "#ffffff" }}>
               <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 20 }}>{t.callTitle}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 14 }}>
-                <HoverBox as="a" href={`tel:${CONTACT_INFO.phone1}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: 20, direction: "ltr", textAlign: "start" }} hoverStyle={{ color: "#8FE0F7" }}>{CONTACT_INFO.phone1}</HoverBox>
-                <HoverBox as="a" href={`tel:${CONTACT_INFO.phone2}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: 20, direction: "ltr", textAlign: "start" }} hoverStyle={{ color: "#8FE0F7" }}>{CONTACT_INFO.phone2}</HoverBox>
-                <HoverBox as="a" href={`mailto:${CONTACT_INFO.email}`} style={{ color: "rgba(255,255,255,0.85)", fontSize: 14.5, marginTop: 4 }} hoverStyle={{ color: "#8FE0F7" }}>{CONTACT_INFO.email}</HoverBox>
+                <HoverBox as="a" href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: 20, direction: "ltr", textAlign: "start" }} hoverStyle={{ color: "#8FE0F7" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</HoverBox>
+                <HoverBox as="a" href={`tel:${st("footer.phone2", lang, CONTACT_INFO.phone2)}`} style={{ color: "#ffffff", fontWeight: 800, fontSize: 20, direction: "ltr", textAlign: "start" }} hoverStyle={{ color: "#8FE0F7" }}>{st("footer.phone2", lang, CONTACT_INFO.phone2)}</HoverBox>
+                <HoverBox as="a" href={`mailto:${st("footer.email", lang, CONTACT_INFO.email)}`} style={{ color: "rgba(255,255,255,0.85)", fontSize: 14.5, marginTop: 4 }} hoverStyle={{ color: "#8FE0F7" }}>{st("footer.email", lang, CONTACT_INFO.email)}</HoverBox>
               </div>
               <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.8, marginTop: 16 }}>{t.videoNote}</div>
             </div>
