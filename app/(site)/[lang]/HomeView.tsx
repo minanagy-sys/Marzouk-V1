@@ -248,10 +248,16 @@ export default function HomeView({
                 <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.igKicker}</div>
                 <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.igTitle}</h2>
               </div>
-              <HoverBox as="a" href={st("footer.instagram", lang, CONTACT_INFO.instagram)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
-                {t.igFollow}
-              </HoverBox>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <HoverBox as="a" href={st("footer.instagram", lang, CONTACT_INFO.instagram)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "linear-gradient(135deg, #E1306C, #C13584)", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
+                  {t.igFollow}
+                </HoverBox>
+                <HoverBox as="a" href={st("footer.facebook", lang, CONTACT_INFO.facebook)} target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: "50%", background: "#1877F2", color: "#fff", fontWeight: 800, fontSize: 18 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>f</HoverBox>
+                <HoverBox as="a" href={st("footer.youtube", lang, CONTACT_INFO.youtube)} target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: "50%", background: "#FF0000", color: "#fff" }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
+                  <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M6 4.5v7l6-3.5-6-3.5z" /></svg>
+                </HoverBox>
+              </div>
             </div>
             <Slider gap={16} bleed>
               {instagram.map((p) => (
@@ -281,7 +287,7 @@ export default function HomeView({
             <p style={{ fontSize: 16, lineHeight: 1.95, color: "rgba(255,255,255,0.85)", margin: "16px 0 0", maxWidth: 560 }}>{t.ctaBody}</p>
           </div>
           <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 14 }}>
-            <HoverBox as={Link} href={lp("/contact")} style={{ background: "#ffffff", color: "#0A3950", borderRadius: 999, padding: "16px 32px", fontWeight: 800, fontSize: 16, textAlign: "center", boxShadow: "0 12px 30px rgba(4,32,46,0.3)" }} hoverStyle={{ transform: "translateY(-2px)", color: "#0A3950" }}>{tc.book}</HoverBox>
+            <HoverBox as={Link} href={lp("/contact")} style={{ background: "#ffffff", color: "#0A3950", borderRadius: 999, padding: "16px 32px", fontWeight: 800, fontSize: 16, textAlign: "center", boxShadow: "0 12px 30px rgba(4,32,46,0.3)" }} hoverStyle={{ transform: "translateY(-2px)", color: "#0A3950" }}>{st("nav.book", lang, tc.book)}</HoverBox>
             <HoverBox as="a" href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`} style={{ border: "1.5px solid rgba(255,255,255,0.5)", color: "#ffffff", borderRadius: 999, padding: "15px 32px", fontWeight: 700, fontSize: 16, textAlign: "center", direction: "ltr" }} hoverStyle={{ borderColor: "#ffffff", background: "rgba(255,255,255,0.1)", color: "#ffffff" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</HoverBox>
           </div>
         </div>
