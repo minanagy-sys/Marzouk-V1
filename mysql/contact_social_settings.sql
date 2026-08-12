@@ -12,5 +12,7 @@ INSERT INTO site_content (id, `key`, section, value_ar, value_en) VALUES
   (UUID(), 'footer.whatsapp',  'Footer', '201063337333', '201063337333'),
   (UUID(), 'footer.facebook',  'Footer', 'https://www.facebook.com/Dr.AhmedMarzouk.official/', 'https://www.facebook.com/Dr.AhmedMarzouk.official/'),
   (UUID(), 'footer.youtube',   'Footer', 'https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ', 'https://www.youtube.com/channel/UCxxu2t7HkvFdMSOKTYUnrdQ'),
-  (UUID(), 'footer.instagram', 'Footer', 'https://www.instagram.com/dr.ahmed.marzok/', 'https://www.instagram.com/dr.ahmed.marzok/')
+  (UUID(), 'footer.instagram', 'Footer', 'https://www.instagram.com/dr.ahmed.marzok/', 'https://www.instagram.com/dr.ahmed.marzok/'),
+  (UUID(), 'footer.tiktok',    'Footer', '', ''),
+  (UUID(), 'footer.snapchat',  'Footer', '', '')
 ON DUPLICATE KEY UPDATE `key` = `key`;
