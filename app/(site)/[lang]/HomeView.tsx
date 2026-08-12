@@ -253,9 +253,13 @@ export default function HomeView({
                   <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg>
                   {t.igFollow}
                 </HoverBox>
-                <HoverBox as="a" href={st("footer.facebook", lang, CONTACT_INFO.facebook)} target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: "50%", background: "#1877F2", color: "#fff", fontWeight: 800, fontSize: 18 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>f</HoverBox>
-                <HoverBox as="a" href={st("footer.youtube", lang, CONTACT_INFO.youtube)} target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: "50%", background: "#FF0000", color: "#fff" }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
-                  <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M6 4.5v7l6-3.5-6-3.5z" /></svg>
+                <HoverBox as="a" href={st("footer.facebook", lang, CONTACT_INFO.facebook)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1877F2", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" /></svg>
+                  Facebook
+                </HoverBox>
+                <HoverBox as="a" href={st("footer.youtube", lang, CONTACT_INFO.youtube)} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#FF0000", color: "#fff", borderRadius: 999, padding: "11px 22px", fontWeight: 800, fontSize: 14 }} hoverStyle={{ opacity: 0.9, color: "#fff" }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7c-.2-.8-.9-1.5-1.7-1.7C19.4 5.2 12 5.2 12 5.2s-7.4 0-8.9.4c-.8.2-1.5.9-1.7 1.7C1 8.8 1 12 1 12s0 3.2.4 4.7c.2.8.9 1.5 1.7 1.7 1.5.4 8.9.4 8.9.4s7.4 0 8.9-.4c.8-.2 1.5-.9 1.7-1.7.4-1.5.4-4.7.4-4.7zM9.8 15.3V8.7l6.2 3.3-6.2 3.3z" /></svg>
+                  YouTube
                 </HoverBox>
               </div>
             </div>
