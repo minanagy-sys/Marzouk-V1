@@ -281,7 +281,7 @@ export default function Navbar({
               }}
               hoverStyle={{ color: "#ffffff" }}
             >
-              {st("footer.phone1", lang, CONTACT_INFO.phone1)}
+              {st("footer.phone1", lang, CONTACT_INFO.phone1)} - {st("footer.phone2", lang, CONTACT_INFO.phone2)}
             </HoverBox>
           ) : (
             <HoverBox
