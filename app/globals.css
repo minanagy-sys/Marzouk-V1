@@ -145,8 +145,8 @@ textarea::placeholder {
 
 /* ---------- Instagram section social pills: one line, icon-only on mobile ---------- */
 @media (max-width: 640px) {
-  .ig-socials { width: 100%; justify-content: space-between; gap: 8px; }
-  .ig-social-pill { flex: 0 0 auto; padding: 11px !important; gap: 0 !important; }
+  .ig-socials { justify-content: flex-start; gap: 10px; }
+  .ig-social-pill { flex: 0 0 auto; padding: 10px !important; gap: 0 !important; }
   .ig-social-label { display: none !important; }
 }
 
