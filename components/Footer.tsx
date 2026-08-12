@@ -150,7 +150,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
                 <span>{st("footer.clinic1", lang, t.clinic1)}</span>
               </HoverBox>
               <div style={{ color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>
-                <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} · {st("footer.phone2", lang, CONTACT_INFO.phone2)}</bdi>
+                <bdi style={{ direction: "ltr", unicodeBidi: "isolate" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} - {st("footer.phone2", lang, CONTACT_INFO.phone2)}</bdi>
               </div>
               <HoverBox as="a" href={`mailto:${st("footer.email", lang, CONTACT_INFO.email)}`} style={{ color: "rgba(255,255,255,0.75)" }} hoverStyle={{ color: "#30B6DE" }}>
                 {st("footer.email", lang, CONTACT_INFO.email)}
@@ -176,7 +176,7 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
           {footerLink(lp("/cases"), t.navCases)}
           {footerLink(lp("/contact"), t.navContact)}
         </div>
-        <div style={{ direction: "ltr", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</div>
+        <div style={{ direction: "ltr", color: "#30B6DE", fontWeight: 700, fontSize: 15 }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} - {st("footer.phone2", lang, CONTACT_INFO.phone2)}</div>
       </div>
       <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "20px 0", textAlign: "center", fontSize: 13, color: "rgba(255,255,255,0.45)" }}>
         {t.copyright}
