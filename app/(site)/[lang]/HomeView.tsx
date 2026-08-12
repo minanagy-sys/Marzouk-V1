@@ -292,7 +292,7 @@ export default function HomeView({
           </div>
           <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 14 }}>
             <HoverBox as={Link} href={lp("/contact")} style={{ background: "#ffffff", color: "#0A3950", borderRadius: 999, padding: "16px 32px", fontWeight: 800, fontSize: 16, textAlign: "center", boxShadow: "0 12px 30px rgba(4,32,46,0.3)" }} hoverStyle={{ transform: "translateY(-2px)", color: "#0A3950" }}>{st("nav.book", lang, tc.book)}</HoverBox>
-            <HoverBox as="a" href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`} style={{ border: "1.5px solid rgba(255,255,255,0.5)", color: "#ffffff", borderRadius: 999, padding: "15px 32px", fontWeight: 700, fontSize: 16, textAlign: "center", direction: "ltr" }} hoverStyle={{ borderColor: "#ffffff", background: "rgba(255,255,255,0.1)", color: "#ffffff" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)}</HoverBox>
+            <HoverBox as="a" href={`tel:${st("footer.phone1", lang, CONTACT_INFO.phone1)}`} style={{ border: "1.5px solid rgba(255,255,255,0.5)", color: "#ffffff", borderRadius: 999, padding: "15px 32px", fontWeight: 700, fontSize: 16, textAlign: "center", direction: "ltr" }} hoverStyle={{ borderColor: "#ffffff", background: "rgba(255,255,255,0.1)", color: "#ffffff" }}>{st("footer.phone1", lang, CONTACT_INFO.phone1)} - {st("footer.phone2", lang, CONTACT_INFO.phone2)}</HoverBox>
           </div>
         </div>
       </section>
