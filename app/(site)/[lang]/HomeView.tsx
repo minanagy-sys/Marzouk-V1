@@ -248,7 +248,7 @@ export default function HomeView({
                 <div style={{ color: "#30B6DE", fontWeight: 800, fontSize: 14, letterSpacing: "2px", textTransform: "uppercase" }}>{t.igKicker}</div>
                 <h2 style={{ fontFamily: SERIF, fontSize: "clamp(30px, 3.4vw, 44px)", fontWeight: 700, margin: "12px 0 0", color: "#0C3446" }}>{t.igTitle}</h2>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap", overflowX: "auto" }}>
+              <div className="ig-socials" style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
                 {([
                   { key: "footer.instagram", def: CONTACT_INFO.instagram, label: t.igFollow, bg: "linear-gradient(135deg, #E1306C, #C13584)", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1.5" y="1.5" width="13" height="13" rx="4" /><circle cx="8" cy="8" r="3.2" /><circle cx="12.2" cy="3.8" r="0.9" fill="currentColor" stroke="none" /></svg> },
                   { key: "footer.facebook", def: CONTACT_INFO.facebook, label: "Facebook", bg: "#1877F2", fg: "#fff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z" /></svg> },
@@ -259,9 +259,9 @@ export default function HomeView({
                   .map((s) => ({ ...s, url: st(s.key, lang, s.def) }))
                   .filter((s) => s.url)
                   .map((s) => (
-                    <HoverBox key={s.key} as="a" href={s.url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: s.bg, color: s.fg, borderRadius: 999, padding: "8px 14px", fontWeight: 800, fontSize: 12.5, whiteSpace: "nowrap", flexShrink: 0 }} hoverStyle={{ opacity: 0.9, color: s.fg }}>
+                    <HoverBox key={s.key} className="ig-social-pill" as="a" href={s.url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, background: s.bg, color: s.fg, borderRadius: 999, padding: "8px 14px", fontWeight: 800, fontSize: 12.5, whiteSpace: "nowrap", flexShrink: 0 }} hoverStyle={{ opacity: 0.9, color: s.fg }}>
                       {s.icon}
-                      {s.label}
+                      <span className="ig-social-label">{s.label}</span>
                     </HoverBox>
                   ))}
               </div>
