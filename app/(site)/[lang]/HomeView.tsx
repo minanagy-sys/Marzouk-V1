@@ -228,10 +228,6 @@ export default function HomeView({
                 <div key={r.id} style={{ flex: "0 0 360px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: "32px 30px", boxShadow: "0 4px 14px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", gap: 14 }}>
                   <div style={{ color: "#F5B301", fontSize: 18, letterSpacing: 2 }}>{"★".repeat(r.rating || 5)}<span style={{ color: "#E3ECF0" }}>{"★".repeat(5 - (r.rating || 5))}</span></div>
                   <p style={{ fontSize: 15, lineHeight: 2, color: "#46687A", margin: 0, flex: 1 }}>{pick(r.text, lang)}</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <span style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg, #30B6DE, #0E5372)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontFamily: SERIF }}>{(r.name || "?").charAt(0)}</span>
-                    <span style={{ fontWeight: 800, fontSize: 14.5, color: "#0C3446" }}>{r.name}</span>
-                  </div>
                 </div>
               ))}
             </Slider>
