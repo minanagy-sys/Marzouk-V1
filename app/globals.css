@@ -124,14 +124,15 @@ textarea::placeholder {
 
 /* ---------- Hero stats: shrink to a single line on mobile ---------- */
 @media (max-width: 600px) {
-  .dam-hero-stats { gap: 10px !important; flex-wrap: nowrap !important; width: 100%; justify-content: space-between; }
-  .dam-hero-stat { gap: 2px !important; flex: 1 1 0; min-width: 0; align-items: center; text-align: center; }
-  .dam-hero-stat-num { font-size: 16px !important; white-space: nowrap; }
-  .dam-hero-stat-label { font-size: 9.5px !important; line-height: 1.3 !important; max-width: none !important; }
+  .dam-hero-stats { gap: 14px !important; flex-wrap: nowrap !important; width: 100%; justify-content: space-between; }
+  .dam-hero-stat { gap: 2px !important; flex: 0 0 auto; min-width: 0; align-items: center; text-align: center; }
+  .dam-hero-stat-num { font-size: 15px !important; white-space: nowrap; }
+  .dam-hero-stat-label { font-size: 9.5px !important; line-height: 1.3 !important; max-width: none !important; white-space: nowrap; }
 }
 @media (max-width: 380px) {
-  .dam-hero-stat-num { font-size: 14px !important; }
-  .dam-hero-stat-label { font-size: 9px !important; }
+  .dam-hero-stats { gap: 10px !important; }
+  .dam-hero-stat-num { font-size: 13px !important; }
+  .dam-hero-stat-label { font-size: 8.5px !important; }
 }
 
 /* ---------- Reviews section: tighter vertical padding on mobile ---------- */
