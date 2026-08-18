@@ -8,6 +8,7 @@ import WhatsappFloat from "@/components/WhatsappFloat";
 import ImageSlot from "@/components/ImageSlot";
 import HoverBox from "@/components/HoverBox";
 import Slider from "@/components/Slider";
+import ReviewCard from "@/components/ReviewCard";
 import { useLang } from "@/lib/lang";
 import { usePageText, useSetting } from "@/lib/settings";
 import { homeContent } from "@/lib/content/home";
@@ -225,10 +226,7 @@ export default function HomeView({
             </div>
             <Slider bleed>
               {reviews.map((r) => (
-                <div key={r.id} style={{ flex: "0 0 360px", scrollSnapAlign: "start", background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 22, padding: "32px 30px", boxShadow: "0 4px 14px rgba(12,52,70,0.05)", display: "flex", flexDirection: "column", gap: 14 }}>
-                  <div style={{ color: "#F5B301", fontSize: 18, letterSpacing: 2 }}>{"★".repeat(r.rating || 5)}<span style={{ color: "#E3ECF0" }}>{"★".repeat(5 - (r.rating || 5))}</span></div>
-                  <p style={{ fontSize: 15, lineHeight: 2, color: "#46687A", margin: 0, flex: 1 }}>{pick(r.text, lang)}</p>
-                </div>
+                <ReviewCard key={r.id} text={pick(r.text, lang)} rating={r.rating || 5} moreLabel={t.revMore} lessLabel={t.revLess} />
               ))}
             </Slider>
           </div>
