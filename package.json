@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "create-admin": "node scripts/create-admin.mjs",
-    "migrate:supabase": "node scripts/migrate-from-supabase.mjs"
+    "migrate:supabase": "node scripts/migrate-from-supabase.mjs",
+    "db:dump": "mysqldump --default-character-set=utf8mb4 --single-transaction --no-tablespaces -h ${MYSQL_HOST:-127.0.0.1} -P ${MYSQL_PORT:-3306} -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE > marzouk_data.sql"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
