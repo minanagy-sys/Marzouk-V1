@@ -51,12 +51,17 @@ export default function RichTextField({ value, onChange, disabled }: { value: un
   const cmds: Cmd[] = [
     { icon: "H2", title: "Heading", run: () => exec("formatBlock", "H2") },
     { icon: "H3", title: "Subheading", run: () => exec("formatBlock", "H3") },
+    { icon: "H4", title: "Small heading", run: () => exec("formatBlock", "H4") },
     { icon: "¶", title: "Paragraph", run: () => exec("formatBlock", "P") },
+    { icon: "❝", title: "Quote", run: () => exec("formatBlock", "BLOCKQUOTE") },
     { icon: "B", title: "Bold", run: () => exec("bold") },
     { icon: "I", title: "Italic", run: () => exec("italic") },
     { icon: "• List", title: "Bullet list", run: () => exec("insertUnorderedList") },
     { icon: "1. List", title: "Numbered list", run: () => exec("insertOrderedList") },
-    { icon: "🔗", title: "Link", run: () => { const u = prompt("Link URL:"); if (u) exec("createLink", u); } },
+    { icon: "⇤", title: "Align start", run: () => exec("justifyLeft") },
+    { icon: "≡", title: "Align center", run: () => exec("justifyCenter") },
+    { icon: "⇥", title: "Align end", run: () => exec("justifyRight") },
+    { icon: "🔗", title: "Link (internal or external)", run: () => { const u = prompt("Link URL (internal e.g. /en/services/... or full https URL):"); if (u) exec("createLink", u); } },
     { icon: uploading ? "⏳" : "🖼 Image", title: "Insert image", run: () => { if (!uploading) fileRef.current?.click(); } },
     { icon: "⌫", title: "Clear formatting", run: () => exec("removeFormat") },
   ];

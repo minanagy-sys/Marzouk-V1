@@ -161,8 +161,10 @@ textarea::placeholder {
 .article-body p { margin: 0 0 22px; }
 .article-body h2 { font-family: var(--font-el-messiri), serif; font-size: clamp(24px, 3vw, 32px); font-weight: 700; color: #0C3446; margin: 34px 0 14px; }
 .article-body h3 { font-family: var(--font-el-messiri), serif; font-size: clamp(20px, 2.4vw, 25px); font-weight: 700; color: #0C3446; margin: 26px 0 12px; }
+.article-body h4 { font-family: var(--font-el-messiri), serif; font-size: clamp(17px, 2vw, 20px); font-weight: 700; color: #0C3446; margin: 22px 0 10px; }
 .article-body ul, .article-body ol { margin: 0 0 22px; padding-inline-start: 26px; }
 .article-body li { margin: 0 0 10px; }
 .article-body a { color: #1E92B8; text-decoration: underline; }
 .article-body strong { color: #0C3446; }
 .article-body img { max-width: 100%; border-radius: 12px; margin: 10px 0; }
+.article-body blockquote { margin: 22px 0; padding: 12px 20px; border-inline-start: 4px solid #30B6DE; background: #F4FBFD; border-radius: 8px; color: #0C3446; font-style: italic; }

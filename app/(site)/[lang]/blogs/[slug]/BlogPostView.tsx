@@ -46,9 +46,25 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
 
       <article style={{ maxWidth: 860, margin: "0 auto", padding: "60px 24px 40px" }}>
         <div style={{ borderRadius: 24, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 14px 40px rgba(12,52,70,0.08)", height: 360, marginBottom: 40 }}>
-          <ImageSlot src={post.imageUrl} placeholder={ui.photoPh} style={{ width: "100%", height: "100%" }} />
+          <ImageSlot src={post.imageUrl} alt={(post.imageAlt && pick(post.imageAlt, lang)) || pick(post.title, lang)} placeholder={ui.photoPh} style={{ width: "100%", height: "100%" }} />
         </div>
         <div className="article-body" style={{ fontSize: 17, lineHeight: 2.1, color: "#46687A" }} dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+
+        {post.faq && post.faq.length > 0 && (
+          <section style={{ marginTop: 44 }}>
+            <h2 style={{ fontFamily: SERIF, fontSize: "clamp(24px, 3vw, 32px)", fontWeight: 700, color: "#0C3446", margin: "0 0 20px" }}>
+              {lang === "ar" ? "الأسئلة الشائعة" : "Frequently Asked Questions"}
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {post.faq.map((f, i) => (
+                <details key={i} style={{ border: "1px solid rgba(12,52,70,0.1)", borderRadius: 14, padding: "16px 20px", background: "#F8FCFE" }}>
+                  <summary style={{ cursor: "pointer", fontWeight: 800, fontSize: 16, color: "#0C3446" }}>{pick(f.q, lang)}</summary>
+                  <p style={{ margin: "12px 0 0", fontSize: 15.5, lineHeight: 1.95, color: "#46687A" }}>{pick(f.a, lang)}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div style={{ marginTop: 30, paddingTop: 26, borderTop: "1px solid rgba(12,52,70,0.08)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <HoverBox as={Link} href={lp("/blogs")} style={{ color: "#30B6DE", fontWeight: 800, fontSize: 15 }} hoverStyle={{ color: "#1E92B8" }}>

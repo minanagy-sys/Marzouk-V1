@@ -151,16 +151,24 @@ export type BlogCategory = {
   name: BiText;
 };
 
+export type FaqItem = { q: BiText; a: BiText };
+
 export type BlogPostBi = {
   slug: string;
   slugAr?: string;
   slugEn?: string;
   imageUrl?: string;
+  imageAlt?: BiText;
   date: string;
   tag: BiText;
   title: BiText;
   excerpt: BiText;
   body: { ar: string; en: string }; // HTML
+  faq?: FaqItem[];
+  schemaType?: string;
+  metaTitle?: BiText;
+  metaDesc?: BiText;
+  keywords?: BiText;
   categorySlug?: string;
   categoryName?: BiText;
   showOnHome?: boolean;

@@ -21,14 +21,21 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!post) return { title: "Not found" };
   const arSlug = post.slugAr || post.slug;
   const enSlug = post.slugEn || post.slug;
-  const title = pick(post.title, l);
-  const description = pick(post.excerpt, l);
+  const title = (post.metaTitle && pick(post.metaTitle, l)) || pick(post.title, l);
+  const description = (post.metaDesc && pick(post.metaDesc, l)) || pick(post.excerpt, l);
+  const keywords = post.keywords ? pick(post.keywords, l) : "";
   const alternates = altLangs(l, `/blogs/${arSlug}`, `/blogs/${enSlug}`);
+  const ogImage = post.imageUrl ? (post.imageUrl.startsWith("http") ? post.imageUrl : `${SITE.url}${post.imageUrl}`) : undefined;
   return {
     title,
     description,
+    ...(keywords ? { keywords } : {}),
     alternates,
-    openGraph: { title, description, url: alternates.canonical, type: "article", siteName: SITE.nameAr },
+    openGraph: {
+      title, description, url: alternates.canonical, type: "article", siteName: SITE.nameAr,
+      ...(ogImage ? { images: [{ url: ogImage }] } : {}),
+    },
+    twitter: { card: "summary_large_image", title, description, ...(ogImage ? { images: [ogImage] } : {}) },
   };
 }
 
@@ -42,21 +49,50 @@ export default async function BlogPostPage({ params }: { params: Promise<{ lang:
   const related = all.filter((p) => p.slug !== post.slug).slice(0, 3);
   const url = `${SITE.url}/${l}/blogs/${slugFor(post, l)}`;
 
+  const ogImage = post.imageUrl ? (post.imageUrl.startsWith("http") ? post.imageUrl : `${SITE.url}${post.imageUrl}`) : undefined;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title.en || post.title.ar,
-    description: post.excerpt.en || post.excerpt.ar,
+    "@type": post.schemaType || "BlogPosting",
+    headline: pick(post.title, l),
+    description: pick(post.excerpt, l),
     url,
     inLanguage: l,
-    datePublished: post.date,
+    datePublished: post.date || undefined,
+    ...(ogImage ? { image: ogImage } : {}),
     author: { "@type": "Physician", name: SITE.nameEn },
     publisher: { "@type": "Organization", name: SITE.nameEn },
+    mainEntityOfPage: url,
   };
+
+  // Breadcrumb trail for rich results.
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE.nameEn, item: `${SITE.url}/${l}` },
+      { "@type": "ListItem", position: 2, name: l === "ar" ? "المدونة" : "Blog", item: `${SITE.url}/${l}/blogs` },
+      { "@type": "ListItem", position: 3, name: pick(post.title, l), item: url },
+    ],
+  };
+
+  // FAQ schema (only when the post has FAQs).
+  const faqLd = post.faq && post.faq.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: post.faq.map((f) => ({
+          "@type": "Question",
+          name: pick(f.q, l),
+          acceptedAnswer: { "@type": "Answer", text: pick(f.a, l) },
+        })),
+      }
+    : null;
 
   return (
     <>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumb} />
+      {faqLd && <JsonLd data={faqLd} />}
       <BlogPostView post={post} related={related} />
     </>
   );
