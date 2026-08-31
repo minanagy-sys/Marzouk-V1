@@ -18,7 +18,14 @@ export const metadata: Metadata = {
   },
   description:
     "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",
-  openGraph: { type: "website", siteName: "د. أحمد مرزوق", url: SITE.url },
+  openGraph: {
+    type: "website", siteName: "د. أحمد مرزوق", url: SITE.url,
+    ...(process.env.NEXT_PUBLIC_OG_IMAGE ? { images: [{ url: process.env.NEXT_PUBLIC_OG_IMAGE }] } : {}),
+  },
+  twitter: {
+    card: "summary_large_image",
+    ...(process.env.NEXT_PUBLIC_OG_IMAGE ? { images: [process.env.NEXT_PUBLIC_OG_IMAGE] } : {}),
+  },
   robots: { index: true, follow: true },
 };
 

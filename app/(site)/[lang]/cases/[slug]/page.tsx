@@ -51,10 +51,19 @@ export default async function CasePage({ params }: { params: Promise<{ lang: str
     inLanguage: l,
     author: { "@type": "Physician", name: SITE.nameEn },
   };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}/${l}` },
+      { "@type": "ListItem", position: 2, name: "Cases", item: `${SITE.url}/${l}/cases` },
+      { "@type": "ListItem", position: 3, name: item.title.en || item.title.ar, item: url },
+    ],
+  };
 
   return (
     <>
-      <JsonLd data={jsonLd} />
+      <JsonLd data={[jsonLd, breadcrumb]} />
       <CaseDetailView item={item} related={related} />
     </>
   );

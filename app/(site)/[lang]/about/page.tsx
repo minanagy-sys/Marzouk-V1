@@ -3,19 +3,18 @@ import AboutView from "./AboutView";
 import { getTestimonials } from "@/lib/data/testimonials";
 import { getValues, getFeatures, getStats } from "@/lib/data/sections";
 import { SITE } from "@/lib/site";
-import { altLangs } from "@/lib/seo";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
-  return {
-  title: "عن د. أحمد مرزوق — About",
-  description:
-    "استشاري النساء والتوليد وجراحة الأورام ومبتكر تجربة الولادة بدون ألم في مصر. رعاية إنسانية قبل أن تكون طبية.",
-  alternates: altLangs(l, "/about", "/about"),
-  };
+  return pageMetadata({
+    page: "about", lang: l, arPath: "/about", enPath: "/about",
+    defTitle: "عن د. أحمد مرزوق — About",
+    defDesc: "استشاري النساء والتوليد وجراحة الأورام ومبتكر تجربة الولادة بدون ألم في مصر. رعاية إنسانية قبل أن تكون طبية.",
+  });
 }
 
 export default async function AboutPage() {

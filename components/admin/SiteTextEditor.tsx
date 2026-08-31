@@ -25,6 +25,8 @@ const PAGES: { id: string; label: string; labelAr: string; icon: string; caption
   { id: "blogs", label: "Blog page", labelAr: "المدونة", icon: "📝", caption: "Blog page text" },
   { id: "media", label: "Media page", labelAr: "الإعلام", icon: "🖼️", caption: "Media page text" },
   { id: "contact", label: "Contact page", labelAr: "اتصل بنا", icon: "📍", caption: "Contact page text" },
+  { id: "seo", label: "SEO", labelAr: "تحسين محركات البحث", icon: "🔎", caption: "Per-page titles, descriptions & share image" },
+  { id: "integrations", label: "Integrations", labelAr: "أدوات التحليلات", icon: "📈", caption: "Analytics & verification IDs" },
   { id: "other", label: "Other text", labelAr: "نصوص أخرى", icon: "✦", caption: "Uncategorised" },
 ];
 const PAGE_BY_ID = Object.fromEntries(PAGES.map((p) => [p.id, p]));
@@ -103,7 +105,7 @@ export default function SiteTextEditor() {
   const sections = useMemo<Section[]>(() => {
     if (!selected) return [];
     // Header / Footer / Other are flat — one section, no prefix sub-grouping.
-    const flat = selected === "header" || selected === "footer" || selected === "other";
+    const flat = selected === "header" || selected === "footer" || selected === "other" || selected === "seo" || selected === "integrations";
     const map = new Map<string, Section>();
     for (const r of byPage[selected] ?? []) {
       const s = flat ? { id: "all", title: "Text", order: 0 } : sectionOf(r);
