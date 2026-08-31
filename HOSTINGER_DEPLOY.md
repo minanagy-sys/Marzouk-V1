@@ -88,6 +88,19 @@ Then, on Hostinger:
 > Re-syncing later: repeat steps 1–4 to regenerate `marzouk_data.sql` from the
 > newest Supabase data, re-import it, and re-upload any new `uploads/` files.
 
+### 3c. Apply the SEO/settings upgrades (run once after importing)
+After importing `marzouk_data.sql`, run these in phpMyAdmin (SQL tab) to add the
+new blog SEO columns and seed the editable SEO/analytics rows. All are
+insert-if-missing / `IF NOT EXISTS`, so they're safe to re-run:
+```
+mysql/upgrade_seo.sql            # adds blog keywords/alt/faq/schema_type columns
+mysql/seo_settings.sql           # per-page SEO title/description + share image
+mysql/integrations_settings.sql  # GA4 / GTM / Meta Pixel / Search Console / Bing
+mysql/contact_social_settings.sql# phones, email, WhatsApp, social links
+```
+Then everything is editable from **Admin → Site text** (SEO / Integrations /
+Footer) and per blog post — no code changes.
+
 ## 4. Create an admin login
 ```
 env $(grep -v '^#' .env | xargs) node scripts/create-admin.mjs you@email.com "yourpassword" "Your Name" admin
