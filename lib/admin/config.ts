@@ -40,6 +40,7 @@ export type Collection = {
   titleColumn: string;
   defaultOrder: string;
   readOnly?: boolean;
+  adminOnly?: boolean;                                // only the `admin` role may view/edit (editors are blocked)
   groupBy?: string;                                   // split the list into groups, each independently ordered
   groupOptions?: { value: string; label: string }[];  // group values + labels (in display order)
   fields: Field[];
@@ -305,7 +306,7 @@ export const COLLECTIONS: Record<string, Collection> = {
   },
 
   bookings: {
-    table: "bookings", label: "Bookings", labelAr: "الحجوزات", singular: "Booking", icon: "📥", group: "System", readOnly: true,
+    table: "bookings", label: "Bookings", labelAr: "الحجوزات", singular: "Booking", icon: "📥", group: "System", readOnly: true, adminOnly: true,
     listColumns: ["name", "phone", "email", "service", "status", "created_at"], titleColumn: "name", defaultOrder: "created_at",
     fields: [
       { name: "name", label: "Name", type: "text" },

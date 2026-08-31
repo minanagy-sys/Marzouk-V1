@@ -124,7 +124,11 @@ export default function AdminGate({
         {user.role === "admin" && navItem("/admin/users", "👥", "Users", "Team & roles", activeKey === "users")}
 
         {NAV_TREE.map((p) => {
-          const containsActive = p.children.includes(activeKey);
+          // Editors don't see admin-only sections (e.g. Bookings). Hide the whole
+          // parent group if none of its children are visible to this role.
+          const children = p.children.filter((k) => user.role === "admin" || !COLLECTIONS[k].adminOnly);
+          if (children.length === 0) return null;
+          const containsActive = children.includes(activeKey);
           const open = openParents[p.label] ?? containsActive;
           return (
             <div key={p.label} style={{ marginTop: 6 }}>
@@ -138,7 +142,7 @@ export default function AdminGate({
               </button>
               {open && (
                 <div style={{ display: "flex", flexDirection: "column", gap: 3, paddingInlineStart: 16, marginTop: 3 }}>
-                  {p.children.map((k) => navItem(`/admin/${k}`, COLLECTIONS[k].icon, COLLECTIONS[k].label, COLLECTIONS[k].labelAr, activeKey === k))}
+                  {children.map((k) => navItem(`/admin/${k}`, COLLECTIONS[k].icon, COLLECTIONS[k].label, COLLECTIONS[k].labelAr, activeKey === k))}
                 </div>
               )}
             </div>

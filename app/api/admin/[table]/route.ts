@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { getServiceClient } from "@/lib/supabase";
-import { verifyAdmin } from "@/lib/admin/auth";
+import { getAdmin } from "@/lib/admin/auth";
 import { COLLECTIONS } from "@/lib/admin/config";
 
 export const runtime = "nodejs";
@@ -19,8 +19,14 @@ function collectionFor(table: string) {
 async function guard(request: Request, table: string) {
   const col = collectionFor(table);
   if (!col) return { error: NextResponse.json({ error: "unknown_table" }, { status: 404 }) };
-  const ok = await verifyAdmin(request);
-  if (!ok) return { error: NextResponse.json({ error: "unauthorized" }, { status: 401 }) };
+  const user = getAdmin(request);
+  if (!user || (user.role !== "admin" && user.role !== "editor")) {
+    return { error: NextResponse.json({ error: "unauthorized" }, { status: 401 }) };
+  }
+  // Admin-only collections (e.g. bookings with customer PII) are hidden from editors.
+  if (col.adminOnly && user.role !== "admin") {
+    return { error: NextResponse.json({ error: "forbidden" }, { status: 403 }) };
+  }
   const supabase = getServiceClient();
   if (!supabase) return { error: NextResponse.json({ error: "supabase_not_configured" }, { status: 500 }) };
   return { col, supabase };
