@@ -16,6 +16,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ path: s
     return new NextResponse(new Uint8Array(data), {
       headers: {
         "Content-Type": type,
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "public, max-age=31536000, immutable",
       },
     });

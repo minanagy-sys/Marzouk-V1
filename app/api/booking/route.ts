@@ -10,6 +10,19 @@ function toAsciiDigits(s: string): string {
     .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
 }
 
+// Best-effort in-memory rate limit (per IP). Resets on restart — enough to blunt
+// simple form spam without extra infrastructure.
+const RATE = { windowMs: 60_000, max: 5 };
+const hits = new Map<string, number[]>();
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const arr = (hits.get(ip) || []).filter((t) => now - t < RATE.windowMs);
+  arr.push(now);
+  hits.set(ip, arr);
+  if (hits.size > 5000) hits.clear(); // guard against unbounded growth
+  return arr.length > RATE.max;
+}
+
 /**
  * Booking form endpoint.
  * Validates the submission and stores it in the Supabase `bookings` table.
@@ -24,12 +37,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
-  const name = String(data.name ?? "").trim();
-  const phone = toAsciiDigits(String(data.phone ?? "").trim());
-  const email = String(data.email ?? "").trim();
-  const service = String(data.service ?? "").trim();
-  const message = String(data.message ?? "").trim();
-  const lang = String(data.lang ?? "ar").trim();
+  // Honeypot: a hidden field real users never fill. If present, pretend success
+  // and drop the submission silently (don't tip off bots).
+  if (String(data.website ?? data.company ?? "").trim()) {
+    return NextResponse.json({ ok: true, stored: false });
+  }
+
+  // Rate limit per client IP.
+  const ip = (request.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
+  if (rateLimited(ip)) {
+    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
+  }
+
+  // Trim + cap lengths to stop oversized/abusive payloads.
+  const cap = (v: unknown, n: number) => String(v ?? "").trim().slice(0, n);
+  const name = cap(data.name, 120);
+  const phone = toAsciiDigits(cap(data.phone, 40));
+  const email = cap(data.email, 160);
+  const service = cap(data.service, 120);
+  const message = cap(data.message, 2000);
+  const lang = cap(data.lang, 8) || "ar";
 
   // Basic validation
   if (!name || !phone) {

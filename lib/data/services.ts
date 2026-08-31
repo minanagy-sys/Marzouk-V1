@@ -1,6 +1,7 @@
 import type { Lang } from "@/lib/lang";
 import type { Service } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
+import { sanitizeRichText } from "@/lib/sanitize";
 import { slugify } from "@/lib/admin/slug";
 import { decodeSlug } from "./types";
 
@@ -453,10 +454,10 @@ function rowToService(r: any): Service {
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     shortDesc: { ar: r.short_desc_ar ?? "", en: r.short_desc_en ?? "" },
     heroSub: { ar: r.hero_sub_ar ?? "", en: r.hero_sub_en ?? "" },
-    intro: { ar: r.intro_ar ?? "", en: r.intro_en ?? "" },
+    intro: { ar: sanitizeRichText(r.intro_ar), en: sanitizeRichText(r.intro_en) },
     sections: (r.sections ?? []).map((s: any) => ({
       heading: { ar: s.heading_ar ?? "", en: s.heading_en ?? "" },
-      body: { ar: s.body_ar ?? "", en: s.body_en ?? "" },
+      body: { ar: sanitizeRichText(s.body_ar), en: sanitizeRichText(s.body_en) },
     })),
     benefits: (r.benefits ?? []).map((b: any) => ({ ar: b.ar ?? "", en: b.en ?? "" })),
     faq: (r.faq ?? []).map((f: any) => ({

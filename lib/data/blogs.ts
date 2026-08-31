@@ -1,5 +1,6 @@
 import type { BlogPostBi, BlogCategory } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
+import { sanitizeRichText } from "@/lib/sanitize";
 import { blogPosts as seedPosts } from "@/lib/content/blogs";
 import { slugify } from "@/lib/admin/slug";
 import { decodeSlug } from "./types";
@@ -24,7 +25,7 @@ export function blogSeed(): BlogPostBi[] {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function rowTo(r: any): BlogPostBi {
   // body columns may hold HTML (from the rich-text editor) or a paragraph array (seed).
-  const toHtml = (v: any): string => (Array.isArray(v) ? v.map((p) => `<p>${p}</p>`).join("") : typeof v === "string" ? v : "");
+  const toHtml = (v: any): string => sanitizeRichText(Array.isArray(v) ? v.map((p) => `<p>${p}</p>`).join("") : typeof v === "string" ? v : "");
   const cat = r.blog_categories;
   return {
     slug: r.slug,

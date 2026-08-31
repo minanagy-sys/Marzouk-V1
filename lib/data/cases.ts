@@ -1,5 +1,6 @@
 import type { CaseItem } from "./types";
 import { getServiceClient, getAnonClient } from "@/lib/supabase";
+import { sanitizeRichText } from "@/lib/sanitize";
 import { slugify } from "@/lib/admin/slug";
 import { decodeSlug } from "./types";
 
@@ -115,7 +116,7 @@ function rowToCase(r: any): CaseItem {
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     excerpt: { ar: r.excerpt_ar ?? "", en: r.excerpt_en ?? "" },
-    body: { ar: r.body_ar ?? "", en: r.body_en ?? "" },
+    body: { ar: sanitizeRichText(r.body_ar), en: sanitizeRichText(r.body_en) },
     showOnHome: r.show_on_home ?? true,
   };
 }

@@ -22,6 +22,8 @@ function publicBase(): string {
   return (process.env.UPLOAD_PUBLIC_BASE || "/uploads").replace(/\/$/, "");
 }
 
+// SVG is intentionally NOT allowed — it can carry <script>/onload and would be
+// a stored-XSS vector when served inline. Only raster image types are accepted.
 const EXT_BY_TYPE: Record<string, string> = {
   "image/jpeg": "jpg",
   "image/jpg": "jpg",
@@ -29,7 +31,6 @@ const EXT_BY_TYPE: Record<string, string> = {
   "image/webp": "webp",
   "image/gif": "gif",
   "image/avif": "avif",
-  "image/svg+xml": "svg",
 };
 
 export const CONTENT_TYPE_BY_EXT: Record<string, string> = {
@@ -39,15 +40,20 @@ export const CONTENT_TYPE_BY_EXT: Record<string, string> = {
   webp: "image/webp",
   gif: "image/gif",
   avif: "image/avif",
-  svg: "image/svg+xml",
 };
+
+const MAX_UPLOAD_BYTES = Number(process.env.MAX_UPLOAD_MB || 5) * 1024 * 1024;
 
 /** Save an uploaded File to disk and return its public URL. */
 export async function saveUpload(file: File): Promise<string> {
+  // Only allow known raster image types (SVG and everything else rejected).
+  const ext = EXT_BY_TYPE[file.type];
+  if (!ext) throw new Error("Unsupported file type. Please upload a JPG, PNG, WebP, AVIF or GIF image.");
+  if (file.size > MAX_UPLOAD_BYTES) {
+    throw new Error(`Image is too large. Maximum ${Math.round(MAX_UPLOAD_BYTES / (1024 * 1024))} MB.`);
+  }
   const dir = uploadDir();
   await fs.mkdir(dir, { recursive: true });
-  const nameExt = (file.name.split(".").pop() || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const ext = EXT_BY_TYPE[file.type] || nameExt || "jpg";
   const filename = `${Date.now()}-${randomUUID().slice(0, 8)}.${ext}`;
   const bytes = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(path.join(dir, filename), bytes);
