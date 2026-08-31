@@ -39,7 +39,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "invalid_phone" }, { status: 400 });
   }
 
-  const record: Record<string, unknown> = { name, phone, email, service, message, lang, created_at: new Date().toISOString() };
+  // Note: `created_at` is intentionally omitted — the MySQL `bookings` table
+  // fills it via DEFAULT CURRENT_TIMESTAMP (an ISO string with "T"/"Z" is not a
+  // valid MySQL datetime and would be rejected).
+  const record: Record<string, unknown> = { name, phone, email, service, message, lang };
 
   const service_client = getServiceClient();
   const anon_client = getAnonClient();
