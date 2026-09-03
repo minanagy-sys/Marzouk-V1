@@ -22,7 +22,21 @@ const nextConfig = {
   // Next's file tracing (silences the "multiple lockfiles" build warning).
   outputFileTracingRoot: __dirname,
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Page documents must NOT be stored by shared caches (LiteSpeed/CDN). Those
+      // caches ignore the `Vary: RSC` header and would otherwise serve the RSC
+      // flight payload (raw text) in place of the HTML on some refreshes. Static
+      // assets under /_next/static and /uploads keep their own long cache.
+      {
+        source: "/:lang(ar|en)/:path*",
+        headers: [{ key: "Cache-Control", value: "private, no-cache, no-store, max-age=0, must-revalidate" }],
+      },
+      {
+        source: "/:lang(ar|en)",
+        headers: [{ key: "Cache-Control", value: "private, no-cache, no-store, max-age=0, must-revalidate" }],
+      },
+    ];
   },
 };
 
