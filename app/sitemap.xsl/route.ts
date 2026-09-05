@@ -1,0 +1,112 @@
+export const runtime = "nodejs";
+
+/**
+ * XSL stylesheet for /sitemap.xml — renders the raw XML as a clean, human
+ * readable table in the browser (the way Rank Math / Yoast sitemaps look),
+ * while search engines still read the underlying XML. Served with an explicit
+ * text/xsl content-type so browsers apply it.
+ */
+const XSL = `<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+  <xsl:template match="/">
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="robots" content="noindex,follow"/>
+        <title>XML Sitemap &#8211; Dr. Ahmed Marzouk</title>
+        <style>
+          :root { --brand:#30B6DE; --ink:#0C3446; --muted:#5B7A88; --line:rgba(12,52,70,0.10); --bg:#f4fafd; }
+          * { box-sizing:border-box; }
+          body { margin:0; background:var(--bg); color:var(--ink);
+            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:14px; }
+          .wrap { max-width:1100px; margin:0 auto; padding:0 20px 60px; }
+          header { background:linear-gradient(135deg,#30B6DE,#0E5372); color:#fff; padding:34px 0 30px; }
+          header .wrap { padding-bottom:0; }
+          h1 { margin:0 0 6px; font-size:24px; font-weight:800; letter-spacing:.2px; }
+          header p { margin:0; opacity:.92; font-size:13.5px; line-height:1.6; }
+          .count { display:inline-block; margin-top:16px; background:#fff; color:var(--ink);
+            border-radius:999px; padding:7px 16px; font-weight:700; font-size:13px;
+            box-shadow:0 6px 18px rgba(4,32,46,.25); }
+          .card { background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden;
+            margin-top:24px; box-shadow:0 12px 34px rgba(12,52,70,.07); }
+          table { width:100%; border-collapse:collapse; }
+          th,td { text-align:left; padding:13px 16px; border-bottom:1px solid var(--line); vertical-align:middle; }
+          th { background:#f0f8fc; color:var(--muted); font-size:11.5px; text-transform:uppercase;
+            letter-spacing:.6px; font-weight:800; position:sticky; top:0; }
+          tr:last-child td { border-bottom:none; }
+          tr:hover td { background:#f7fcff; }
+          td.url { word-break:break-all; }
+          td.url a { color:#1E92B8; text-decoration:none; font-weight:600; }
+          td.url a:hover { text-decoration:underline; }
+          td.num, th.num { text-align:center; white-space:nowrap; color:var(--muted); }
+          .pill { display:inline-block; min-width:34px; text-align:center; background:#EAF7FB; color:#1E92B8;
+            border-radius:8px; padding:3px 8px; font-weight:700; font-size:12.5px; }
+          footer { margin-top:22px; color:var(--muted); font-size:12.5px; text-align:center; }
+          footer a { color:#1E92B8; text-decoration:none; }
+          @media (max-width:600px){ th.hide,td.hide{ display:none; } h1{ font-size:20px; } }
+        </style>
+      </head>
+      <body>
+        <header>
+          <div class="wrap">
+            <h1>XML Sitemap</h1>
+            <p>This is an XML sitemap for <strong>doctorahmedmarzouk.com</strong>, generated for search engines
+               such as Google. It lists every public page in Arabic and English with its language alternates.</p>
+            <span class="count">
+              <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/> URLs
+            </span>
+          </div>
+        </header>
+        <div class="wrap">
+          <div class="card">
+            <table>
+              <thead>
+                <tr>
+                  <th class="num">#</th>
+                  <th>URL</th>
+                  <th class="num">Images</th>
+                  <th class="num hide">Priority</th>
+                  <th class="num hide">Change</th>
+                  <th class="num hide">Last Modified</th>
+                </tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="sitemap:urlset/sitemap:url">
+                  <tr>
+                    <td class="num"><xsl:value-of select="position()"/></td>
+                    <td class="url">
+                      <a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a>
+                    </td>
+                    <td class="num"><span class="pill"><xsl:value-of select="count(image:image)"/></span></td>
+                    <td class="num hide"><xsl:value-of select="sitemap:priority"/></td>
+                    <td class="num hide"><xsl:value-of select="sitemap:changefreq"/></td>
+                    <td class="num hide"><xsl:value-of select="substring(sitemap:lastmod,1,10)"/></td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+          </div>
+          <footer>
+            Generated by <a href="https://www.doctorahmedmarzouk.com">Dr. Ahmed Marzouk</a> &#8226; each URL includes
+            <code>hreflang</code> alternates (ar / en / x-default).
+          </footer>
+        </div>
+      </body>
+    </html>
+  </xsl:template>
+</xsl:stylesheet>
+`;
+
+export async function GET() {
+  return new Response(XSL, {
+    headers: {
+      "Content-Type": "text/xsl; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+    },
+  });
+}
