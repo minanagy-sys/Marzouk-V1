@@ -19,7 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "home", lang: l, arPath: "", enPath: "",
-    defTitle: "د. أحمد مرزوق | Dr. Ahmed Marzouk",
+    absoluteTitle: "د. أحمد مرزوق | Dr. Ahmed Marzouk",
+    defTitleAr: "د. أحمد مرزوق", defTitleEn: "Dr. Ahmed Marzouk",
     defDesc: "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",
   });
 }

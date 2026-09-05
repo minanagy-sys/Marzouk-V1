@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import CaseDetailView from "./CaseDetailView";
 import { getCases, getCase, getCaseParams } from "@/lib/data/cases";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
-import { altLangs } from "@/lib/seo";
+import { altLangs, stripBrand } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!item) return { title: "Not found" };
   const arSlug = item.slugAr || item.slug;
   const enSlug = item.slugEn || item.slug;
-  const title = pick(item.title, l);
+  const title = stripBrand(pick(item.title, l));
   const description = pick(item.excerpt, l);
   const alternates = altLangs(l, `/cases/${arSlug}`, `/cases/${enSlug}`);
   return {

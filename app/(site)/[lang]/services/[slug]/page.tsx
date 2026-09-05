@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import ServiceDetailView from "./ServiceDetailView";
 import { getServices, getService, getServiceParams } from "@/lib/data/services";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
-import { altLangs } from "@/lib/seo";
+import { altLangs, stripBrand } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!service) return { title: "Not found" };
   const arSlug = service.slugAr || service.slug;
   const enSlug = service.slugEn || service.slug;
-  const title = pick(service.metaTitle, l) || pick(service.title, l);
+  const title = stripBrand(pick(service.metaTitle, l) || pick(service.title, l));
   const description = pick(service.metaDesc, l) || pick(service.shortDesc, l);
   const alternates = altLangs(l, `/services/${arSlug}`, `/services/${enSlug}`);
   return {

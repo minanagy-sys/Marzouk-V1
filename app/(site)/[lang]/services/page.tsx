@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "services", lang: l, arPath: "/services", enPath: "/services",
-    defTitle: "خدماتنا | د. أحمد مرزوق — Our Services",
+    defTitleAr: "خدماتنا", defTitleEn: "Our Services",
     defDesc: "رعاية متكاملة لصحة المرأة — الولادة بدون ألم، استئصال الأورام الليفية المعقدة، بطانة الرحم المهاجرة، والتجميل النسائي مع د. أحمد مرزوق.",
   });
 }

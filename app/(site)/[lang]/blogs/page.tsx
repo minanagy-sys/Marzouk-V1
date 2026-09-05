@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "blogs", lang: l, arPath: "/blogs", enPath: "/blogs",
-    defTitle: "المدونة ومعلومات طبية — Blog",
+    defTitleAr: "المدونة ومعلومات طبية", defTitleEn: "Blog & Medical Info",
     defDesc: "معلومات طبية موثوقة حول الولادة بدون ألم، الأورام الليفية، بطانة الرحم المهاجرة، ومتابعة الحمل من د. أحمد مرزوق.",
   });
 }

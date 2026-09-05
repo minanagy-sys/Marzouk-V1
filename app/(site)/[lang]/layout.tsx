@@ -11,7 +11,9 @@ export function generateStaticParams() {
   return [{ lang: "ar" }, { lang: "en" }];
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const brand = lang === "en" ? "Dr. Ahmed Marzouk" : "د. أحمد مرزوق";
   const settings = await getSiteContent();
   const val = (k: string) => (settings[k]?.en || settings[k]?.ar || "").trim();
   const google = val("integrations.gsc");
@@ -20,7 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(SITE.url),
     title: {
       default: "د. أحمد مرزوق | Dr. Ahmed Marzouk",
-      template: "%s | د. أحمد مرزوق",
+      // Appends the brand once, in the page's language. Page titles are kept
+      // brand-free (see lib/seo stripBrand) so this never doubles up.
+      template: `%s | ${brand}`,
     },
     description:
       "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",

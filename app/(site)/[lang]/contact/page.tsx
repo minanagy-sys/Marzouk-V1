@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "contact", lang: l, arPath: "/contact", enPath: "/contact",
-    defTitle: "اتصل بنا — Contact",
+    defTitleAr: "اتصل بنا", defTitleEn: "Contact",
     defDesc: "احجزي موعدك مع د. أحمد مرزوق — عيادة التجمع الخامس، بولاريس مول. Book an appointment — Fifth Settlement clinic, Polaris Mall.",
   });
 }

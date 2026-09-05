@@ -15,6 +15,8 @@ interface LangCtx {
   setAltUrl: (url: string | null) => void;
   toggleLang: () => void;
   setLang: (l: Lang) => void;
+  /** Crawlable href for the other language of the current page (for a real <a>). */
+  otherHref: string;
 }
 
 const Ctx = createContext<LangCtx | null>(null);
@@ -53,8 +55,15 @@ export function LangProvider({ lang, children }: { lang: Lang; children: React.R
   const toggleLang = useCallback(() => go(isAr ? "en" : "ar"), [go, isAr]);
   const setLang = useCallback((l: Lang) => go(l), [go]);
 
+  // A real URL for the other language of this page, so the switcher can be a
+  // crawlable <a href> (not just a JS button). Detail pages with localized
+  // slugs override it via setAltUrl; otherwise swap the locale prefix.
+  const otherLang: Lang = isAr ? "en" : "ar";
+  const rest = (pathname || "/").replace(/^\/(ar|en)(?=\/|$)/, "") || "/";
+  const otherHref = altUrl || `/${otherLang}${rest === "/" ? "" : rest}`;
+
   return (
-    <Ctx.Provider value={{ lang, isAr, dir, lp, setAltUrl, toggleLang, setLang }}>
+    <Ctx.Provider value={{ lang, isAr, dir, lp, setAltUrl, toggleLang, setLang, otherHref }}>
       {children}
     </Ctx.Provider>
   );

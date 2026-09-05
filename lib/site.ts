@@ -1,7 +1,9 @@
 // Central site config used for SEO/metadata, sitemap and structured data.
+// The canonical host MUST match the host the site is actually served on
+// (www vs apex). Set NEXT_PUBLIC_SITE_URL in the environment to the live
+// https + www domain; the trailing slash is stripped so URLs never double up.
 export const SITE = {
-  // Update this to your production domain (or set NEXT_PUBLIC_SITE_URL in env).
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://ahmedmarzouk.com",
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://www.doctorahmedmarzouk.com").replace(/\/+$/, ""),
   nameAr: "د. أحمد مرزوق",
   nameEn: "Dr. Ahmed Marzouk",
   phone: "01063337333",

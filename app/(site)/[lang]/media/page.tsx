@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "media", lang: l, arPath: "/media", enPath: "/media",
-    defTitle: "الإعلام — Media",
+    defTitleAr: "الإعلام", defTitleEn: "Media",
     defDesc: "صور وفيديوهات من داخل عيادات د. أحمد مرزوق وغرف العمليات — لحظات حقيقية توثق آلاف قصص الفرح.",
   });
 }

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const l: "ar" | "en" = lang === "en" ? "en" : "ar";
   return pageMetadata({
     page: "about", lang: l, arPath: "/about", enPath: "/about",
-    defTitle: "عن د. أحمد مرزوق — About",
+    defTitleAr: "عن الطبيب", defTitleEn: "About",
     defDesc: "استشاري النساء والتوليد وجراحة الأورام ومبتكر تجربة الولادة بدون ألم في مصر. رعاية إنسانية قبل أن تكون طبية.",
   });
 }

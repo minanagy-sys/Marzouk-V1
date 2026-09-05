@@ -4,7 +4,7 @@ import JsonLd from "@/components/JsonLd";
 import BlogPostView from "./BlogPostView";
 import { getBlogPostsBi, getBlogPostBi, getBlogParams } from "@/lib/data/blogs";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
-import { altLangs } from "@/lib/seo";
+import { altLangs, stripBrand } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!post) return { title: "Not found" };
   const arSlug = post.slugAr || post.slug;
   const enSlug = post.slugEn || post.slug;
-  const title = (post.metaTitle && pick(post.metaTitle, l)) || pick(post.title, l);
+  const title = stripBrand((post.metaTitle && pick(post.metaTitle, l)) || pick(post.title, l));
   const description = (post.metaDesc && pick(post.metaDesc, l)) || pick(post.excerpt, l);
   const keywords = post.keywords ? pick(post.keywords, l) : "";
   const alternates = altLangs(l, `/blogs/${arSlug}`, `/blogs/${enSlug}`);

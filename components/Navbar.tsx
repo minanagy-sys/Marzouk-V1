@@ -32,7 +32,7 @@ export default function Navbar({
   dropdowns?: boolean;
   cta?: "book" | "phone";
 }) {
-  const { lang, toggleLang, lp } = useLang();
+  const { lang, lp, otherHref } = useLang();
   const t = common(lang);
   const st = useSetting();
   const [casesOpen, setCasesOpen] = useState(false);
@@ -138,25 +138,22 @@ export default function Navbar({
           {plainLink("services", "/services", st("nav.services", lang, t.navServices))}
 
           {dropdowns ? (
-            <span style={{ position: "relative" }}>
+            <span
+              style={{ position: "relative" }}
+              onMouseEnter={() => { setCasesOpen(true); setMediaOpen(false); }}
+              onMouseLeave={() => setCasesOpen(false)}
+            >
               <HoverBox
-                as="button"
-                onClick={() => {
-                  setCasesOpen((v) => !v);
-                  setMediaOpen(false);
-                }}
+                as={Link}
+                href={lp("/cases")}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
                   fontSize: 15,
                   fontWeight: active === "cases" ? 700 : 500,
                   color: active === "cases" ? "#30B6DE" : "#0C3446",
                   display: "flex",
                   alignItems: "center",
                   gap: 5,
-                  padding: 0,
+                  textDecoration: "none",
                 }}
                 hoverStyle={{ color: "#30B6DE" }}
               >
@@ -191,25 +188,22 @@ export default function Navbar({
           {plainLink("blogs", "/blogs", st("nav.blogs", lang, t.navBlogs))}
 
           {dropdowns ? (
-            <span style={{ position: "relative" }}>
+            <span
+              style={{ position: "relative" }}
+              onMouseEnter={() => { setMediaOpen(true); setCasesOpen(false); }}
+              onMouseLeave={() => setMediaOpen(false)}
+            >
               <HoverBox
-                as="button"
-                onClick={() => {
-                  setMediaOpen((v) => !v);
-                  setCasesOpen(false);
-                }}
+                as={Link}
+                href={lp("/media")}
                 style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
                   fontSize: 15,
                   fontWeight: active === "media" ? 700 : 500,
                   color: active === "media" ? "#30B6DE" : "#0C3446",
                   display: "flex",
                   alignItems: "center",
                   gap: 5,
-                  padding: 0,
+                  textDecoration: "none",
                 }}
                 hoverStyle={{ color: "#30B6DE" }}
               >
@@ -247,8 +241,9 @@ export default function Navbar({
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div className="dam-desktop-actions" style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <HoverBox
-            as="button"
-            onClick={toggleLang}
+            as={Link}
+            href={otherHref}
+            hrefLang={lang === "ar" ? "en" : "ar"}
             style={{
               background: "#ffffff",
               border: "1.5px solid rgba(48,182,222,0.5)",
@@ -259,6 +254,7 @@ export default function Navbar({
               fontWeight: 700,
               fontSize: 13.5,
               cursor: "pointer",
+              textDecoration: "none",
             }}
             hoverStyle={{ background: "#EAF7FB" }}
           >
@@ -334,7 +330,7 @@ export default function Navbar({
             ))}
             {mobileLink("/contact", st("nav.contact", lang, t.navContact))}
             <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
-              <button onClick={() => toggleLang()} style={{ flex: 1, background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer" }}>{st("nav.lang", lang, t.langBtn)}</button>
+              <Link href={otherHref} hrefLang={lang === "ar" ? "en" : "ar"} onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "#fff", border: "1.5px solid rgba(48,182,222,0.5)", color: "#1E92B8", borderRadius: 10, padding: "11px", fontWeight: 700, cursor: "pointer", textDecoration: "none" }}>{st("nav.lang", lang, t.langBtn)}</Link>
               <Link href={lp("/contact")} onClick={() => setMenuOpen(false)} style={{ flex: 1, textAlign: "center", background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#fff", borderRadius: 10, padding: "11px", fontWeight: 800, textDecoration: "none" }}>{st("nav.book", lang, t.book)}</Link>
             </div>
           </div>
