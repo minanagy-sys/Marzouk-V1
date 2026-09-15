@@ -16,6 +16,45 @@ function collectionFor(table: string) {
   return COLLECTIONS[table];
 }
 
+/**
+ * Validate + normalize a redirect before write (spec: source starts with /,
+ * stored lowercased; reject source===destination and loops; collapse chains
+ * to the final target; warn on overwrite). Returns a normalized patch, an
+ * optional warning, or a fatal error string.
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+async function prepRedirect(supabase: any, body: any, selfId: string | null) {
+  let source = String(body.source || "").trim();
+  const dest = String(body.destination || "").trim();
+  if (!source.startsWith("/")) return { error: "source_must_start_with_slash" };
+  if (!dest) return { error: "destination_required" };
+  source = source.toLowerCase().replace(/\/+$/, "") || "/";
+  if (source === dest.toLowerCase()) return { error: "source_equals_destination" };
+
+  const patch: Record<string, unknown> = { source };
+  let warning: string | undefined;
+  const { data: all } = await supabase.from("redirects").select("id,source,destination,is_active");
+  const rules = (all || []).filter((r: any) => r.is_active && r.id !== selfId);
+  if (rules.some((r: any) => r.source === source)) warning = "overwrites_existing_source";
+
+  // Collapse a chain: while the destination is itself another rule's source,
+  // follow it to the final target (max 10 hops); a cycle is a loop.
+  const bySource = new Map<string, string>(rules.map((r: any) => [r.source, r.destination]));
+  let target = dest;
+  const seen = new Set<string>([source]);
+  for (let i = 0; i < 10 && bySource.has(target.toLowerCase()); i++) {
+    const next = bySource.get(target.toLowerCase())!;
+    if (seen.has(next.toLowerCase())) return { error: "redirect_loop" };
+    seen.add(next.toLowerCase());
+    target = next;
+    warning = "chain_collapsed";
+  }
+  if (target.toLowerCase() === source) return { error: "redirect_loop" };
+  if (target !== dest) patch.destination = target;
+  return { patch, warning };
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 async function guard(request: Request, table: string) {
   const col = collectionFor(table);
   if (!col) return { error: NextResponse.json({ error: "unknown_table" }, { status: 404 }) };
@@ -49,10 +88,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ tab
   if (g.error) return g.error;
   if (g.col.readOnly) return NextResponse.json({ error: "read_only" }, { status: 400 });
   const body = await request.json();
+  let warning: string | undefined;
+  if (table === "redirects") {
+    const v = await prepRedirect(g.supabase, body, null);
+    if ("error" in v && v.error) return NextResponse.json({ error: v.error }, { status: 400 });
+    Object.assign(body, v.patch);
+    warning = v.warning;
+  }
   const { data, error } = await g.supabase.from(table).insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   refreshSite();
-  return NextResponse.json({ data });
+  return NextResponse.json({ data, warning });
 }
 
 // UPDATE
@@ -72,10 +118,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ tabl
     refreshSite();
     return NextResponse.json({ data });
   }
+  let warning: string | undefined;
+  if (table === "redirects") {
+    const v = await prepRedirect(g.supabase, rest, id);
+    if ("error" in v && v.error) return NextResponse.json({ error: v.error }, { status: 400 });
+    Object.assign(rest, v.patch);
+    warning = v.warning;
+  }
   const { data, error } = await g.supabase.from(table).update(rest).eq("id", id).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   refreshSite();
-  return NextResponse.json({ data });
+  return NextResponse.json({ data, warning });
 }
 
 // DELETE

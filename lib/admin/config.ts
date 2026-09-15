@@ -331,6 +331,20 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "status", label: "Status", type: "select", options: ["new", "contacted", "confirmed", "done", "cancelled"] },
     ],
   },
+  redirects: {
+    table: "redirects", label: "Redirects", labelAr: "التحويلات", singular: "Redirect", icon: "↪️", group: "System", adminOnly: true,
+    listColumns: ["source", "destination", "status_code", "is_active", "hit_count", "last_hit_at", "updated_at"],
+    titleColumn: "source", defaultOrder: "priority",
+    fields: [
+      { name: "source", label: "Old URL (source)", type: "text", help: "The legacy path — must start with /. Stored lowercased. e.g. /surgerytipdetail/…", group: "Rule" },
+      { name: "destination", label: "New URL (destination)", type: "text", help: "Where it 301s to, e.g. /ar/blogs/… (or a full https URL).", group: "Rule" },
+      { name: "status_code", label: "Status", type: "select", options: ["301", "302", "410"], group: "Rule" },
+      { name: "is_active", label: "Active", type: "boolean", group: "Rule" },
+      { name: "is_regex", label: "Pattern (regex)", type: "boolean", help: "Match by regular expression instead of an exact path.", group: "Rule" },
+      { name: "priority", label: "Priority", type: "number", help: "Higher wins. Exact rules use 10, patterns 1.", group: "Rule" },
+      { name: "note", label: "Note", type: "text", group: "Rule" },
+    ],
+  },
 };
 
 export const COLLECTION_KEYS = Object.keys(COLLECTIONS);
@@ -347,4 +361,5 @@ export const NAV_TREE: NavParent[] = [
   { label: "Media", labelAr: "الإعلام", icon: "🖼️", children: ["media_items", "instagram_posts"] },
   { label: "Content", labelAr: "المحتوى", icon: "✦", children: ["testimonials", "clinics", "site_content"] },
   { label: "Inbox", labelAr: "الوارد", icon: "📥", children: ["bookings"] },
+  { label: "SEO & Redirects", labelAr: "التحسين والتحويلات", icon: "🔎", children: ["redirects"] },
 ];

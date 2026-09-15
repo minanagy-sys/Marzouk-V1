@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
 import redirects from "./redirect-map.json";
 
 const LOCALES = ["ar", "en"] as const;
@@ -42,7 +42,7 @@ function legacyTarget(pathname: string): string | null {
  *   2. Locale routing for everything else ("/" and unprefixed links → /ar|/en).
  * /ar and /en routes are never touched.
  */
-export function middleware(req: NextRequest) {
+export function middleware(req: NextRequest, event: NextFetchEvent) {
   const { pathname, search } = req.nextUrl;
 
   // Never touch already-localized routes.
@@ -54,6 +54,19 @@ export function middleware(req: NextRequest) {
   // slash never bleeds into the destination, e.g. "/whoweare/" -> "/ar/about".
   const legacy = legacyTarget(pathname);
   if (legacy) {
+    // Record the hit (the recovery metric) — best-effort, never blocks the 301.
+    try {
+      let src: string;
+      try { src = decodeURIComponent(pathname); } catch { src = pathname; }
+      src = src.toLowerCase().replace(/\/+$/, "") || "/";
+      event.waitUntil(
+        fetch(new URL("/api/redirects/hit", req.url), {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ source: src }),
+        }).catch(() => {}),
+      );
+    } catch { /* never let metrics break a redirect */ }
     const dest = new URL(legacy, req.url);
     dest.search = search;
     return NextResponse.redirect(dest, 301);
