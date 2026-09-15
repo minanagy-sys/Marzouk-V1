@@ -18,6 +18,10 @@ const nextConfig = {
   // The original design files live here; keep Next from trying to compile them.
   eslint: { ignoreDuringBuilds: true },
   poweredByHeader: false,
+  // Let the middleware own trailing-slash handling so legacy URLs like
+  // "/whoweare/" 301 straight to their target instead of first 308-ing to
+  // "/whoweare" (which would create a redirect chain).
+  skipTrailingSlashRedirect: true,
   // Pin the workspace root so a stray lockfile in the home folder doesn't confuse
   // Next's file tracing (silences the "multiple lockfiles" build warning).
   outputFileTracingRoot: __dirname,
