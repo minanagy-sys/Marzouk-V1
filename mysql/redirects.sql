@@ -66,6 +66,7 @@ INSERT INTO `redirects` (`id`,`source`,`destination`,`status_code`,`is_regex`,`p
 ('2c847dea-e1fa-55d9-8e42-774cbd8e12e4','/surgerytipdetail/انسداد-قنوات-فالوب','/ar/blogs/انسداد-قنوات-فالوب',301,0,10,'recovery-seed'),
 ('4962ac74-86a3-5ace-9f97-5ee3ac5eb029','/surgerytipdetail/انقطاع-الطمث','/ar/blogs/انقطاع-الطمث',301,0,10,'recovery-seed'),
 ('34aef63e-679a-5238-9103-c99ce2305d27','/surgerytipdetail/تكيس-المبايض','/ar/blogs/تكيس-المبايض',301,0,10,'recovery-seed'),
+('5e42c55b-8479-5adb-abe3-2916b034f344','/surgerytipdetail/علاج-بطانة-الرحم-المهاجرة','/ar/services/بطانة-الرحم-المهاجرة',301,0,10,'recovery-seed'),
 ('ad5d9d2d-80b2-5aba-ac00-90dfea867357','/publicdetail/المذيعة-الجميلة-أنجي-يحيى-وأحلى-توأم','/ar/cases/المذيعة-الجميلة-إنجي-يحيى-وأحلى-توأم',301,0,10,'recovery-seed'),
 ('d555d3ca-48ca-5b25-8ea2-f8fc7e0fef92','/publicdetail/الإذاعية-الجميلة-شيرين-أمين-ومأساة-الأورام-الليفية','/ar/cases/الإذاعية-الجميلة-شيرين-أمين-ومأساة-الأورام-الليفية',301,0,10,'recovery-seed'),
 ('639ce572-17f1-5b2b-8cfa-55b3adb2841c','/publicdetail/الفنانة-الجميلة-خلود-الباشا-وفرحتها-بمولودتها-كيان','/ar/cases/الفنانة-الجميلة-خلود-الباشا-وفرحتها-بمولودتها-كيان',301,0,10,'recovery-seed'),
