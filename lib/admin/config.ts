@@ -140,6 +140,10 @@ export const COLLECTIONS: Record<string, Collection> = {
       { name: "excerpt_en", label: "Short summary (English)", type: "textarea", group: "Basics" },
       { name: "body_ar", label: "Full story (Arabic)", type: "richtext", group: "Story" },
       { name: "body_en", label: "Full story (English)", type: "richtext", group: "Story" },
+      { name: "meta_title_ar", label: "SEO title (Arabic)", type: "text", group: "SEO", help: "≤ 60 characters. Leave empty to use the title. Do not add the brand — it's appended automatically." },
+      { name: "meta_title_en", label: "SEO title (English)", type: "text", group: "SEO", help: "≤ 60 characters. Leave empty to use the title." },
+      { name: "meta_desc_ar", label: "SEO description (Arabic)", type: "textarea", group: "SEO", help: "≤ 160 characters." },
+      { name: "meta_desc_en", label: "SEO description (English)", type: "textarea", group: "SEO", help: "≤ 160 characters." },
     ],
   },
 
