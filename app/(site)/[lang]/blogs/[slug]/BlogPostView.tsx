@@ -35,10 +35,16 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
           <div style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", fontWeight: 500 }}>
             <Link href={lp("/")} style={{ color: "#8FE0F7" }}>{tc.navHome}</Link> · <Link href={lp("/blogs")} style={{ color: "#8FE0F7" }}>{tc.navBlogs}</Link>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 22 }}>
-            <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "5px 15px", fontSize: 12.5, fontWeight: 800 }}>{pick(post.tag, lang)}</span>
-            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{post.date}</span>
-          </div>
+          {(pick(post.tag, lang) || post.date) && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 22 }}>
+              {pick(post.tag, lang) && (
+                <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "5px 15px", fontSize: 12.5, fontWeight: 800 }}>{pick(post.tag, lang)}</span>
+              )}
+              {post.date && (
+                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{post.date}</span>
+              )}
+            </div>
+          )}
           <h1 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(30px, 4vw, 48px)", color: "#ffffff", margin: "16px 0 0", lineHeight: 1.35 }}>{pick(post.title, lang)}</h1>
           <p style={{ fontSize: 17, lineHeight: 1.9, color: "rgba(255,255,255,0.72)", margin: "16px 0 0", textWrap: "pretty" }}>{pick(post.excerpt, lang)}</p>
         </div>

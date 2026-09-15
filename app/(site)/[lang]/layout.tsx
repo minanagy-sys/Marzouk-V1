@@ -4,6 +4,8 @@ import { LangProvider, type Lang } from "@/lib/lang";
 import { SettingsProvider } from "@/lib/settings";
 import { getSiteContent } from "@/lib/data/siteContent";
 import Analytics from "@/components/Analytics";
+import JsonLd from "@/components/JsonLd";
+import { siteGraph } from "@/lib/schema";
 import { SITE } from "@/lib/site";
 import "../../globals.css";
 
@@ -58,6 +60,7 @@ export default async function SiteLayout({
   return (
     <html lang={l} dir={dir}>
       <body className={fontVars}>
+        <JsonLd data={siteGraph(l)} />
         <Analytics ga4={iv("integrations.ga4")} gtm={iv("integrations.gtm")} pixel={iv("integrations.metaPixel")} />
         <LangProvider lang={l}>
           <SettingsProvider initial={settings}>{children}</SettingsProvider>

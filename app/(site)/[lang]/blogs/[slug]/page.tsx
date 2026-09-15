@@ -5,6 +5,7 @@ import BlogPostView from "./BlogPostView";
 import { getBlogPostsBi, getBlogPostBi, getBlogParams } from "@/lib/data/blogs";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
 import { altLangs, stripBrand } from "@/lib/seo";
+import { blogGraph } from "@/lib/schema";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -49,50 +50,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ lang:
   const related = all.filter((p) => p.slug !== post.slug).slice(0, 3);
   const url = `${SITE.url}/${l}/blogs/${slugFor(post, l)}`;
 
-  const ogImage = post.imageUrl ? (post.imageUrl.startsWith("http") ? post.imageUrl : `${SITE.url}${post.imageUrl}`) : undefined;
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": post.schemaType || "BlogPosting",
-    headline: pick(post.title, l),
-    description: pick(post.excerpt, l),
-    url,
-    inLanguage: l,
-    datePublished: post.date || undefined,
-    ...(ogImage ? { image: ogImage } : {}),
-    author: { "@type": "Physician", name: SITE.nameEn },
-    publisher: { "@type": "Organization", name: SITE.nameEn },
-    mainEntityOfPage: url,
-  };
-
-  // Breadcrumb trail for rich results.
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: SITE.nameEn, item: `${SITE.url}/${l}` },
-      { "@type": "ListItem", position: 2, name: l === "ar" ? "المدونة" : "Blog", item: `${SITE.url}/${l}/blogs` },
-      { "@type": "ListItem", position: 3, name: pick(post.title, l), item: url },
-    ],
-  };
-
-  // FAQ schema (only when the post has FAQs).
-  const faqLd = post.faq && post.faq.length
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: post.faq.map((f) => ({
-          "@type": "Question",
-          name: pick(f.q, l),
-          acceptedAnswer: { "@type": "Answer", text: pick(f.a, l) },
-        })),
-      }
-    : null;
+  // Single @graph: MedicalWebPage (about→MedicalCondition, author→Physician) +
+  // BreadcrumbList + FAQPage. No reviewedBy until a real reviewer is assigned.
+  const jsonLd = blogGraph(l, post, url, l === "ar" ? "المدونة" : "Blog");
 
   return (
     <>
       <JsonLd data={jsonLd} />
-      <JsonLd data={breadcrumb} />
-      {faqLd && <JsonLd data={faqLd} />}
       <BlogPostView post={post} related={related} />
     </>
   );

@@ -5,6 +5,7 @@ import ServiceDetailView from "./ServiceDetailView";
 import { getServices, getService, getServiceParams } from "@/lib/data/services";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
 import { altLangs, stripBrand } from "@/lib/seo";
+import { serviceGraph } from "@/lib/schema";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -42,27 +43,13 @@ export default async function ServicePage({ params }: { params: Promise<{ lang: 
   const related = all.filter((s) => s.slug !== service.slug).slice(0, 3);
   const url = `${SITE.url}/${l}/services/${slugFor(service, l)}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "MedicalProcedure",
-    name: service.title.en || service.title.ar,
-    description: service.metaDesc.en || service.shortDesc.en,
-    url,
-    provider: { "@type": "Physician", name: SITE.nameEn, medicalSpecialty: "Gynecologic", telephone: SITE.phone },
-  };
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}/${l}` },
-      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE.url}/${l}/services` },
-      { "@type": "ListItem", position: 3, name: service.title.en || service.title.ar, item: url },
-    ],
-  };
+  // Single @graph: MedicalProcedure (+ procedureType/bodyLocation, provider→
+  // Physician) + MedicalWebPage + BreadcrumbList.
+  const jsonLd = serviceGraph(l, service, url, l === "ar" ? "الخدمات" : "Services");
 
   return (
     <>
-      <JsonLd data={[jsonLd, breadcrumb]} />
+      <JsonLd data={jsonLd} />
       <ServiceDetailView service={service} related={related} />
     </>
   );

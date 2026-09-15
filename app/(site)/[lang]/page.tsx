@@ -44,10 +44,6 @@ export default async function HomePage() {
     .map((k) => settings[k]?.en || settings[k]?.ar || (CONTACT_INFO as Record<string, string>)[k.replace("footer.", "")] || "")
     .filter((u) => u && /^https?:\/\//.test(u));
 
-  // Aggregate rating from published testimonials (helps rich results).
-  const rated = reviews.filter((r) => (r.rating ?? 0) > 0);
-  const avg = rated.length ? rated.reduce((s, r) => s + (r.rating ?? 0), 0) / rated.length : 0;
-
   const physician = {
     "@context": "https://schema.org",
     "@type": ["Physician", "MedicalBusiness"],
@@ -58,7 +54,8 @@ export default async function HomePage() {
     email: SITE.email,
     medicalSpecialty: ["Gynecologic", "Obstetric"],
     ...(social.length ? { sameAs: social } : {}),
-    ...(rated.length ? { aggregateRating: { "@type": "AggregateRating", ratingValue: avg.toFixed(1), reviewCount: rated.length, bestRating: 5 } } : {}),
+    // No aggregateRating: self-hosted testimonials are a self-serving rating,
+    // which violates Google's rich-results policy and the recovery schema rules.
     address: SITE.clinics.map((c) => ({
       "@type": "PostalAddress",
       name: c.nameEn,

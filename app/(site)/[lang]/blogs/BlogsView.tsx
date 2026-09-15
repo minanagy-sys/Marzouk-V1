@@ -53,10 +53,14 @@ export default function BlogsView({ posts, categories }: { posts: BlogPostBi[]; 
                   <ImageSlot src={p.imageUrl} alt={pick(p.title, lang)} placeholder={ui.photoPh} style={{ width: "100%", height: 200 }} />
                 </div>
                 <div style={{ padding: 26, display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                    <span style={{ background: "rgba(48,182,222,0.12)", border: "1px solid rgba(48,182,222,0.35)", color: "#1E92B8", borderRadius: 999, padding: "4px 13px", fontSize: 12, fontWeight: 800 }}>{p.categoryName ? pick(p.categoryName, lang) : pick(p.tag, lang)}</span>
-                    <span style={{ fontSize: 12.5, color: "#8AA5B1", fontWeight: 700 }}>{p.date}</span>
-                  </div>
+                  {((p.categoryName ? pick(p.categoryName, lang) : pick(p.tag, lang)) || p.date) && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                      {(p.categoryName ? pick(p.categoryName, lang) : pick(p.tag, lang)) && (
+                        <span style={{ background: "rgba(48,182,222,0.12)", border: "1px solid rgba(48,182,222,0.35)", color: "#1E92B8", borderRadius: 999, padding: "4px 13px", fontSize: 12, fontWeight: 800 }}>{p.categoryName ? pick(p.categoryName, lang) : pick(p.tag, lang)}</span>
+                      )}
+                      {p.date && <span style={{ fontSize: 12.5, color: "#8AA5B1", fontWeight: 700 }}>{p.date}</span>}
+                    </div>
+                  )}
                   <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, lineHeight: 1.5 }}>{pick(p.title, lang)}</div>
                   <p style={{ fontSize: 14, lineHeight: 1.9, color: "#5B7A88", margin: 0, flex: 1 }}>{pick(p.excerpt, lang)}</p>
                   <span style={{ fontSize: 13.5, fontWeight: 800, color: "#30B6DE", marginTop: 4 }}>{ui.readMore} {dir === "rtl" ? "←" : "→"}</span>

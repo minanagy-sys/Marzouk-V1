@@ -5,6 +5,7 @@ import CaseDetailView from "./CaseDetailView";
 import { getCases, getCase, getCaseParams } from "@/lib/data/cases";
 import { pick, slugFor, type Lang } from "@/lib/data/types";
 import { altLangs, stripBrand } from "@/lib/seo";
+import { caseGraph } from "@/lib/schema";
 import { SITE } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -42,28 +43,12 @@ export default async function CasePage({ params }: { params: Promise<{ lang: str
   const related = all.filter((c) => c.slug !== item.slug && c.category === item.category).slice(0, 3);
   const url = `${SITE.url}/${l}/cases/${slugFor(item, l)}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: item.title.en || item.title.ar,
-    description: item.excerpt.en || item.excerpt.ar,
-    url,
-    inLanguage: l,
-    author: { "@type": "Physician", name: SITE.nameEn },
-  };
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.url}/${l}` },
-      { "@type": "ListItem", position: 2, name: "Cases", item: `${SITE.url}/${l}/cases` },
-      { "@type": "ListItem", position: 3, name: item.title.en || item.title.ar, item: url },
-    ],
-  };
+  // Patient story = narrative Article (+ BreadcrumbList), NOT MedicalWebPage.
+  const jsonLd = caseGraph(l, item, url, l === "ar" ? "الحالات" : "Cases");
 
   return (
     <>
-      <JsonLd data={[jsonLd, breadcrumb]} />
+      <JsonLd data={jsonLd} />
       <CaseDetailView item={item} related={related} />
     </>
   );
