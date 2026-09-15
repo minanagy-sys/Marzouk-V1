@@ -84,7 +84,7 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
               {related.map((p) => (
                 <HoverBox key={p.slug} as={Link} href={lp(`/blogs/${slugFor(p, lang)}`)} style={{ background: "#ffffff", border: "1px solid rgba(12,52,70,0.08)", borderRadius: 24, overflow: "hidden", boxShadow: "0 4px 14px rgba(12,52,70,0.04)", display: "flex", flexDirection: "column", color: "#0C3446" }} hoverStyle={{ transform: "translateY(-8px)", boxShadow: "0 24px 50px rgba(48,182,222,0.18)", borderColor: "rgba(48,182,222,0.5)", color: "#0C3446" }}>
                   <div style={{ height: 170 }}>
-                    <ImageSlot src={p.imageUrl} placeholder={ui.photoPh} style={{ width: "100%", height: 170 }} />
+                    <ImageSlot src={p.imageUrl} alt={pick(p.title, lang)} placeholder={ui.photoPh} style={{ width: "100%", height: 170 }} />
                   </div>
                   <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 10 }}>
                     <span style={{ fontSize: 12, color: "#8AA5B1", fontWeight: 700 }}>{p.date}</span>
