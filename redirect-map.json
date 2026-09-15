@@ -5,9 +5,9 @@
     "/newsdetail/افتتاح عيادة مدينة نصر": "/ar/blogs/افتتاح-عيادة-مدينة-نصر",
     "/newsdetail/افتتاح فرع التجمع الخامس": "/ar/blogs/افتتاح-فرع-التجمع-الخامس",
     "/servicedetail/ولادة-قيصرية-بدون-ألم": "/ar/services/الولادة-القيصرية-بدون-ألم",
-    "/servicedetail/شد-البطن-مع-القيصري-mommy-makeover": "/ar/services/شد-البطن-مع-القيصري-mommy-makeover",
-    "/servicedetail/اسئصال-الأورام-الليفية-المعقدة": "/ar/services/اسئصال-الأورام-الليفية-المعقدة",
-    "/servicedetail/علاج-بطانة-الرحم-المهاجرة": "/ar/services/علاج-بطانة-الرحم-المهاجرة",
+    "/servicedetail/شد-البطن-مع-القيصري-mommy-makeover": "/ar/services/استئصال-الأورام-الليفية-المعقدة-مع-نحت-القوام-او-شد-البطن",
+    "/servicedetail/اسئصال-الأورام-الليفية-المعقدة": "/ar/services/استئصال-الأورام-الليفية-المعقدة",
+    "/servicedetail/علاج-بطانة-الرحم-المهاجرة": "/ar/services/بطانة-الرحم-المهاجرة",
     "/servicedetail/التجميل-النسائي": "/ar/services/التجميل-النسائي",
     "/servicedetail/ولادة-طبيعية-بدون-ألم": "/ar/services/الولادة-الطبيعية-بدون-ألم",
     "/successstorydetail/استئصال-ورم-في-الشهر-الثالث-من-الحمل": "/ar/cases/استئصال-ورم-في-الشهر-الثالث-من-الحمل",
@@ -82,7 +82,7 @@
     "/successstorydetail/a fibroid destroys her life": "/en/cases/a-fibroid-destroys-her-life",
     "/successstorydetail/a natural birth without pain on a special day": "/en/cases/pain-free-natural-birth-story",
     "/successstorydetail/success story": "/en/cases/pain-free-natural-birth-story",
-    "/successstorydetail/14-kilo fibroid": "/en/cases/extracting-a-14-kilograms-fibroid-during-pregnancy"
+    "/successstorydetail/14-kilo fibroid": "/en/cases/extracting-a-14-kilograms-fibroid-during-pregnancy-while-preserving-the-fetus-and-the-uterus"
   },
   "static": {
     "/whoweare": "/ar/about",
