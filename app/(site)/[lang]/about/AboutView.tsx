@@ -57,6 +57,20 @@ export default function AboutView({ testimonials, values, features, stats }: { t
                 </div>
               ))}
             </div>
+
+            {a.milestones?.length ? (
+              <div style={{ marginTop: 40 }}>
+                <div style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 700, color: "#0C3446", marginBottom: 18 }}>{t.milestonesTitle}</div>
+                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+                  {a.milestones.map((m, i) => (
+                    <li key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                      <span style={{ flex: "0 0 auto", minWidth: 62, textAlign: "center", fontFamily: SERIF, fontWeight: 700, fontSize: 15, color: "#ffffff", background: "linear-gradient(135deg, #1E92B8, #30B6DE)", borderRadius: 999, padding: "6px 12px", boxShadow: "0 6px 14px rgba(48,182,222,0.25)" }}>{m.year}</span>
+                      <span style={{ fontSize: 15.5, lineHeight: 1.85, color: "#46687A", paddingTop: 4 }}>{m.text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
         </div>
       </section>

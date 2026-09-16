@@ -8,11 +8,12 @@ export function aboutContent(lang: Lang) {
         pageTitle: "عن د. أحمد مرزوق",
         pageSub: "استشاري النساء والتوليد وجراحة الأورام، ومبتكر تجربة الولادة بدون ألم في مصر.",
         whoKicker: "من نحن",
-        whoTitle: "رعاية إنسانية قبل أن تكون طبية",
+        whoTitle: "الدكتور أحمد مرزوق",
         whoBody1:
-          "يقود د. أحمد مرزوق فريقًا طبيًا متكاملًا يقدم مجموعة كاملة من خدمات الأمومة — من متابعة ما قبل الولادة إلى تجربة الولادة بدون ألم بنوعيها الطبيعية والقيصرية — إلى جانب مجموعة شاملة من خدمات أمراض النساء للمريضات من جميع الأعمار.",
+          "الدكتور أحمد مرزوق محمد حسين، استشاري جراحات النساء والتوليد، وُلد في القاهرة عام 1986. تخرج من كلية الطب جامعة عين شمس، وحصل على ماجستير أمراض النساء والتوليد والعقم (2015)، ودبلومة جراحة مناظير أمراض النساء من كليرمون – فرنسا، وعضوية الكلية الملكية لأمراض النساء والتوليد (MRCOG) بلندن (2011)، والزمالة في أمراض النساء التجميلية بدبي (أغسطس 2021).",
         whoBody2:
-          "كما يتميز برعاية متخصصة في حالات الأورام الليفية المعقدة وبطانة الرحم المهاجرة وجراحات التجميل النسائي، مع مهارة نادرة في الحفاظ على الرحم والقدرة على الإنجاب حتى في أصعب الحالات.",
+          "يتخصص في استئصال أورام الرحم الليفية المعقدة دون التأثير على الرحم، ويستقبل مريضات من جميع أنحاء العالم لإجراء أدق العمليات وأكثرها تعقيدًا. وهو أول من أدخل تقنية التاب بلوك (TAP Block) لولادة قيصرية بدون ألم في مصر والشرق الأوسط، وأول من أجرى ولادة طبيعية بدون ألم في مصر والوطن العربي — وقد طُبّقت تقنيته على أكثر من 10,000 أم دون أي آثار جانبية.",
+        milestonesTitle: "محطات ومساهمات علمية",
         statBirths: "ولادة بدون ألم",
         vmKicker: "من نحن",
         vmTitle: "رسالتنا ورؤيتنا وقيمنا",
@@ -26,11 +27,12 @@ export function aboutContent(lang: Lang) {
         pageTitle: "About Dr. Ahmed Marzouk",
         pageSub: "Consultant of obstetrics, gynecology & oncologic surgery — pioneer of the pain-free delivery experience in Egypt.",
         whoKicker: "Who we are",
-        whoTitle: "Humane care before medical care",
+        whoTitle: "Dr. Ahmed Marzouk",
         whoBody1:
-          "Dr. Ahmed Marzouk leads a complete medical team offering a full range of maternity services — from prenatal follow-up to pain-free natural and cesarean delivery — alongside comprehensive gynecology services for patients of all ages.",
+          "Dr. Ahmed Marzouk Mohamed Hussein is a consultant of obstetrics and gynecologic surgery, born in Cairo in 1986. He graduated from the Faculty of Medicine at Ain Shams University, and holds a Master's degree in Obstetrics, Gynecology & Infertility (2015), a diploma in gynecologic endoscopic surgery from Clermont — France, the Membership of the Royal College of Obstetricians and Gynaecologists (MRCOG) in London (2011), and a Fellowship in cosmetic gynecology in Dubai (August 2021).",
         whoBody2:
-          "He is distinguished by specialized care for complex fibroids, endometriosis, and cosmetic gynecology, with rare skill in preserving the uterus and fertility even in the most difficult cases.",
+          "He specializes in removing complex uterine fibroids without affecting the uterus, and receives patients from all over the world for the most precise and complex operations. He was the first to introduce the TAP Block technique for pain-free cesarean delivery in Egypt and the Middle East, and the first to perform a pain-free natural birth in Egypt and the Arab world — his technique has now been applied to more than 10,000 mothers with no side effects.",
+        milestonesTitle: "Milestones & scientific contributions",
         statBirths: "Pain-free deliveries",
         vmKicker: "Who we are",
         vmTitle: "Our Mission, Vision & Values",
@@ -51,6 +53,24 @@ export function aboutContent(lang: Lang) {
         { num: "10,000+", label: "Pain-free deliveries" },
         { num: "14 kg", label: "Largest tumor removed while preserving the fetus" },
         { num: "1 Clinic", label: "Fifth Settlement — Polaris Mall" },
+      ];
+
+  const milestones = isAr
+    ? [
+        { year: "2011", text: "الحصول على عضوية الكلية الملكية لأمراض النساء والتوليد (MRCOG) بلندن." },
+        { year: "2015", text: "ماجستير أمراض النساء والتوليد والعقم، وإتمام دبلومة جراحة المناظير من كليرمون – فرنسا." },
+        { year: "2017", text: "أول تطبيق لتقنية التاب بلوك (TAP Block) لولادة قيصرية بدون ألم في مصر والشرق الأوسط." },
+        { year: "2019", text: "استئصال أكبر ورم ليفي (14 كجم) مع الحفاظ على الرحم والجنين." },
+        { year: "2020", text: "الاحتفال بأكثر من 10,000 أم وُلدن بدون ألم، ومتابعة من أكثر من 45 دولة حول العالم." },
+        { year: "2021", text: "الحصول على الزمالة في أمراض النساء التجميلية بدبي." },
+      ]
+    : [
+        { year: "2011", text: "Awarded the Membership of the Royal College of Obstetricians and Gynaecologists (MRCOG) in London." },
+        { year: "2015", text: "Master's degree in Obstetrics, Gynecology & Infertility, and completion of the endoscopic surgery diploma from Clermont — France." },
+        { year: "2017", text: "First application of the TAP Block technique for pain-free cesarean delivery in Egypt and the Middle East." },
+        { year: "2019", text: "Removed the largest uterine fibroid (14 kg) while preserving the uterus and the fetus." },
+        { year: "2020", text: "Celebrated more than 10,000 mothers who delivered pain-free, followed by patients from over 45 countries worldwide." },
+        { year: "2021", text: "Awarded the Fellowship in cosmetic gynecology in Dubai." },
       ];
 
   const vm = isAr
@@ -91,5 +111,5 @@ export function aboutContent(lang: Lang) {
         { name: "Semsema Ali", text: "Your skill made me travel to Egypt just to deliver with you — and I would do it again. Everything I feared about birth changed completely." },
       ];
 
-  return { t, facts, vm, why, testimonials };
+  return { t, facts, milestones, vm, why, testimonials };
 }
