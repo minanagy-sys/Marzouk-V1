@@ -37,11 +37,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
     openGraph: {
       type: "website", siteName: "د. أحمد مرزوق", url: SITE.url,
-      images: [{ url: process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.jpg` }],
+      images: [{ url: process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.webp` }],
     },
     twitter: {
       card: "summary_large_image",
-      images: [process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.jpg`],
+      images: [process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.webp`],
     },
     ...(google || bing
       ? { verification: { ...(google ? { google } : {}), ...(bing ? { other: { "msvalidate.01": bing } } : {}) } }
