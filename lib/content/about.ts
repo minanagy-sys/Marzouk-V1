@@ -12,8 +12,10 @@ export function aboutContent(lang: Lang) {
         whoBody1:
           "الدكتور أحمد مرزوق محمد حسين، استشاري جراحات النساء والتوليد، وُلد في القاهرة عام 1986. تخرج من كلية الطب جامعة عين شمس، وحصل على ماجستير أمراض النساء والتوليد والعقم (2015)، ودبلومة جراحة مناظير أمراض النساء من كليرمون – فرنسا، وعضوية الكلية الملكية لأمراض النساء والتوليد (MRCOG) بلندن (2011)، والزمالة في أمراض النساء التجميلية بدبي (أغسطس 2021).",
         whoBody2:
-          "يتخصص في استئصال أورام الرحم الليفية المعقدة دون التأثير على الرحم، ويستقبل مريضات من جميع أنحاء العالم لإجراء أدق العمليات وأكثرها تعقيدًا. وهو أول من أدخل تقنية التاب بلوك (TAP Block) لولادة قيصرية بدون ألم في مصر والشرق الأوسط، وأول من أجرى ولادة طبيعية بدون ألم في مصر والوطن العربي — وقد طُبّقت تقنيته على أكثر من 10,000 أم دون أي آثار جانبية.",
-        milestonesTitle: "محطات ومساهمات علمية",
+          "يتخصص الدكتور أحمد مرزوق في استئصال أورام الرحم الليفية دون التأثير على الرحم، ويستقبل المريضات من جميع أنحاء العالم لإجراء أكثر العمليات الجراحية تعقيدًا. وينبع إقدامه على علاج الحالات المعقدة من إيمانه بأن الجنين روحٌ يجب أن نحارب من أجلها؛ لذا تسعى المريضات من كل مكان للاستفادة من خبرته.",
+        whoBody3:
+          "وللدكتور أحمد مرزوق العديد من الإضافات والتعديلات على تقنيات الولادة القيصرية والطبيعية، فهو أول من أدخل تعديلات تُجنّب السيدات الألم لمدة 36 ساعة بعد الولادة عبر تطبيق تخدير جدار البطن (TAP Block) وكذلك تقنية (QL Block) الأحدث، وأول من أجرى ولادة طبيعية بدون ألم في مصر والوطن العربي. وقد طُبّقت تقنيته الشهيرة على أكثر من 10,000 أم من جميع أنحاء العالم دون أي آثار جانبية، مما مكّنهن من العودة إلى حياتهن الطبيعية بعد الجراحة مباشرة.",
+        milestonesTitle: "المشاركات والإنجازات العلمية",
         statBirths: "ولادة بدون ألم",
         vmKicker: "من نحن",
         vmTitle: "رسالتنا ورؤيتنا وقيمنا",
@@ -31,8 +33,10 @@ export function aboutContent(lang: Lang) {
         whoBody1:
           "Dr. Ahmed Marzouk Mohamed Hussein is a consultant of obstetrics and gynecologic surgery, born in Cairo in 1986. He graduated from the Faculty of Medicine at Ain Shams University, and holds a Master's degree in Obstetrics, Gynecology & Infertility (2015), a diploma in gynecologic endoscopic surgery from Clermont — France, the Membership of the Royal College of Obstetricians and Gynaecologists (MRCOG) in London (2011), and a Fellowship in cosmetic gynecology in Dubai (August 2021).",
         whoBody2:
-          "He specializes in removing complex uterine fibroids without affecting the uterus, and receives patients from all over the world for the most precise and complex operations. He was the first to introduce the TAP Block technique for pain-free cesarean delivery in Egypt and the Middle East, and the first to perform a pain-free natural birth in Egypt and the Arab world — his technique has now been applied to more than 10,000 mothers with no side effects.",
-        milestonesTitle: "Milestones & scientific contributions",
+          "Dr. Ahmed Marzouk specializes in removing uterine fibroids without affecting the uterus, and receives patients from all over the world for the most complex operations. His readiness to treat difficult cases stems from his belief that the fetus is a soul worth fighting for — which is why patients seek out his expertise from everywhere.",
+        whoBody3:
+          "He has introduced numerous refinements to cesarean and natural delivery techniques. He was the first to apply modifications that spare women pain for 36 hours after delivery using the abdominal-wall TAP Block and the newer QL Block, and the first to perform a pain-free natural birth in Egypt and the Arab world. His renowned technique has been applied to more than 10,000 mothers worldwide with no side effects, letting them return to normal life immediately after surgery.",
+        milestonesTitle: "Scientific contributions & achievements",
         statBirths: "Pain-free deliveries",
         vmKicker: "Who we are",
         vmTitle: "Our Mission, Vision & Values",
@@ -57,19 +61,19 @@ export function aboutContent(lang: Lang) {
 
   const milestones = isAr
     ? [
-        { year: "2011", text: "الحصول على عضوية الكلية الملكية لأمراض النساء والتوليد (MRCOG) بلندن." },
-        { year: "2015", text: "ماجستير أمراض النساء والتوليد والعقم، وإتمام دبلومة جراحة المناظير من كليرمون – فرنسا." },
-        { year: "2017", text: "أول تطبيق لتقنية التاب بلوك (TAP Block) لولادة قيصرية بدون ألم في مصر والشرق الأوسط." },
-        { year: "2019", text: "استئصال أكبر ورم ليفي (14 كجم) مع الحفاظ على الرحم والجنين." },
-        { year: "2020", text: "الاحتفال بأكثر من 10,000 أم وُلدن بدون ألم، ومتابعة من أكثر من 45 دولة حول العالم." },
-        { year: "2021", text: "الحصول على الزمالة في أمراض النساء التجميلية بدبي." },
+        { year: "2017", text: "إدخال تقنية التاب بلوك (TAP Block) لتوفير ولادة قيصرية غير مؤلمة، لأول مرة في مصر والشرق الأوسط." },
+        { year: "2017", text: "أول من أدخل تصوير جلسات الولادة (PhotoSessions) داخل غرفة العمليات." },
+        { year: "2019", text: "استخراج ورم ليفي وزنه 14 كجم من رحم امرأة حامل في فبراير مع الحفاظ على الجنين والرحم وإنقاذ حياتها — لأول مرة في الشرق الأوسط." },
+        { year: "2020", text: "الاحتفال بأكثر من 10,000 أم في مارس." },
+        { year: "2020", text: "الوصول إلى 1,000,000 متابع من 45 دولة في يونيو." },
+        { year: "2021", text: "الحصول على درجة الزمالة في أمراض النساء التجميلية بدبي." },
       ]
     : [
-        { year: "2011", text: "Awarded the Membership of the Royal College of Obstetricians and Gynaecologists (MRCOG) in London." },
-        { year: "2015", text: "Master's degree in Obstetrics, Gynecology & Infertility, and completion of the endoscopic surgery diploma from Clermont — France." },
-        { year: "2017", text: "First application of the TAP Block technique for pain-free cesarean delivery in Egypt and the Middle East." },
-        { year: "2019", text: "Removed the largest uterine fibroid (14 kg) while preserving the uterus and the fetus." },
-        { year: "2020", text: "Celebrated more than 10,000 mothers who delivered pain-free, followed by patients from over 45 countries worldwide." },
+        { year: "2017", text: "Introduced the TAP Block technique for pain-free cesarean delivery — a first in Egypt and the Middle East." },
+        { year: "2017", text: "First to bring PhotoSessions into the operating room." },
+        { year: "2019", text: "Removed a 14 kg uterine fibroid from a pregnant woman in February while preserving the fetus and uterus and saving her life — a first in the Middle East." },
+        { year: "2020", text: "Celebrated more than 10,000 mothers in March." },
+        { year: "2020", text: "Reached 1,000,000 followers across 45 countries in June." },
         { year: "2021", text: "Awarded the Fellowship in cosmetic gynecology in Dubai." },
       ];
 

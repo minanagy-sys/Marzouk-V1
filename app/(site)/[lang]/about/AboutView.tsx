@@ -49,6 +49,9 @@ export default function AboutView({ testimonials, values, features, stats }: { t
             <h2 style={{ fontFamily: SERIF, fontSize: "clamp(28px, 3.2vw, 42px)", fontWeight: 700, margin: "14px 0 0", color: "#0C3446", lineHeight: 1.35 }}>{t.whoTitle}</h2>
             <p style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", margin: "22px 0 0", textWrap: "pretty" }}>{t.whoBody1}</p>
             <p style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", margin: "16px 0 0", textWrap: "pretty" }}>{t.whoBody2}</p>
+            {t.whoBody3 ? (
+              <p style={{ fontSize: 16.5, lineHeight: 2.05, color: "#46687A", margin: "16px 0 0", textWrap: "pretty" }}>{t.whoBody3}</p>
+            ) : null}
             <div style={{ display: "flex", gap: 34, marginTop: 32, flexWrap: "wrap" }}>
               {facts.map((f) => (
                 <div key={f.id}>
