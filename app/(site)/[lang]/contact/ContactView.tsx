@@ -11,6 +11,7 @@ import { usePageText, useSetting } from "@/lib/settings";
 import { contactContent } from "@/lib/content/contact";
 import { common, CONTACT_INFO } from "@/lib/content/common";
 import { pick, type Clinic } from "@/lib/data/types";
+import { trackEvent } from "@/lib/analytics";
 import { SERIF, SANS } from "@/lib/theme";
 
 function MapPin({ clinic, index, open, onToggle, directions, lang }: { clinic: Clinic; index: number; open: boolean; onToggle: () => void; directions: string; lang: Lang }) {
@@ -72,6 +73,7 @@ export default function ContactView({ clinics }: { clinics: Clinic[] }) {
         return;
       }
       setStatus("sent");
+      trackEvent("booking_submit", { form: "contact", service: form.service || undefined, language: lang });
     } catch { setErrText(t.errorMsg); setStatus("error"); }
   };
 

@@ -4,6 +4,7 @@ import HoverBox from "./HoverBox";
 import { CONTACT_INFO } from "@/lib/content/common";
 import { useLang } from "@/lib/lang";
 import { useSetting } from "@/lib/settings";
+import { trackEvent } from "@/lib/analytics";
 
 // Floating WhatsApp button, fixed bottom corner — identical to the original.
 export default function WhatsappFloat() {
@@ -17,6 +18,7 @@ export default function WhatsappFloat() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
+      onClick={() => trackEvent("whatsapp_click", { method: "whatsapp", location: "float_button", language: lang })}
       style={{
         position: "fixed",
         bottom: 28,
