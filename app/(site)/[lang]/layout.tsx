@@ -30,13 +30,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
     description:
       "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",
+    icons: {
+      icon: [{ url: "/brand/logo.png", type: "image/png" }],
+      shortcut: "/brand/logo.png",
+      apple: "/brand/logo.png",
+    },
     openGraph: {
       type: "website", siteName: "د. أحمد مرزوق", url: SITE.url,
-      ...(process.env.NEXT_PUBLIC_OG_IMAGE ? { images: [{ url: process.env.NEXT_PUBLIC_OG_IMAGE }] } : {}),
+      images: [{ url: process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.jpg` }],
     },
     twitter: {
       card: "summary_large_image",
-      ...(process.env.NEXT_PUBLIC_OG_IMAGE ? { images: [process.env.NEXT_PUBLIC_OG_IMAGE] } : {}),
+      images: [process.env.NEXT_PUBLIC_OG_IMAGE || `${SITE.url}/brand/og-doctor.jpg`],
     },
     ...(google || bing
       ? { verification: { ...(google ? { google } : {}), ...(bing ? { other: { "msvalidate.01": bing } } : {}) } }
