@@ -75,7 +75,7 @@ export async function pageMetadata(opts: {
   const bare = stripBrand(dbTitle || (lang === "ar" ? defTitleAr : defTitleEn));
   const description = pick(s[`seo.${page}.desc`]) || defDesc;
   // Editable share image (Admin → Site text → SEO), else the doctor's photo default.
-  const ogImage = absUrl(s["seo.ogImage"]?.en || s["seo.ogImage"]?.ar) || absUrl("/brand/og-doctor.webp");
+  const ogImage = absUrl(s["seo.ogImage"]?.en || s["seo.ogImage"]?.ar) || absUrl("/brand/og-doctor.jpg");
   const alternates = altLangs(lang, arPath, enPath);
   // Social title should carry the brand explicitly (OG has no template).
   const ogTitle = absoluteTitle || `${bare} | ${BRAND[lang]}`;
