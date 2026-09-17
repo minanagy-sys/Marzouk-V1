@@ -25,6 +25,11 @@ const nextConfig = {
   // Pin the workspace root so a stray lockfile in the home folder doesn't confuse
   // Next's file tracing (silences the "multiple lockfiles" build warning).
   outputFileTracingRoot: __dirname,
+  // Serve the brand logo at the well-known /favicon.ico path so a bare
+  // /favicon.ico request returns an image (not the app's HTML 404 page).
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/brand/logo.png" }];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
