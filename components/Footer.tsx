@@ -74,23 +74,14 @@ export default function Footer(_props?: { variant?: "full" | "simple" }) {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <span
-                style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #30B6DE, #0E5372)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#ffffff",
-                  fontFamily: SERIF,
-                  fontWeight: 700,
-                  fontSize: 20,
-                }}
-              >
-                Dr
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/logo.png"
+                alt={st("brand", lang, t.brand)}
+                width={46}
+                height={46}
+                style={{ width: 46, height: 46, borderRadius: "50%", objectFit: "cover", boxShadow: "0 6px 16px rgba(48,182,222,0.35)" }}
+              />
               <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 20, color: "#ffffff" }}>{st("brand", lang, t.brand)}</span>
             </div>
             <p style={{ fontSize: 14.5, lineHeight: 2, margin: "20px 0 0", maxWidth: 380 }}>{st("footer.about", lang, t.footerAbout)}</p>

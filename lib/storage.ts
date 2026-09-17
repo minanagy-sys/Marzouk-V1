@@ -67,3 +67,25 @@ export function resolveUpload(segments: string[]): string | null {
   if (target !== dir && !target.startsWith(dir + path.sep)) return null;
   return target;
 }
+
+/**
+ * Brand assets (logo, favicons, OG image, manifest icons) live OUTSIDE the
+ * build output so they survive redeploys — served by app/brand/[...path].
+ *
+ * Env:
+ *   BRAND_DIR  absolute or cwd-relative folder. Defaults to "<UPLOAD_DIR>/brand"
+ *              so you can keep the brand folder next to uploads on a persistent
+ *              path (e.g. /home/USER/uploads/brand) and never re-upload it.
+ */
+export function brandDir(): string {
+  const dir = process.env.BRAND_DIR || path.join(uploadDir(), "brand");
+  return path.isAbsolute(dir) ? dir : path.join(process.cwd(), dir);
+}
+
+/** Safely resolve a requested brand path to an absolute file path (no traversal). */
+export function resolveBrand(segments: string[]): string | null {
+  const dir = brandDir();
+  const target = path.normalize(path.join(dir, ...segments));
+  if (target !== dir && !target.startsWith(dir + path.sep)) return null;
+  return target;
+}
