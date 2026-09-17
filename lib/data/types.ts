@@ -6,7 +6,12 @@ export type BiText = { ar: string; en: string };
 
 /** Pick the right language from a bilingual field. */
 export function pick(v: BiText, lang: Lang): string {
-  return v[lang] ?? v.ar ?? "";
+  // Fall back across languages when the preferred one is missing OR empty.
+  // Recovered content is often Arabic-only (empty title_en/body_en), and an
+  // empty string must not render as a blank card — so we treat "" as missing.
+  const primary = v[lang];
+  if (primary != null && primary !== "") return primary;
+  return v.ar || v.en || "";
 }
 
 /** The localized URL slug for a record, falling back to the canonical slug. */
