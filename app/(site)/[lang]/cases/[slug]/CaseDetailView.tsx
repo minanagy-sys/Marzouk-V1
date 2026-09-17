@@ -9,7 +9,7 @@ import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
 import { common } from "@/lib/content/common";
-import { slugFor, pick, type CaseItem } from "@/lib/data/types";
+import { slugFor, pick, pickStrict, type CaseItem } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function CaseDetailView({ item, related }: { item: CaseItem; related: CaseItem[] }) {
@@ -35,7 +35,7 @@ export default function CaseDetailView({ item, related }: { item: CaseItem; rela
             <Link href={lp("/")} style={{ color: "#8FE0F7" }}>{tc.navHome}</Link> · <Link href={lp("/cases")} style={{ color: "#8FE0F7" }}>{ui.crumb}</Link>
           </div>
           <div style={{ marginTop: 20 }}>
-            <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "6px 16px", fontSize: 12.5, fontWeight: 800 }}>{pick(item.tag, lang)}</span>
+            <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "6px 16px", fontSize: 12.5, fontWeight: 800 }}>{pickStrict(item.tag, lang)}</span>
           </div>
           <h1 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(28px, 4vw, 46px)", color: "#ffffff", margin: "18px 0 0", lineHeight: 1.35 }}>{pick(item.title, lang)}</h1>
           <p style={{ fontSize: 17.5, lineHeight: 1.9, color: "rgba(255,255,255,0.75)", margin: "16px 0 0", textWrap: "pretty" }}>{pick(item.excerpt, lang)}</p>
@@ -69,7 +69,7 @@ export default function CaseDetailView({ item, related }: { item: CaseItem; rela
                     <ImageSlot src={r.imageUrl} placeholder={ui.photoPh} style={{ width: "100%", height: 170 }} />
                   </div>
                   <div style={{ padding: 22, display: "flex", flexDirection: "column", gap: 10 }}>
-                    <span style={{ fontSize: 12, color: "#1E92B8", fontWeight: 800 }}>{pick(r.tag, lang)}</span>
+                    <span style={{ fontSize: 12, color: "#1E92B8", fontWeight: 800 }}>{pickStrict(r.tag, lang)}</span>
                     <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 17.5, lineHeight: 1.5 }}>{pick(r.title, lang)}</span>
                   </div>
                 </HoverBox>

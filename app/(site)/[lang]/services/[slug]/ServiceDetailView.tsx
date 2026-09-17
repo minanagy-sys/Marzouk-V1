@@ -9,7 +9,7 @@ import HoverBox from "@/components/HoverBox";
 import ImageSlot from "@/components/ImageSlot";
 import { useLang } from "@/lib/lang";
 import { common } from "@/lib/content/common";
-import { slugFor, pick, type Service } from "@/lib/data/types";
+import { slugFor, pick, pickStrict, type Service } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function ServiceDetailView({ service, related }: { service: Service; related: Service[] }) {
@@ -41,7 +41,7 @@ export default function ServiceDetailView({ service, related }: { service: Servi
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 22 }}>
             <span style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(48,182,222,0.15)", border: "1px solid rgba(48,182,222,0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, color: "#8FE0F7", fontFamily: SERIF }}>{service.glyph}</span>
-            <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "6px 16px", fontSize: 12.5, fontWeight: 800 }}>{pick(service.tag, lang)}</span>
+            <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "6px 16px", fontSize: 12.5, fontWeight: 800 }}>{pickStrict(service.tag, lang)}</span>
           </div>
           <h1 style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(32px, 4.4vw, 54px)", color: "#ffffff", margin: "18px 0 0", lineHeight: 1.3 }}>{pick(service.title, lang)}</h1>
           <p style={{ fontSize: 18, lineHeight: 1.9, color: "rgba(255,255,255,0.75)", margin: "18px 0 0", maxWidth: 680, textWrap: "pretty" }}>{pick(service.heroSub, lang)}</p>

@@ -14,6 +14,17 @@ export function pick(v: BiText, lang: Lang): string {
   return v.ar || v.en || "";
 }
 
+/**
+ * Language-strict variant for short LABELS (tag/category chips): returns the
+ * value ONLY in the requested language, never the other one. A monolingual tag
+ * (e.g. an English-only "Cesarean") must not surface on the Arabic page — the
+ * caller hides the chip when this returns empty. Content (titles/bodies) should
+ * still use pick() so they never render blank.
+ */
+export function pickStrict(v: BiText | undefined, lang: Lang): string {
+  return (v && v[lang]) || "";
+}
+
 /** The localized URL slug for a record, falling back to the canonical slug. */
 export function slugFor(item: { slug: string; slugAr?: string; slugEn?: string }, lang: Lang): string {
   return (lang === "en" ? item.slugEn : item.slugAr) || item.slug;

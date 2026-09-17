@@ -11,7 +11,7 @@ import { useLang } from "@/lib/lang";
 import { usePageText } from "@/lib/settings";
 import { blogsUi } from "@/lib/content/blogs";
 import { common } from "@/lib/content/common";
-import { slugFor, pick, type BlogPostBi } from "@/lib/data/types";
+import { slugFor, pick, pickStrict, type BlogPostBi } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function BlogPostView({ post, related }: { post: BlogPostBi; related: BlogPostBi[] }) {
@@ -35,10 +35,10 @@ export default function BlogPostView({ post, related }: { post: BlogPostBi; rela
           <div style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", fontWeight: 500 }}>
             <Link href={lp("/")} style={{ color: "#8FE0F7" }}>{tc.navHome}</Link> · <Link href={lp("/blogs")} style={{ color: "#8FE0F7" }}>{tc.navBlogs}</Link>
           </div>
-          {(pick(post.tag, lang) || post.date) && (
+          {(pickStrict(post.tag, lang) || post.date) && (
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 22 }}>
-              {pick(post.tag, lang) && (
-                <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "5px 15px", fontSize: 12.5, fontWeight: 800 }}>{pick(post.tag, lang)}</span>
+              {pickStrict(post.tag, lang) && (
+                <span style={{ background: "rgba(48,182,222,0.18)", border: "1px solid rgba(48,182,222,0.4)", color: "#8FE0F7", borderRadius: 999, padding: "5px 15px", fontSize: 12.5, fontWeight: 800 }}>{pickStrict(post.tag, lang)}</span>
               )}
               {post.date && (
                 <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", fontWeight: 700 }}>{post.date}</span>

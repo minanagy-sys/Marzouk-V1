@@ -12,7 +12,7 @@ import { useLang } from "@/lib/lang";
 import { usePageText } from "@/lib/settings";
 import { casesContent, caseCardStyle } from "@/lib/content/cases";
 import { common } from "@/lib/content/common";
-import { slugFor, pick, type CaseItem } from "@/lib/data/types";
+import { slugFor, pick, pickStrict, type CaseItem } from "@/lib/data/types";
 import { SERIF, SANS } from "@/lib/theme";
 
 export default function CasesView({ cases }: { cases: CaseItem[] }) {
@@ -69,7 +69,7 @@ export default function CasesView({ cases }: { cases: CaseItem[] }) {
                 <div style={{ position: "absolute", top: -24, insetInlineEnd: 12, fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(110px, 13vw, 180px)", lineHeight: 1.2, color: s.numC, pointerEvents: "none", userSelect: "none" }}>{s.numStr}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <span style={{ width: 46, height: 2, background: "#30B6DE", borderRadius: 2 }} />
-                  <span style={{ background: s.chipBg, color: s.chipFg, border: "1px solid rgba(48,182,222,0.4)", borderRadius: 999, padding: "6px 18px", fontSize: 12.5, fontWeight: 800, letterSpacing: "0.6px" }}>{pick(c.tag, lang)}</span>
+                  <span style={{ background: s.chipBg, color: s.chipFg, border: "1px solid rgba(48,182,222,0.4)", borderRadius: 999, padding: "6px 18px", fontSize: 12.5, fontWeight: 800, letterSpacing: "0.6px" }}>{pickStrict(c.tag, lang)}</span>
                 </div>
                 <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: "clamp(26px, 3.4vw, 42px)", lineHeight: 1.4, color: s.fg, textWrap: "pretty" }}>{pick(c.title, lang)}</div>
                 <p style={{ fontSize: "clamp(15px, 1.5vw, 17px)", lineHeight: 2.05, color: s.subC, margin: 0, maxWidth: 560, textWrap: "pretty" }}>{pick(c.excerpt, lang)}</p>

@@ -13,7 +13,7 @@ import { useLang } from "@/lib/lang";
 import { usePageText, useSetting } from "@/lib/settings";
 import { homeContent } from "@/lib/content/home";
 import { common, CONTACT_INFO } from "@/lib/content/common";
-import { pick, slugFor, type Service, type CaseItem, type Testimonial, type InstagramPost, type BlogPostBi, type HeroSlide, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
+import { pick, pickStrict, slugFor, type Service, type CaseItem, type Testimonial, type InstagramPost, type BlogPostBi, type HeroSlide, type Stat, type ValueItem, type Feature } from "@/lib/data/types";
 import { ytThumb } from "@/lib/youtube";
 import { SERIF, SANS } from "@/lib/theme";
 
@@ -144,7 +144,7 @@ export default function HomeView({
               <HoverBox key={svc.slug} as={Link} href={lp(`/services/${slugFor(svc, lang)}`)} style={{ flex: "0 0 300px", scrollSnapAlign: "start", position: "relative", height: 440, borderRadius: 26, overflow: "hidden", border: "1px solid rgba(12,52,70,0.08)", boxShadow: "0 10px 30px rgba(12,52,70,0.08)", background: "linear-gradient(160deg, #0A3950, #0E5372)", transition: "all 0.35s ease", color: "#ffffff", display: "block" }} hoverStyle={{ transform: "translateY(-8px)", boxShadow: "0 28px 60px rgba(48,182,222,0.28)", color: "#ffffff" }}>
                 <ImageSlot src={svc.imageUrlHome || svc.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                 <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.25) 0%, rgba(4,32,46,0) 38%, rgba(4,32,46,0.55) 62%, rgba(4,32,46,0.94) 100%)", pointerEvents: "none" }} />
-                <span style={{ position: "absolute", top: 18, insetInlineStart: 18, background: "rgba(48,182,222,0.92)", color: "#ffffff", borderRadius: 999, padding: "6px 16px", fontSize: 12, fontWeight: 800, pointerEvents: "none" }}>{pick(svc.tag, lang)}</span>
+                <span style={{ position: "absolute", top: 18, insetInlineStart: 18, background: "rgba(48,182,222,0.92)", color: "#ffffff", borderRadius: 999, padding: "6px 16px", fontSize: 12, fontWeight: 800, pointerEvents: "none" }}>{pickStrict(svc.tag, lang)}</span>
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 26px", pointerEvents: "none" }}>
                   <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 23, lineHeight: 1.45, color: "#ffffff", display: "block" }}>{pick(svc.title, lang)}</span>
                 </div>
@@ -205,7 +205,7 @@ export default function HomeView({
                 <ImageSlot src={cel.imageUrl} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />
                 {cel.imageUrl2 && <span className="celeb-hover-img" style={{ position: "absolute", inset: 0 }}><ImageSlot src={cel.imageUrl2} placeholder={t.photoPh} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} /></span>}
                 <span style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(4,32,46,0.15) 0%, rgba(4,32,46,0) 34%, rgba(4,32,46,0.72) 66%, rgba(4,32,46,0.96) 100%)", pointerEvents: "none" }} />
-                <span style={{ position: "absolute", top: 18, insetInlineStart: 18, display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#ffffff", borderRadius: 999, padding: "6px 15px", fontSize: 11.5, fontWeight: 800, letterSpacing: "0.4px", pointerEvents: "none", boxShadow: "0 6px 16px rgba(4,32,46,0.4)" }}>★ {pick(cel.tag, lang) || t.celebKicker}</span>
+                <span style={{ position: "absolute", top: 18, insetInlineStart: 18, display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #30B6DE, #1E92B8)", color: "#ffffff", borderRadius: 999, padding: "6px 15px", fontSize: 11.5, fontWeight: 800, letterSpacing: "0.4px", pointerEvents: "none", boxShadow: "0 6px 16px rgba(4,32,46,0.4)" }}>★ {pickStrict(cel.tag, lang) || t.celebKicker}</span>
                 <span style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "30px 26px 28px", pointerEvents: "none", display: "flex", flexDirection: "column", gap: 8 }}>
                   <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 22, lineHeight: 1.4, color: "#ffffff", textShadow: "0 2px 16px rgba(4,32,46,0.6)" }}>{pick(cel.title, lang)}</span>
                   <span style={{ fontSize: 13.5, color: "rgba(255,255,255,0.82)", lineHeight: 1.7, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{pick(cel.excerpt, lang)}</span>
@@ -307,7 +307,7 @@ export default function HomeView({
                   </span>
                   <span style={{ display: "flex", flexDirection: "column", gap: 10, padding: 24 }}>
                     <span style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                      <span style={{ background: "rgba(48,182,222,0.12)", border: "1px solid rgba(48,182,222,0.35)", color: "#1E92B8", borderRadius: 999, padding: "3px 12px", fontSize: 11.5, fontWeight: 800 }}>{n.categoryName ? pick(n.categoryName, lang) : pick(n.tag, lang)}</span>
+                      <span style={{ background: "rgba(48,182,222,0.12)", border: "1px solid rgba(48,182,222,0.35)", color: "#1E92B8", borderRadius: 999, padding: "3px 12px", fontSize: 11.5, fontWeight: 800 }}>{n.categoryName ? pick(n.categoryName, lang) : pickStrict(n.tag, lang)}</span>
                       <span style={{ fontSize: 12, fontWeight: 700, color: "#8AA5B1" }}>{n.date}</span>
                     </span>
                     <span style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 19, lineHeight: 1.5 }}>{pick(n.title, lang)}</span>
