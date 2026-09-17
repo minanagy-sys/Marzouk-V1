@@ -451,6 +451,7 @@ function rowToService(r: any): Service {
     gc: r.span_gc ?? "auto",
     gr: r.span_gr ?? "auto",
     tag: { ar: r.tag_ar ?? "", en: r.tag_en ?? "" },
+    keywords: { ar: r.keywords_ar ?? "", en: r.keywords_en ?? "" },
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     shortDesc: { ar: r.short_desc_ar ?? "", en: r.short_desc_en ?? "" },
     heroSub: { ar: r.hero_sub_ar ?? "", en: r.hero_sub_en ?? "" },

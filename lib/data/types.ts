@@ -64,6 +64,7 @@ export type Service = {
   faq: ServiceFaq[];
   metaTitle: BiText;
   metaDesc: BiText;
+  keywords?: BiText;
 };
 
 /** A parent service / category used to group and filter services. */
@@ -84,6 +85,7 @@ export type CaseItem = {
   title: BiText;
   excerpt: BiText;
   body: BiText;
+  keywords?: BiText;
   showOnHome?: boolean;
 };
 

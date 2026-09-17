@@ -117,6 +117,7 @@ function rowToCase(r: any): CaseItem {
     title: { ar: r.title_ar ?? "", en: r.title_en ?? "" },
     excerpt: { ar: r.excerpt_ar ?? "", en: r.excerpt_en ?? "" },
     body: { ar: sanitizeRichText(r.body_ar), en: sanitizeRichText(r.body_en) },
+    keywords: { ar: r.keywords_ar ?? "", en: r.keywords_en ?? "" },
     showOnHome: r.show_on_home ?? true,
   };
 }

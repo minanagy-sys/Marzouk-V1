@@ -151,6 +151,7 @@ export function serviceGraph(lang: Lang, service: Service, url: string, hubName:
     inLanguage: lang,
     isPartOf: { "@id": `${BASE}/#website` },
     ...(service.imageUrl ? { image: abs(service.imageUrl) } : {}),
+    ...(service.keywords && pick(service.keywords, lang) ? { keywords: pick(service.keywords, lang) } : {}),
     about: { "@id": `${url}#procedure` },
   };
   const nodes: unknown[] = [proc, page, breadcrumb(lang, [
@@ -174,7 +175,8 @@ export function caseGraph(lang: Lang, item: CaseItem, url: string, hubName: stri
     author: physician(lang),
     publisher: { "@id": `${BASE}/#org` },
     ...(item.imageUrl ? { image: abs(item.imageUrl) } : {}),
-    about: pick(item.tag, lang) || undefined,
+    ...(item.keywords && pick(item.keywords, lang) ? { keywords: pick(item.keywords, lang) } : {}),
+    about: (item.keywords && pick(item.keywords, lang)) || pick(item.tag, lang) || undefined,
   };
   return graph([article, breadcrumb(lang, [
     { name: lang === "ar" ? "الرئيسية" : "Home", path: "" },

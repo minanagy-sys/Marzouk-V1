@@ -1,0 +1,33 @@
+-- Recovery: add + populate focus keywords for SERVICES and CASES, from proven
+-- Search Console queries. Matched by slug_ar. Idempotent (MariaDB).
+ALTER TABLE `services` ADD COLUMN IF NOT EXISTS `keywords_ar` TEXT NULL, ADD COLUMN IF NOT EXISTS `keywords_en` TEXT NULL;
+ALTER TABLE `cases` ADD COLUMN IF NOT EXISTS `keywords_ar` TEXT NULL, ADD COLUMN IF NOT EXISTS `keywords_en` TEXT NULL;
+START TRANSACTION;
+UPDATE `services` SET `keywords_ar`='الولادة القيصرية بدون ألم, ولادة قيصرية بدون الم, ولادة قيصرية حقيقية, لاصقة الولادة القيصرية بدون ألم', `keywords_en`='painless cesarean, pain-free c-section, cesarean without pain, real cesarean' WHERE `slug_ar`='الولادة-القيصرية-بدون-ألم';
+UPDATE `services` SET `keywords_ar`='ولادة طبيعية بدون ألم, الولادة الطبيعية بدون ألم, طرق تسهيل الولادة بدون ألم, ولادة بدون طلق', `keywords_en`='painless natural birth, natural delivery without pain, painless labor' WHERE `slug_ar`='الولادة-الطبيعية-بدون-ألم';
+UPDATE `services` SET `keywords_ar`='التجميل النسائي, تجميل المهبل, عمليات تجميل المهبل, تجميل المهبل قبل وبعد', `keywords_en`='cosmetic gynecology, vaginal cosmetic surgery, vaginal rejuvenation' WHERE `slug_ar`='التجميل-النسائي';
+UPDATE `services` SET `keywords_ar`='استئصال الورم الليفي, علاج الورم الليفي, الأورام الليفية, استئصال الأورام الليفية المعقدة', `keywords_en`='complex fibroid removal, uterine fibroid surgery, fibroid treatment' WHERE `slug_ar`='استئصال-الأورام-الليفية-المعقدة';
+UPDATE `services` SET `keywords_ar`='شد البطن مع الولادة القيصرية, عملية شد البطن مع الولادة القيصرية, شد البطن الجزئي مع القيصرية, نحت القوام مع القيصرية', `keywords_en`='tummy tuck with cesarean, mommy makeover, body contouring with c-section' WHERE `slug_ar`='استئصال-الأورام-الليفية-المعقدة-مع-نحت-القوام-او-شد-البطن';
+UPDATE `services` SET `keywords_ar`='بطانة الرحم المهاجرة, اعراض بطانة الرحم المهاجرة, تشخيص بطانة الرحم المهاجرة, علاج بطانة الرحم المهاجرة', `keywords_en`='endometriosis, endometriosis symptoms, endometriosis diagnosis, endometriosis treatment' WHERE `slug_ar`='بطانة-الرحم-المهاجرة';
+UPDATE `cases` SET `keywords_ar`='تجربتي مع استئصال الورم الليفي, تجارب السيدات مع الورم الليفي, تجربتي في القضاء على الورم الليفي', `keywords_en`='my fibroid removal experience, women''s fibroid stories' WHERE `slug_ar`='الخوف-عطلني-11-سنة-عن-إزالة-الورم-الليفي';
+UPDATE `cases` SET `keywords_ar`='ولادة طبيعية بدون ألم, قصة ولادتي بدون طلق, ولادة بدون الم طبيعي', `keywords_en`='painless natural birth story' WHERE `slug_ar`='ولادة-طبيعية-بدون-ألم-في-يوم-مميز';
+UPDATE `cases` SET `keywords_ar`='سامية عاطف, الفنانة سامية عاطف', `keywords_en`='Samia Atef' WHERE `slug_ar`='الفنانة-الجميلة-سامية-عاطف-بعد-8-سنين-من-الانتظار';
+UPDATE `cases` SET `keywords_ar`='انجي يحيى, المذيعة انجي يحيى', `keywords_en`='Angie Yehia' WHERE `slug_ar`='المذيعة-الجميلة-إنجي-يحيى-وأحلى-توأم';
+UPDATE `cases` SET `keywords_ar`='محمد مجدي قفشة, أفشة وزوجته, محمد مجدي', `keywords_en`='Mohamed Magdy Afsha' WHERE `slug_ar`='ولادة-مالك-ابن-نجم-منتخب-مصر-محمد-مجدي';
+UPDATE `cases` SET `keywords_ar`='ايمن الكاشف', `keywords_en`='Ayman El-Kashef' WHERE `slug_ar`='ولادة-ابن-أسطورة-التعليق-الكابتن-أيمن-الكاشف';
+UPDATE `cases` SET `keywords_ar`='محمود الليثي, زوجة محمود الليثي', `keywords_en`='Mahmoud Ellisy, Mahmoud Ellisy wife' WHERE `slug_ar`='الفنان-محمود-الليثي-يستقبل-مولوده-بأحلى-الضحكات';
+UPDATE `cases` SET `keywords_ar`='رنا سماحة', `keywords_en`='Rana Samaha' WHERE `slug_ar`='المطربة-رنا-سماحة-وطلق-الساعة-2-بعد-منتصف-الليل';
+UPDATE `cases` SET `keywords_ar`='شيرين أمين, الأورام الليفية', `keywords_en`='Sherine Amin' WHERE `slug_ar`='الإذاعية-الجميلة-شيرين-أمين-ومأساة-الأورام-الليفية';
+UPDATE `cases` SET `keywords_ar`='خلود الباشا', `keywords_en`='Kholoud Al-Basha' WHERE `slug_ar`='الفنانة-الجميلة-خلود-الباشا-وفرحتها-بمولودتها-كيان';
+UPDATE `cases` SET `keywords_ar`='رانيا مسعد, ولادة طبيعية بدون ألم', `keywords_en`='Rania Massad' WHERE `slug_ar`='الفنانة-الجميلة-رانيا-مسعد-تخوض-الولادة-الطبيعية-بدون-ألم';
+UPDATE `cases` SET `keywords_ar`='عماد فتحي, زوجة عماد فتحي', `keywords_en`='Emad Fathy wife' WHERE `slug_ar`='زوجة-اللاعب-عماد-فتحي-تتمتع-بقيصرية-بدون-ألم';
+UPDATE `cases` SET `keywords_ar`='استئصال ورم 14 كيلو, ورم ليفي أثناء الحمل, استئصال ورم أثناء الحمل', `keywords_en`='14 kg fibroid removal during pregnancy' WHERE `slug_ar`='استئصال-ورم-14-كيلو-أثناء-الحمل-مع-الحفاظ-على-الجنين';
+UPDATE `cases` SET `keywords_ar`='استئصال ورم أثناء الحمل, ورم في الشهر الثالث من الحمل', `keywords_en`='tumor removal in the third month of pregnancy' WHERE `slug_ar`='استئصال-ورم-في-الشهر-الثالث-من-الحمل';
+UPDATE `cases` SET `keywords_ar`='تشخيص مرض نادر, دكتور احمد مرزوق', `keywords_en`='rare disease diagnosis, Dr. Ahmed Marzouk' WHERE `slug_ar`='الدكتور-أحمد-مرزوق-الوحيد-الذي-شخص-مرضي-النادر';
+UPDATE `cases` SET `keywords_ar`='دكتور احمد مرزوق, استشارة طارئة', `keywords_en`='Dr. Ahmed Marzouk, emergency consultation' WHERE `slug_ar`='استشارة-الدكتور-أحمد-مرزوق-لأول-مرة-الساعة-3-فجرًا';
+UPDATE `cases` SET `keywords_ar`='ورم ليفي, الورم الليفي عند الفتيات', `keywords_en`='fibroid, fibroids in young women' WHERE `slug_ar`='ورم-ليفي-يدمر-حياة-آنسة';
+UPDATE `cases` SET `keywords_ar`='دعاء ياسر, ولادة في الشهر الثامن', `keywords_en`='Doaa Yasser, eighth-month birth' WHERE `slug_ar`='الموديل-الجميلة-دعاء-ياسر-وولادة-في-شهرها-الثامن';
+UPDATE `cases` SET `keywords_ar`='تهاني الجبالي, تاليا', `keywords_en`='Tahani El-Gebali, Talia' WHERE `slug_ar`='أهلًا-تاليا-حفيدة-المستشارة-تهاني-الجبالي';
+UPDATE `cases` SET `keywords_ar`='قصة نجاح, رحلة علاج العقم', `keywords_en`='success story, fertility journey' WHERE `slug_ar`='توكلي-على-الله-وواصلي-الرحلة-لسارة-من-أسوان';
+UPDATE `cases` SET `keywords_ar`='الولادة المبكرة, فقدان التوأم, قصة ولادة', `keywords_en`='premature birth, loss of twins, birth story' WHERE `slug_ar`='ولدت-ابنتي-بعد-تجربة-ولادة-مبكرة-فقدت-فيها-تؤامي';
+COMMIT;
