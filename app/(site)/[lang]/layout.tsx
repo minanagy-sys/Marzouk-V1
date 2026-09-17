@@ -31,9 +31,13 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     description:
       "استشاري النساء والتوليد وجراحة الأورام — مبتكر الولادة بدون ألم في مصر. Consultant of OB-GYN & Oncologic Surgery.",
     icons: {
-      icon: [{ url: "/brand/logo.png", type: "image/png" }],
-      shortcut: "/brand/logo.png",
-      apple: "/brand/logo.png",
+      icon: [
+        { url: "/brand/favicon.ico", sizes: "any" },
+        { url: "/brand/favicon.svg", type: "image/svg+xml" },
+        { url: "/brand/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      ],
+      shortcut: "/brand/favicon.ico",
+      apple: [{ url: "/brand/apple-touch-icon.png", sizes: "180x180" }],
     },
     openGraph: {
       type: "website", siteName: "د. أحمد مرزوق", url: SITE.url,

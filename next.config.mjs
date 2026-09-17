@@ -28,7 +28,7 @@ const nextConfig = {
   // Serve the brand logo at the well-known /favicon.ico path so a bare
   // /favicon.ico request returns an image (not the app's HTML 404 page).
   async rewrites() {
-    return [{ source: "/favicon.ico", destination: "/brand/logo.png" }];
+    return [{ source: "/favicon.ico", destination: "/brand/favicon.ico" }];
   },
   async headers() {
     return [
